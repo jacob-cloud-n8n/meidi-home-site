@@ -53,3 +53,8 @@ Zeabur 使用 `zeabur.json`：
 - Node: `24`
 
 此 repo 是美地獨立網站，不需要 `PUBLIC_SITE_VARIANT`，根目錄就是美地首頁。
+
+## Maintenance Docs
+
+- `docs/meidi-notion-schema.md`：Notion 資料庫與欄位規劃
+- `docs/meidi-astro-build-plan.md`：建置、驗證與部署紀錄
