@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>審稿註記板｜美地居家收納 Stitch 版</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Noto+Serif+TC:wght@600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .review-board { width: min(1500px, calc(100% - 48px)); margin: 0 auto; padding: 72px 0; }
+      .review-card { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; padding: 24px 0; border-top: 1px solid rgba(5, 25, 14, 0.12); }
+      .review-frame { height: 720px; border: 1px solid rgba(74, 97, 82, 0.24); border-radius: 14px; overflow: hidden; background: #fff; box-shadow: var(--shadow); }
+      .review-frame iframe { width: 100%; height: 100%; border: 0; background: #fff; }
+      .review-notes { position: sticky; top: 96px; align-self: start; display: grid; gap: 14px; }
+      .review-notes textarea { width: 100%; min-height: 220px; resize: vertical; border: 1px solid var(--outline-soft); border-radius: 10px; padding: 14px; background: rgba(255,255,255,.78); color: var(--text); font: inherit; }
+      .review-checklist { display: grid; gap: 8px; color: var(--muted); }
+      .review-checklist label { display: flex; gap: 8px; align-items: start; }
+      .review-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+      .review-actions button { cursor: pointer; }
+      .save-state { color: var(--muted); font-size: 14px; }
+      @media (max-width: 980px) {
+        .review-card { grid-template-columns: 1fr; }
+        .review-frame { height: 620px; }
+        .review-notes { position: static; }
+      }
+    </style>
+  </head>
+  <body class="grid-bg">
+    <nav class="nav"><div class="nav-inner"><a class="brand" href="index.html"><img src="assets/meidi-logo.png" alt="美地居家收納 logo" /><span class="brand-name">美地居家收納</span></a><div class="nav-links"><a href="index.html">首頁</a><a href="about.html">關於美地</a><a href="team.html">收納團隊</a><a href="services.html">服務項目</a><a href="portfolio.html">精選案例</a><a href="booking.html">預約聯繫</a></div><a class="button" href="booking.html">線上預約</a></div></nav>
+    <main class="review-board">
+      <header class="page-hero"><span class="label">審稿註記板</span><h1>逐頁標記需要修改的位置。</h1><p class="lede">此頁供內部與客戶審稿使用，不放在主選單。可在每個頁面旁輸入調整意見；內容會自動暫存在這台瀏覽器，也可以匯出成文字檔。</p><div class="review-actions"><button class="button" type="button" id="export-notes">匯出全部註記</button><button class="button secondary" type="button" id="clear-notes">清除本機註記</button><span class="save-state" id="save-state">尚未輸入註記</span></div></header>
+      <section class="review-card" data-page="首頁">
+        <div class="review-frame"><iframe title="首頁預覽" src="index.html"></iframe></div>
+        <aside class="review-notes"><span class="label">01 / 首頁</span><h3>首頁</h3><textarea data-note="home" placeholder="請標註 Hero、空間分類、心動馬上行動區塊需要調整的文字、照片或順序。"></textarea><div class="review-checklist"><label><input data-check="home-hero" type="checkbox" /> 首屏主張清楚</label><label><input data-check="home-services" type="checkbox" /> 空間分類符合服務範圍</label><label><input data-check="home-cta" type="checkbox" /> 預約 CTA 位置明確</label></div></aside>
+      </section>
+      <section class="review-card" data-page="關於美地">
+        <div class="review-frame"><iframe title="關於美地預覽" src="about.html"></iframe></div>
+        <aside class="review-notes"><span class="label">02 / 關於美地</span><h3>關於美地</h3><textarea data-note="about" placeholder="請標註品牌故事、空間規劃邏輯、納爺體系說明是否需要增刪。"></textarea><div class="review-checklist"><label><input data-check="about-story" type="checkbox" /> 品牌初衷完整</label><label><input data-check="about-method" type="checkbox" /> 空間規劃邏輯易懂</label><label><input data-check="about-duplicate" type="checkbox" /> 沒有與團隊頁重複</label></div></aside>
+      </section>
+      <section class="review-card" data-page="收納團隊">
+        <div class="review-frame"><iframe title="收納團隊預覽" src="team.html"></iframe></div>
+        <aside class="review-notes"><span class="label">03 / 收納團隊</span><h3>收納團隊</h3><textarea data-note="team" placeholder="請標註資歷、社群、動態牆、形象照與培訓照是否需要替換。"></textarea><div class="review-checklist"><label><input data-check="team-proof" type="checkbox" /> 專業背書足夠</label><label><input data-check="team-social" type="checkbox" /> 社群入口清楚</label><label><input data-check="team-photo" type="checkbox" /> 圖片使用已確認</label></div></aside>
+      </section>
+      <section class="review-card" data-page="服務項目">
+        <div class="review-frame"><iframe title="服務項目預覽" src="services.html"></iframe></div>
+        <aside class="review-notes"><span class="label">04 / 服務項目</span><h3>服務項目</h3><textarea data-note="services" placeholder="請標註六大分類、服務範圍、報價導引是否需要調整。"></textarea><div class="review-checklist"><label><input data-check="services-name" type="checkbox" /> 分類名稱正確</label><label><input data-check="services-copy" type="checkbox" /> 服務描述貼近客戶</label><label><input data-check="services-price" type="checkbox" /> 報價導引清楚</label></div></aside>
+      </section>
+      <section class="review-card" data-page="精選案例">
+        <div class="review-frame"><iframe title="精選案例預覽" src="portfolio.html"></iframe></div>
+        <aside class="review-notes"><span class="label">05 / 精選案例</span><h3>精選案例</h3><textarea data-note="portfolio" placeholder="請標註案例分類、待補照片、文字方向與隱私提醒。"></textarea><div class="review-checklist"><label><input data-check="portfolio-filter" type="checkbox" /> 案例分類可用</label><label><input data-check="portfolio-photo" type="checkbox" /> 待補圖說清楚</label><label><input data-check="portfolio-privacy" type="checkbox" /> 隱私說明合適</label></div></aside>
+      </section>
+      <section class="review-card" data-page="預約聯繫">
+        <div class="review-frame"><iframe title="預約聯繫預覽" src="booking.html"></iframe></div>
+        <aside class="review-notes"><span class="label">06 / 預約聯繫</span><h3>預約聯繫</h3><textarea data-note="booking" placeholder="請標註流程、費用、表單欄位、LINE 或 Facebook 導向是否需要修改。"></textarea><div class="review-checklist"><label><input data-check="booking-flow" type="checkbox" /> 三步驟流程清楚</label><label><input data-check="booking-price" type="checkbox" /> 報價資訊正確</label><label><input data-check="booking-line" type="checkbox" /> 聯繫 CTA 待補正式 LINE</label></div></aside>
+      </section>
+    </main>
+    <footer><div class="footer-inner"><div>美地居家收納 · 審稿註記板</div><div><a href="index.html">回網站首頁</a></div></div></footer>
+    <script>
+      const storageKey = "meidi-stitch-review-notes-v1";
+      const saveState = document.querySelector("#save-state");
+      const textareas = Array.from(document.querySelectorAll("[data-note]"));
+      const checks = Array.from(document.querySelectorAll("[data-check]"));
+
+      function readStore() {
+        try {
+          return JSON.parse(localStorage.getItem(storageKey) || "{}");
+        } catch {
+          return {};
+        }
+      }
+
+      function writeStore(store) {
+        localStorage.setItem(storageKey, JSON.stringify(store));
+        if (saveState) {
+          const time = new Date().toLocaleTimeString("zh-TW", { hour: "2-digit", minute: "2-digit" });
+          saveState.textContent = `已自動暫存 ${time}`;
+        }
+      }
+
+      function collectStore() {
+        const store = { notes: {}, checks: {} };
+        textareas.forEach((field) => { store.notes[field.dataset.note] = field.value; });
+        checks.forEach((field) => { store.checks[field.dataset.check] = field.checked; });
+        return store;
+      }
+
+      function hydrate() {
+        const store = readStore();
+        textareas.forEach((field) => { field.value = store.notes?.[field.dataset.note] || ""; });
+        checks.forEach((field) => { field.checked = Boolean(store.checks?.[field.dataset.check]); });
+        if (saveState && (store.notes || store.checks)) saveState.textContent = "已載入本機暫存註記";
+      }
+
+      function exportNotes() {
+        const store = collectStore();
+        const pages = textareas.map((field) => {
+          const card = field.closest(".review-card");
+          const page = card?.dataset.page || field.dataset.note;
+          const checklist = Array.from(card?.querySelectorAll("[data-check]") || [])
+            .map((item) => `- [${item.checked ? "x" : " "}] ${item.parentElement.textContent.trim()}`)
+            .join("\n");
+          return `## ${page}\n\n${field.value || "尚未填寫註記"}\n\n${checklist}`;
+        }).join("\n\n---\n\n");
+        const content = `# 美地居家收納 Stitch 版審稿註記\n\n匯出時間：${new Date().toLocaleString("zh-TW")}\n\n${pages}\n`;
+        const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "meidi-stitch-review-notes.txt";
+        link.click();
+        URL.revokeObjectURL(url);
+        writeStore(store);
+      }
+
+      hydrate();
+      textareas.forEach((field) => field.addEventListener("input", () => writeStore(collectStore())));
+      checks.forEach((field) => field.addEventListener("change", () => writeStore(collectStore())));
+      document.querySelector("#export-notes")?.addEventListener("click", exportNotes);
+      document.querySelector("#clear-notes")?.addEventListener("click", () => {
+        if (!confirm("確定要清除這台瀏覽器中的所有審稿註記？")) return;
+        localStorage.removeItem(storageKey);
+        textareas.forEach((field) => { field.value = ""; });
+        checks.forEach((field) => { field.checked = false; });
+        if (saveState) saveState.textContent = "已清除本機註記";
+      });
+    </script>
+  </body>
+</html>

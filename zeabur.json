@@ -1,0 +1,7 @@
+{
+  "buildCommand": "pnpm run build",
+  "startCommand": "node ./dist/server/entry.mjs",
+  "env": {
+    "NODE_VERSION": "24"
+  }
+}

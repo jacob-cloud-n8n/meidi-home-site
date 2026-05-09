@@ -1,0 +1,46 @@
+---
+import { lineUrl } from "@lib/meidi";
+
+interface Props {
+  title: string;
+  currentPath: string;
+}
+
+const { title, currentPath } = Astro.props;
+const nav = [
+  ["首頁", "/"],
+  ["關於美地", "/about/"],
+  ["收納團隊", "/team/"],
+  ["服務項目", "/services/"],
+  ["精選案例", "/portfolio/"],
+  ["預約聯繫", "/booking/"]
+];
+---
+
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content="美地居家收納提供專業空間診斷、收納規劃與親子家庭生活系統設計。" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Noto+Serif+TC:wght@600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body class="grid-bg">
+    <nav class="nav">
+      <div class="nav-inner">
+        <a class="brand" href="/"><img src="/assets/meidi-logo.png" alt="美地居家收納 logo" /><span class="brand-name">美地居家收納</span></a>
+        <div class="nav-links">
+          {nav.map(([label, path]) => <a aria-current={currentPath === path ? "page" : undefined} href={path}>{label}</a>)}
+        </div>
+        <a class="button" href="/booking/">線上預約</a>
+      </div>
+    </nav>
+    <slot />
+    <a class="floating-contact" href={lineUrl} target="_blank" rel="noreferrer"><span class="material-symbols-outlined">chat</span>預約與聯繫</a>
+    <footer><div class="footer-inner"><div>美地居家收納</div><div><a href="/review.html">審稿註記板</a></div></div></footer>
+  </body>
+</html>

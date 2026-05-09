@@ -1,0 +1,80 @@
+---
+import MeidiLayout from "@layouts/MeidiLayout.astro";
+import { c, facebookUrl, getMeidiCopy, href, image, lineQrUrl, lineUrl } from "@lib/meidi";
+
+const copy = await getMeidiCopy("booking");
+---
+
+<MeidiLayout title="預約諮詢｜美地居家收納 Stitch 版" currentPath="/booking/">
+  <main class="container">
+    <section class="booking-layout">
+      <div>
+        <span class="label">{c(copy, "booking.hero.label", "線上預約與聯繫")}</span>
+        <h1>{c(copy, "booking.hero.title", "從混亂到心動，只要簡單三步驟。")}</h1>
+        <p class="lede">{c(copy, "booking.hero.lede", "初步自我評估、現場預采與空間診斷、確認方案後開始打造心動的家。正式報價與預估時數以現場診斷為主。")}</p>
+        <div class="actions"><a class="button" href="#form">填寫預約資料</a><a class="button secondary" href={href(copy, "booking.line.url", lineUrl)} target="_blank" rel="noreferrer">加入官方 LINE</a></div>
+        <div class="process-list">
+          <article class="process-item"><div class="badge"><span class="material-symbols-outlined">analytics</span></div><div><h3>01. 初步自我評估</h3><p>辨識輕中度凌亂或重度囤積，先了解目前卡住的生活情境。</p></div></article>
+          <article class="process-item"><div class="badge"><span class="material-symbols-outlined">architecture</span></div><div><h3>02. 現場預采與空間診斷</h3><p>到府實際丈量、動線分析、空間規劃，提供整理方案建議書。</p></div></article>
+          <article class="process-item"><div class="badge"><span class="material-symbols-outlined">home_repair_service</span></div><div><h3>03. 確認方案，開始打造心動的家</h3><p>依診斷結果確認報價與時數，進入到府收納服務。</p></div></article>
+        </div>
+      </div>
+      <aside class="form-panel" id="form">
+        <div><span class="label">預約表單</span><div class="progress"><span></span></div></div>
+        <form class="form meidi-inquiry-form" style="margin-top:30px">
+          <input class="field" name="name" placeholder="姓名" required />
+          <input class="field" name="phone" placeholder="聯絡電話" required />
+          <input class="field" name="lineId" placeholder="LINE ID（選填）" />
+          <input class="field" name="serviceArea" placeholder="服務行政區" required />
+          <select class="field" name="spaceType"><option>衣櫥</option><option>廚房餐廳</option><option>兒童房</option><option>儲藏室</option><option>書房辦公</option><option>搬家打包</option><option>全屋整理</option><option>其他</option></select>
+          <textarea class="field large" name="problem" placeholder="目前最困擾的狀況"></textarea>
+          <input class="field" name="photoUrl" placeholder="現況照片連結（可先留空）" />
+          <label class="privacy-note"><input name="privacyConsent" type="checkbox" required /> {c(copy, "booking.privacy", "資料僅作預約聯繫與服務評估使用，不會用於其他目的。")}</label>
+          <button class="button" type="submit">送出預約資料</button>
+          <p class="privacy-note form-message" aria-live="polite"></p>
+        </form>
+      </aside>
+    </section>
+    <section class="section contact-panel">
+      <img src={image(copy, "booking.qr.image", lineQrUrl)} alt="美地居家收納官方 LINE QR Code" />
+      <div>
+        <span class="label">Official LINE</span>
+        <h2>官方 LINE 已提供，正式預約通知將以 LINE 與 Notion 紀錄串接。</h2>
+        <p class="lede">表單資料會寫入 Notion「美地諮詢表單」資料庫；若暫時無法送出，仍可透過 LINE 或 Facebook 聯繫。</p>
+        <div class="actions"><a class="button" href={href(copy, "booking.line.url", lineUrl)} target="_blank" rel="noreferrer">加入官方 LINE</a><a class="button secondary" href={href(copy, "booking.facebook.url", facebookUrl)} target="_blank" rel="noreferrer">前往 Facebook</a></div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="grid-3">
+        <article class="card"><span class="label">Step 1</span><h3>初步自我評估</h3><p>辨識輕中度凌亂或重度囤積。</p></article>
+        <article class="card"><span class="label">Step 2</span><h3>現場預采與空間診斷</h3><div class="price">{c(copy, "booking.price.step2", "2000 元 / 約 1hr；後續確定委託，此費用可全額折抵。")}</div></article>
+        <article class="card"><span class="label">Step 3</span><h3>確認方案</h3><p>{c(copy, "booking.price.step3", "5500 / 空間；30000 / 全屋。最終報價與時數以 Step 2 診斷結果為主，服務區域與車馬費另行報價。")}</p></article>
+      </div>
+    </section>
+  </main>
+  <script>
+    const form = document.querySelector(".meidi-inquiry-form");
+    const message = document.querySelector(".form-message");
+    form?.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const data = Object.fromEntries(new FormData(form));
+      try {
+        const response = await fetch("/api/meidi-inquiry", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+        const payload = await response.json();
+        if (payload.ok) {
+          message.textContent = payload.mode === "notion" ? "已送出，後續將由美地居家收納與您聯繫。" : "已建立聯繫訊息，請點選 LINE 完成傳送。";
+          if (payload.lineUrl) window.open(payload.lineUrl, "_blank", "noopener");
+          form.reset();
+        } else {
+          message.textContent = payload.message || "送出失敗，請改用官方 LINE 聯繫。";
+        }
+      } catch {
+        message.textContent = "目前表單服務暫不可用，請改用官方 LINE 聯繫。";
+      }
+    });
+  </script>
+</MeidiLayout>

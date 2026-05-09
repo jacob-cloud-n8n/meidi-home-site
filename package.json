@@ -1,0 +1,21 @@
+{
+  "name": "meidi-home-site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.33.2",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "start": "node ./dist/server/entry.mjs"
+  },
+  "dependencies": {
+    "@astrojs/node": "^9.0.0",
+    "astro": "^5.0.0"
+  },
+  "devDependencies": {
+    "@rollup/wasm-node": "^4.60.2",
+    "typescript": "^5.6.0"
+  }
+}

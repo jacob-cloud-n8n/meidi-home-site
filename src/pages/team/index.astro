@@ -1,0 +1,32 @@
+---
+import MeidiLayout from "@layouts/MeidiLayout.astro";
+import { c, facebookUrl, getMeidiCopy, href } from "@lib/meidi";
+
+const copy = await getMeidiCopy("team");
+---
+
+<MeidiLayout title="收納團隊｜美地居家收納 Stitch 版" currentPath="/team/">
+  <main class="container">
+    <section class="section">
+      <div class="section-head"><div><span class="label">{c(copy, "team.hero.label", "收納團隊")}</span><h1>{c(copy, "team.hero.title", "專業資歷、社群驗證與動態牆嵌入。")}</h1></div><div class="rule"></div></div>
+      <div class="profile-panel">
+        <aside class="photo-card portrait"><img src="/assets/huali-portrait.jpg" alt="華琍老師形象照" /><div class="photo-copy"><h3>{c(copy, "team.profile.name", "收納師華琍（小琍）")}</h3><p>{c(copy, "team.profile.body", "以專業認證、社群日常與真實整理紀錄，串聯個人特質與品牌信任。")}</p></div></aside>
+        <div class="profile-list">
+          <article class="profile-item"><span class="material-symbols-outlined">license</span><div><h3>專業資歷</h3><p>呈現相關認證、收納理念與專業經歷，強化到府服務的可信度。</p></div></article>
+          <article class="profile-item"><div class="social-icons"><a class="social-link" href={href(copy, "team.social.facebook", facebookUrl)} target="_blank" rel="noreferrer">f</a><span class="social-link pending">◎</span><span class="social-link pending">@</span></div><div><h3>社群驗證</h3><p>Facebook 已連結，IG 與 Threads 先保留欄位，待客戶提供正式網址後補上。</p></div></article>
+          <article class="profile-item"><span class="material-symbols-outlined">grid_view</span><div><h3>動態牆嵌入</h3><p>正式版可於介紹頁底部嵌入 IG 九宮格照片牆，隨時展示最新整理理念的真實感。</p></div></article>
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="credential-grid">
+        <div class="credential-feature">
+          <img src="/assets/naye-certificate.jpg" alt="納爺收納研究所結業證書" />
+          <div class="caption"><span class="label">服務證書</span><h3>{c(copy, "team.certificate.title", "納爺收納研究所結業證書")}</h3></div>
+        </div>
+        <article class="credential-card"><span class="material-symbols-outlined">analytics</span><h3>空間診斷</h3><p>先找病灶，再進行分類與定位。</p></article>
+        <article class="credential-card"><span class="material-symbols-outlined">family_restroom</span><h3>親子生活</h3><p>替媽媽減壓，讓全家一起維持。</p></article>
+      </div>
+    </section>
+  </main>
+</MeidiLayout>

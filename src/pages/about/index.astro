@@ -1,0 +1,32 @@
+---
+import MeidiLayout from "@layouts/MeidiLayout.astro";
+import { c, getMeidiCopy } from "@lib/meidi";
+
+const copy = await getMeidiCopy("about");
+---
+
+<MeidiLayout title="理念與華琍老師｜美地居家收納 Stitch 版" currentPath="/about/">
+  <main class="container">
+    <header class="hero">
+      <div>
+        <span class="label">{c(copy, "about.hero.label", "關於美地")}</span>
+        <h1>{c(copy, "about.hero.title", "華琍老師：用母親的同理心，落實世界級空間邏輯。")}</h1>
+        <p class="lede">{c(copy, "about.hero.lede", "作為二寶媽，華琍老師理解台灣家庭需要的不是空無一物，而是一套真正不復亂的生活系統。")}</p>
+      </div>
+      <aside class="portrait-frame"><img src="/assets/huali-portrait.jpg" alt="華琍老師形象照" /></aside>
+    </header>
+    <section class="section split">
+      <div class="copy">
+        <span class="label">Method</span>
+        <h2>{c(copy, "about.method.title", "你以為的收納，和專業的空間規劃有什麼不同？")}</h2>
+        <div class="quote">{c(copy, "about.method.quote", "我們不只想幫您把家變乾淨一次，而是交給您一套全家人都能秒懂的生活系統。")}</div>
+        <p>{c(copy, "about.method.body", "美地居家承襲納爺體系，服務開始前先進行空間診斷，像醫生看診一樣分析生活動線、物品數量與儲存空間的關係，找出復亂的真正病灶。")}</p>
+      </div>
+      <aside class="photo-card portrait"><img src="/assets/huali-portrait.jpg" alt="華琍老師形象照" /><div class="photo-copy"><h3>美地居家收納主理人</h3><p>細膩傾聽、邏輯分類、維持設計。</p></div></aside>
+    </section>
+    <section class="section split">
+      <aside class="photo-card"><img src="/assets/naye-training.jpg" alt="華琍老師參與納爺體系培訓照片" /></aside>
+      <div class="copy"><span class="label">師承研究室</span><h2>{c(copy, "about.mentor.title", "師承納爺收納研究室")}</h2><p class="lede">{c(copy, "about.mentor.body", "承襲上門預采、空間診斷、方案溝通、上門服務、復盤陳列的 SOP，把成熟市場驗證過的空間科學帶進台灣家庭。")}</p></div>
+    </section>
+  </main>
+</MeidiLayout>
