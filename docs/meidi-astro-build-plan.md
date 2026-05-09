@@ -7,6 +7,16 @@
 - Zeabur 使用獨立服務 `meidi-home-site-v2`，不再與小牧人 repo 或服務共用部署流程。
 - 正式網址：`https://meidi-home-untitled-20260509.zeabur.app/`。
 
+## 維護紀錄
+
+### 2026-05-10
+
+- 已對舊 Zeabur 美地服務 `meidi-home-site` 執行刪除；Zeabur API 回報 deletion already scheduled，該服務目前無 domain、deployments 皆為 `REMOVED`，正式流量只由新服務 `meidi-home-site-v2` 承接。
+- `astro-notion-zeabur-site` skill 已補上最新 SOP：正式站預設一個 Astro repo 對一個 Zeabur 服務；遇到同 repo 多網站時需先提醒維護風險並優先建議拆 repo。
+- 美地正式網址 `https://meidi-home-untitled-20260509.zeabur.app/` 已確認指向新服務，首頁與 `/booking/` 回應 `200`。
+- 預約表單已確認回傳 `mode: "notion"`；盤點測試資料已從 Notion 諮詢資料庫封存。
+- Notion token 暫不輪替；仍需避免再次貼到文件、Git 或前端輸出。
+
 ## 建置邊界
 
 - 根目錄 `/` 即為美地首頁，不使用 `PUBLIC_SITE_VARIANT`。
