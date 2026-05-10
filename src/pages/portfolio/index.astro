@@ -4,6 +4,7 @@ import { c, getMeidiCases, getMeidiCopy } from "@lib/meidi";
 
 const copy = await getMeidiCopy("portfolio");
 const cases = await getMeidiCases();
+const categories = ["全部案例", ...Array.from(new Set(cases.map((item) => item.category).filter(Boolean)))];
 ---
 
 <MeidiLayout title="精選案例｜美地居家收納 Stitch 版" currentPath="/portfolio/">
@@ -12,12 +13,28 @@ const cases = await getMeidiCases();
       <span class="label">{c(copy, "portfolio.hero.label", "Before & After 空間故事")}</span>
       <h1>{c(copy, "portfolio.hero.title", "展示改變，也保護每一位客戶的生活隱私。")}</h1>
       <p class="lede">{c(copy, "portfolio.hero.lede", "正式案例需取得授權並去識別化。此版本先建立分類標籤，讓客戶能快速找到與自家相似的混亂情境。")}</p>
-      <div class="filters"><span class="filter active">全部案例</span><span class="filter">衣櫥收納</span><span class="filter">廚房餐廳</span><span class="filter">兒童房</span><span class="filter">儲藏室</span><span class="filter">書房辦公</span><span class="filter">搬家打包</span><span class="filter">全屋整理</span></div>
+      <div class="filters" data-case-filters>
+        {categories.map((category, index) => <button class:list={["filter", { active: index === 0 }]} type="button" data-category={category}>{category}</button>)}
+      </div>
     </header>
     <section class="section">
-      <div class="grid-3">
-        {cases.map((item) => <article class="card"><span class="label">{item.status || "案例"}</span><h3>{item.title}</h3><p>{item.body}</p></article>)}
+      <div class="grid-3" data-case-list>
+        {cases.map((item) => <article class="card case-card" data-category={item.category}>{item.image && <img class="case-image" src={item.image} alt={`${item.title} 案例照片`} />}<span class="label">{item.status || item.category || "案例"}</span><h3>{item.title}</h3><p>{item.body}</p></article>)}
       </div>
     </section>
   </main>
+  <script>
+    const filters = document.querySelector("[data-case-filters]");
+    const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-case-list] [data-category]"));
+    filters?.addEventListener("click", (event) => {
+      const target = event.target instanceof HTMLElement ? event.target.closest<HTMLButtonElement>("[data-category]") : null;
+      if (!target) return;
+      const category = target.dataset.category || "全部案例";
+      filters.querySelectorAll(".filter").forEach((button) => button.classList.toggle("active", button === target));
+      cards.forEach((card) => {
+        const matches = category === "全部案例" || card.dataset.category === category;
+        card.hidden = !matches;
+      });
+    });
+  </script>
 </MeidiLayout>

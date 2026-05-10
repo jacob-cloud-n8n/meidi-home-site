@@ -18,6 +18,8 @@
 - Notion token 暫不輪替；仍需避免再次貼到文件、Git 或前端輸出。
 - Zeabur 已移除臨時驗證網域 `meidi-home-independent-20260509.zeabur.app`；目前正式服務只保留 `https://meidi-home-untitled-20260509.zeabur.app/`。
 - 手機版導覽改為可展開的頁面選單，並調整手機閱讀時的 hero、卡片、表單與浮動聯繫按鈕間距。
+- 已依客戶標註補強 Notion 維護：首頁/服務項目的空間分類卡片可用 Notion 圖片替換 icon；關於美地與收納團隊固定照片改為 Notion 圖片 key；精選案例支援 `分類` 篩選，案例卡可由 Notion 設定圖片。
+- `astro-notion-zeabur-site` skill 已補上統一原則：新網站設計時，前台可見圖文、圖片、CTA、服務卡與案例卡都應預設做成 Notion 可維護槽位，除非客戶明確指定固定。
 
 ## 建置邊界
 

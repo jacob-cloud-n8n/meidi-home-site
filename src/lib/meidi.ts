@@ -12,11 +12,13 @@ export type MeidiService = {
   title: string;
   body: string;
   icon: string;
+  image?: string;
 };
 
 export type MeidiCase = {
   title: string;
   body: string;
+  category: string;
   image?: string;
   status?: string;
 };
@@ -60,6 +62,10 @@ function title(prop: any): string {
 
 function select(prop: any): string {
   return prop?.select?.name ?? "";
+}
+
+function richOrSelect(prop: any): string {
+  return select(prop) || text(prop);
 }
 
 function checkbox(prop: any, fallback = true): boolean {
@@ -153,6 +159,7 @@ export async function getMeidiServices(): Promise<MeidiService[]> {
           type: select(props["類型"]),
           title: cardTitle,
           body: text(props["文字內容"]),
+          image: fileUrl(props["圖片"]) || url(props["圖片網址"]),
           enabled: checkbox(props["啟用"], true),
           order: number(props["排序"], index),
           icon: icons[index % icons.length]
@@ -160,7 +167,7 @@ export async function getMeidiServices(): Promise<MeidiService[]> {
       })
       .filter((item) => item.enabled && item.type === "區塊" && item.key.startsWith("service.") && item.title && item.body)
       .sort((a, b) => a.order - b.order);
-    return items.length > 0 ? items.map(({ title, body, icon }) => ({ title, body, icon })) : fallbackServices;
+    return items.length > 0 ? items.map(({ title, body, icon, image }) => ({ title, body, icon, image })) : fallbackServices;
   } catch (error) {
     warn(error);
     return fallbackServices;
@@ -181,6 +188,7 @@ export async function getMeidiCases(): Promise<MeidiCase[]> {
           type: select(props["類型"]),
           title: caseTitle,
           body: text(props["文字內容"]),
+          category: richOrSelect(props["分類"]) || caseTitle,
           image: fileUrl(props["圖片"]) || url(props["圖片網址"]),
           status: select(props["授權狀態"]),
           enabled: checkbox(props["啟用"], true),
@@ -189,7 +197,7 @@ export async function getMeidiCases(): Promise<MeidiCase[]> {
       })
       .filter((item) => item.enabled && item.type === "案例")
       .sort((a, b) => a.order - b.order);
-    return items.length > 0 ? items.map(({ title, body, image, status }) => ({ title, body, image, status })) : fallbackCases;
+    return items.length > 0 ? items.map(({ title, body, category, image, status }) => ({ title, body, category, image, status })) : fallbackCases;
   } catch (error) {
     warn(error);
     return fallbackCases;
@@ -223,6 +231,6 @@ export const fallbackServices: MeidiService[] = [
 ];
 
 export const fallbackCases: MeidiCase[] = [
-  { title: "衣櫥收納", body: "案例照片待客戶授權後上傳。", status: "待授權" },
-  { title: "廚房餐廳", body: "案例照片待客戶授權後上傳。", status: "待授權" }
+  { title: "衣櫥收納", category: "衣櫥收納", body: "案例照片待客戶授權後上傳。", status: "待授權" },
+  { title: "廚房餐廳", category: "廚房餐廳", body: "案例照片待客戶授權後上傳。", status: "待授權" }
 ];
