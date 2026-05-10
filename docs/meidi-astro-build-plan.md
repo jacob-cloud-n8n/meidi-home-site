@@ -16,6 +16,8 @@
 - 美地正式網址 `https://meidi-home-untitled-20260509.zeabur.app/` 已確認指向新服務，首頁與 `/booking/` 回應 `200`。
 - 預約表單已確認回傳 `mode: "notion"`；盤點測試資料已從 Notion 諮詢資料庫封存。
 - Notion token 暫不輪替；仍需避免再次貼到文件、Git 或前端輸出。
+- Zeabur 已移除臨時驗證網域 `meidi-home-independent-20260509.zeabur.app`；目前正式服務只保留 `https://meidi-home-untitled-20260509.zeabur.app/`。
+- 手機版導覽改為可展開的頁面選單，並調整手機閱讀時的 hero、卡片、表單與浮動聯繫按鈕間距。
 
 ## 建置邊界
 

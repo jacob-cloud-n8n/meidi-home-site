@@ -37,6 +37,13 @@ const nav = [
           {nav.map(([label, path]) => <a aria-current={currentPath === path ? "page" : undefined} href={path}>{label}</a>)}
         </div>
         <a class="button" href="/booking/">線上預約</a>
+        <details class="mobile-menu">
+          <summary aria-label="開啟頁面選單"><span class="material-symbols-outlined">menu</span><span>選單</span></summary>
+          <div class="mobile-menu-panel">
+            {nav.map(([label, path]) => <a aria-current={currentPath === path ? "page" : undefined} href={path}>{label}</a>)}
+            <a class="mobile-cta" href="/booking/">線上預約</a>
+          </div>
+        </details>
       </div>
     </nav>
     <slot />
