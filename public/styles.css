@@ -468,12 +468,40 @@ h3 { color: var(--primary); font-family: "Noto Serif TC", "Noto Serif", serif; f
   align-content: start;
   gap: 14px;
 }
+.before-after {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.before-after figure {
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+.before-after figcaption {
+  color: var(--secondary);
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
 .case-image {
   width: 100%;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
   border-radius: 8px;
   background: var(--surface-low);
+}
+.case-placeholder {
+  aspect-ratio: 4 / 3;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  border: 1px dashed rgba(74, 97, 82, 0.36);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.56);
+  color: var(--muted);
+  text-align: center;
+  font-weight: 800;
 }
 .form { display: grid; gap: 16px; }
 .field { min-height: 54px; padding: 14px 16px; border: 1px solid var(--outline); border-radius: var(--radius); background: var(--paper); color: var(--muted); }

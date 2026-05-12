@@ -22,6 +22,8 @@ export type MeidiCase = {
   body: string;
   category: string;
   image?: string;
+  beforeImage?: string;
+  afterImage?: string;
   status?: string;
   fontSize?: string;
 };
@@ -86,6 +88,10 @@ function url(prop: any): string {
 function fileUrl(prop: any): string {
   const file = prop?.files?.[0];
   return file?.file?.url ?? file?.external?.url ?? "";
+}
+
+function imageValue(props: Record<string, any>, fileKey: string, urlKey: string): string {
+  return fileUrl(props[fileKey]) || url(props[urlKey]);
 }
 
 async function queryDatabase(databaseId: string): Promise<NotionPage[]> {
@@ -194,7 +200,9 @@ export async function getMeidiCases(): Promise<MeidiCase[]> {
           title: caseTitle,
           body: text(props["文字內容"]),
           category: richOrSelect(props["分類"]) || caseTitle,
-          image: fileUrl(props["圖片"]) || url(props["圖片網址"]),
+          image: imageValue(props, "圖片", "圖片網址"),
+          beforeImage: imageValue(props, "整理前圖片", "整理前圖片網址") || imageValue(props, "Before 圖片", "Before 圖片網址"),
+          afterImage: imageValue(props, "整理後圖片", "整理後圖片網址") || imageValue(props, "After 圖片", "After 圖片網址"),
           status: select(props["授權狀態"]),
           fontSize: select(props["字體大小"]),
           enabled: checkbox(props["啟用"], true),
@@ -203,11 +211,34 @@ export async function getMeidiCases(): Promise<MeidiCase[]> {
       })
       .filter((item) => item.enabled && item.type === "案例")
       .sort((a, b) => a.order - b.order);
-    return items.length > 0 ? items.map(({ title, body, category, image, status, fontSize }) => ({ title, body, category, image, status, fontSize })) : fallbackCases;
+    const mapped = items.map(({ title, body, category, image, beforeImage, afterImage, status, fontSize }) => ({
+      title,
+      body,
+      category,
+      image,
+      beforeImage: beforeImage || image,
+      afterImage,
+      status,
+      fontSize
+    }));
+    return ensureCaseCategories(mapped.length > 0 ? mapped : fallbackCases);
   } catch (error) {
     warn(error);
-    return fallbackCases;
+    return ensureCaseCategories(fallbackCases);
   }
+}
+
+function ensureCaseCategories(items: MeidiCase[]): MeidiCase[] {
+  const existing = new Set(items.map((item) => item.category));
+  const placeholders = caseCategories
+    .filter((category) => !existing.has(category))
+    .map((category) => ({
+      title: category,
+      category,
+      body: "案例照片待客戶授權後上傳。",
+      status: "待授權"
+    }));
+  return [...items, ...placeholders];
 }
 
 export function c(copy: MeidiCopy, key: string, fallback: string): string {
@@ -250,7 +281,14 @@ export const fallbackServices: MeidiService[] = [
   { title: "全屋整理", body: "年度深度整理與跨空間生活系統重建。", icon: "home_spark" }
 ];
 
+export const caseCategories = ["衣櫥收納", "廚房餐廳", "兒童房", "儲藏室", "書房辦公", "搬家打包", "全屋整理"];
+
 export const fallbackCases: MeidiCase[] = [
   { title: "衣櫥收納", category: "衣櫥收納", body: "案例照片待客戶授權後上傳。", status: "待授權" },
-  { title: "廚房餐廳", category: "廚房餐廳", body: "案例照片待客戶授權後上傳。", status: "待授權" }
+  { title: "廚房餐廳", category: "廚房餐廳", body: "案例照片待客戶授權後上傳。", status: "待授權" },
+  { title: "兒童房", category: "兒童房", body: "案例照片待客戶授權後上傳。", status: "待授權" },
+  { title: "儲藏室", category: "儲藏室", body: "案例照片待客戶授權後上傳。", status: "待授權" },
+  { title: "書房辦公", category: "書房辦公", body: "案例照片待客戶授權後上傳。", status: "待授權" },
+  { title: "搬家打包", category: "搬家打包", body: "案例照片待客戶授權後上傳。", status: "待授權" },
+  { title: "全屋整理", category: "全屋整理", body: "案例照片待客戶授權後上傳。", status: "待授權" }
 ];

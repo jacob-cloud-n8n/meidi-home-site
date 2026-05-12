@@ -19,7 +19,23 @@ const categories = ["全部案例", ...Array.from(new Set(cases.map((item) => it
     </header>
     <section class="section">
       <div class="grid-3" data-case-list>
-        {cases.map((item) => <article class="card case-card" data-category={item.category}>{item.image && <img class="case-image" src={item.image} alt={`${item.title} 案例照片`} />}<span class="label">{item.status || item.category || "案例"}</span><h3 class={valueFontSizeClass(item.fontSize)}>{item.title}</h3><p class={valueFontSizeClass(item.fontSize)}>{item.body}</p></article>)}
+        {cases.map((item) => (
+          <article class="card case-card" data-category={item.category}>
+            <div class="before-after">
+              <figure>
+                {item.beforeImage ? <img class="case-image" src={item.beforeImage} alt={`${item.title} 整理前照片`} /> : <div class="case-placeholder">整理前照片待上傳</div>}
+                <figcaption>整理前</figcaption>
+              </figure>
+              <figure>
+                {item.afterImage ? <img class="case-image" src={item.afterImage} alt={`${item.title} 整理後照片`} /> : <div class="case-placeholder">整理後照片待上傳</div>}
+                <figcaption>整理後</figcaption>
+              </figure>
+            </div>
+            <span class="label">{item.status || item.category || "案例"}</span>
+            <h3 class={valueFontSizeClass(item.fontSize)}>{item.title}</h3>
+            <p class={valueFontSizeClass(item.fontSize)}>{item.body}</p>
+          </article>
+        ))}
       </div>
     </section>
   </main>
