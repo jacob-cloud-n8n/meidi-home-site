@@ -6,6 +6,7 @@ export type MeidiCopy = Record<string, {
   image?: string;
   buttonLabel?: string;
   buttonUrl?: string;
+  fontSize?: string;
 }>;
 
 export type MeidiService = {
@@ -13,6 +14,7 @@ export type MeidiService = {
   body: string;
   icon: string;
   image?: string;
+  fontSize?: string;
 };
 
 export type MeidiCase = {
@@ -21,6 +23,7 @@ export type MeidiCase = {
   category: string;
   image?: string;
   status?: string;
+  fontSize?: string;
 };
 
 type NotionPage = {
@@ -134,7 +137,8 @@ export async function getMeidiCopy(page: keyof typeof pageDatabaseIds): Promise<
         text: text(props["文字內容"]),
         image: fileUrl(props["圖片"]) || url(props["圖片網址"]),
         buttonLabel: text(props["按鈕文字"]),
-        buttonUrl: url(props["按鈕連結"])
+        buttonUrl: url(props["按鈕連結"]),
+        fontSize: select(props["字體大小"])
       };
       return copy;
     }, {});
@@ -160,6 +164,7 @@ export async function getMeidiServices(): Promise<MeidiService[]> {
           title: cardTitle,
           body: text(props["文字內容"]),
           image: fileUrl(props["圖片"]) || url(props["圖片網址"]),
+          fontSize: select(props["字體大小"]),
           enabled: checkbox(props["啟用"], true),
           order: number(props["排序"], index),
           icon: icons[index % icons.length]
@@ -167,7 +172,7 @@ export async function getMeidiServices(): Promise<MeidiService[]> {
       })
       .filter((item) => item.enabled && item.type === "區塊" && item.key.startsWith("service.") && item.title && item.body)
       .sort((a, b) => a.order - b.order);
-    return items.length > 0 ? items.map(({ title, body, icon, image }) => ({ title, body, icon, image })) : fallbackServices;
+    return items.length > 0 ? items.map(({ title, body, icon, image, fontSize }) => ({ title, body, icon, image, fontSize })) : fallbackServices;
   } catch (error) {
     warn(error);
     return fallbackServices;
@@ -191,13 +196,14 @@ export async function getMeidiCases(): Promise<MeidiCase[]> {
           category: richOrSelect(props["分類"]) || caseTitle,
           image: fileUrl(props["圖片"]) || url(props["圖片網址"]),
           status: select(props["授權狀態"]),
+          fontSize: select(props["字體大小"]),
           enabled: checkbox(props["啟用"], true),
           order: number(props["排序"], index)
         };
       })
       .filter((item) => item.enabled && item.type === "案例")
       .sort((a, b) => a.order - b.order);
-    return items.length > 0 ? items.map(({ title, body, category, image, status }) => ({ title, body, category, image, status })) : fallbackCases;
+    return items.length > 0 ? items.map(({ title, body, category, image, status, fontSize }) => ({ title, body, category, image, status, fontSize })) : fallbackCases;
   } catch (error) {
     warn(error);
     return fallbackCases;
@@ -214,6 +220,20 @@ export function href(copy: MeidiCopy, key: string, fallback: string): string {
 
 export function image(copy: MeidiCopy, key: string, fallback: string): string {
   return copy[key]?.image || fallback;
+}
+
+export function fontSizeClass(copy: MeidiCopy, key: string, prefix = "font-size"): string {
+  return valueFontSizeClass(copy[key]?.fontSize, prefix);
+}
+
+export function valueFontSizeClass(size: string | undefined, prefix = "font-size"): string {
+  const classes: Record<string, string> = {
+    "小": `${prefix}-small`,
+    "標準": `${prefix}-normal`,
+    "大": `${prefix}-large`,
+    "特大": `${prefix}-xlarge`
+  };
+  return size ? classes[size] || "" : "";
 }
 
 export const lineUrl = "https://line.me/R/ti/p/@135hliju";

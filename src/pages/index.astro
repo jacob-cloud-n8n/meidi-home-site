@@ -1,6 +1,6 @@
 ---
 import MeidiLayout from "@layouts/MeidiLayout.astro";
-import { c, getMeidiCopy, getMeidiServices, image } from "@lib/meidi";
+import { c, fontSizeClass, getMeidiCopy, getMeidiServices, image, valueFontSizeClass } from "@lib/meidi";
 
 const copy = await getMeidiCopy("home");
 const services = await getMeidiServices();
@@ -13,22 +13,22 @@ const services = await getMeidiServices();
       <div class="hero-copy">
         <div>
           <span class="label">{c(copy, "home.hero.label", "品牌初衷")}</span>
-          <h1>{c(copy, "home.hero.title", "收納的科學：重塑不復亂的居家秩序。")}</h1>
-          <p class="lede">{c(copy, "home.hero.lede", "美地居家收納承襲納爺體系的空間診斷邏輯，把居家整理從「摺衣服、丟東西」提升為人、物、空間的專業規劃。")}</p>
+          <h1 class={fontSizeClass(copy, "home.hero.title", "display-size")}>{c(copy, "home.hero.title", "收納的科學：重塑不復亂的居家秩序。")}</h1>
+          <p class:list={["lede", fontSizeClass(copy, "home.hero.lede")]}>{c(copy, "home.hero.lede", "美地居家收納承襲納爺體系的空間診斷邏輯，把居家整理從「摺衣服、丟東西」提升為人、物、空間的專業規劃。")}</p>
           <div class="actions"><a class="button" href="/booking/">{c(copy, "home.cta.primary.label", "預約空間診斷")}</a><a class="button secondary" href="/about/">{c(copy, "home.cta.secondary.label", "了解華琍老師")}</a></div>
         </div>
       </div>
       <div class="logo-watermark"><img src="/assets/meidi-logo.png" alt="美地居家收納 logo 浮水印" /></div>
     </section>
     <section class="value-grid">
-      <article class="value"><span class="material-symbols-outlined">architecture</span><h3>{c(copy, "home.value.1.title", "專業邏輯")}</h3><p>{c(copy, "home.value.1.body", "不是憑感覺整理，而是透過空間診斷分析動線、物品數量與收納容量，找到復亂的真正原因。")}</p></article>
-      <article class="value"><span class="material-symbols-outlined">family_restroom</span><h3>{c(copy, "home.value.2.title", "親子家庭")}</h3><p>{c(copy, "home.value.2.body", "結合二寶媽的生活經驗與蒙特梭利精神，建立小孩也能看懂、好拿好收的家庭系統。")}</p></article>
-      <article class="value"><span class="material-symbols-outlined">verified</span><h3>{c(copy, "home.value.3.title", "納爺體系")}</h3><p>{c(copy, "home.value.3.body", "承襲上門預采、診斷、方案溝通、執行與復盤陳列，把成熟 SOP 轉化為台灣家庭可用的服務。")}</p></article>
+      <article class="value"><span class="material-symbols-outlined">architecture</span><h3 class={fontSizeClass(copy, "home.value.1.title")}>{c(copy, "home.value.1.title", "專業邏輯")}</h3><p class={fontSizeClass(copy, "home.value.1.body")}>{c(copy, "home.value.1.body", "不是憑感覺整理，而是透過空間診斷分析動線、物品數量與收納容量，找到復亂的真正原因。")}</p></article>
+      <article class="value"><span class="material-symbols-outlined">family_restroom</span><h3 class={fontSizeClass(copy, "home.value.2.title")}>{c(copy, "home.value.2.title", "親子家庭")}</h3><p class={fontSizeClass(copy, "home.value.2.body")}>{c(copy, "home.value.2.body", "結合二寶媽的生活經驗與蒙特梭利精神，建立小孩也能看懂、好拿好收的家庭系統。")}</p></article>
+      <article class="value"><span class="material-symbols-outlined">verified</span><h3 class={fontSizeClass(copy, "home.value.3.title")}>{c(copy, "home.value.3.title", "納爺體系")}</h3><p class={fontSizeClass(copy, "home.value.3.body")}>{c(copy, "home.value.3.body", "承襲上門預采、診斷、方案溝通、執行與復盤陳列，把成熟 SOP 轉化為台灣家庭可用的服務。")}</p></article>
     </section>
     <section class="section container">
-      <div class="section-head"><div><span class="label">空間分類系統</span><h2>精準對接客戶痛點。</h2><p class="lede">透過分類標籤，讓客戶快速找到與自家相似的混亂情境，並理解美地可以協助的空間範圍。</p></div><div class="rule"></div></div>
+      <div class="section-head"><div><span class="label">{c(copy, "home.services.label", "空間分類系統")}</span><h2 class={fontSizeClass(copy, "home.services.title", "heading-size")}>{c(copy, "home.services.title", "精準對接客戶痛點。")}</h2><p class:list={["lede", fontSizeClass(copy, "home.services.lede")]}>{c(copy, "home.services.lede", "透過分類標籤，讓客戶快速找到與自家相似的混亂情境，並理解美地可以協助的空間範圍。")}</p></div><div class="rule"></div></div>
       <div class="service-grid">
-        {services.map((service) => <article class="service-tile">{service.image ? <img class="service-visual" src={service.image} alt={`${service.title} 圖示`} /> : <span class="material-symbols-outlined">{service.icon}</span>}<h3>{service.title}</h3><p>{service.body}</p></article>)}
+        {services.map((service) => <article class="service-tile">{service.image ? <img class="service-visual" src={service.image} alt={`${service.title} 圖示`} /> : <span class="material-symbols-outlined">{service.icon}</span>}<h3 class={valueFontSizeClass(service.fontSize)}>{service.title}</h3><p class={valueFontSizeClass(service.fontSize)}>{service.body}</p></article>)}
       </div>
     </section>
   </main>

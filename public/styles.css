@@ -163,6 +163,46 @@ h2 {
 }
 h3 { color: var(--primary); font-family: "Noto Serif TC", "Noto Serif", serif; font-size: 25px; line-height: 1.35; }
 .lede { margin-top: 24px; color: var(--muted); font-size: 18px; max-width: 680px; }
+.display-size-small { font-size: clamp(40px, 4.8vw, 68px); }
+.display-size-normal { font-size: clamp(42px, 6vw, 72px); }
+.display-size-large { font-size: clamp(52px, 7vw, 88px); }
+.display-size-xlarge { font-size: clamp(64px, 8vw, 104px); }
+.heading-size-small { font-size: clamp(28px, 3.2vw, 42px); }
+.heading-size-normal { font-size: clamp(32px, 4vw, 52px); }
+.heading-size-large { font-size: clamp(38px, 4.6vw, 62px); }
+.heading-size-xlarge { font-size: clamp(46px, 5.2vw, 72px); }
+.quote-size-small { font-size: clamp(22px, 2.4vw, 30px); }
+.quote-size-normal { font-size: clamp(25px, 3vw, 38px); }
+.quote-size-large { font-size: clamp(30px, 3.4vw, 46px); }
+.quote-size-xlarge { font-size: clamp(36px, 4vw, 56px); }
+.font-size-small { font-size: 16px; }
+.font-size-normal { font-size: 18px; }
+.font-size-large { font-size: 20px; }
+.font-size-xlarge { font-size: 22px; }
+.service-tile p.font-size-small,
+.card p.font-size-small,
+.process-item p.font-size-small,
+.profile-item p.font-size-small,
+.credential-card p.font-size-small { font-size: 16px; }
+.service-tile p.font-size-normal,
+.card p.font-size-normal,
+.process-item p.font-size-normal,
+.profile-item p.font-size-normal,
+.credential-card p.font-size-normal { font-size: 18px; }
+.service-tile p.font-size-large,
+.card p.font-size-large,
+.process-item p.font-size-large,
+.profile-item p.font-size-large,
+.credential-card p.font-size-large { font-size: 20px; }
+.service-tile p.font-size-xlarge,
+.card p.font-size-xlarge,
+.process-item p.font-size-xlarge,
+.profile-item p.font-size-xlarge,
+.credential-card p.font-size-xlarge { font-size: 22px; }
+.price.quote-size-small { font-size: clamp(22px, 2.4vw, 30px); }
+.price.quote-size-normal { font-size: clamp(25px, 3vw, 38px); }
+.price.quote-size-large { font-size: clamp(30px, 3.4vw, 46px); }
+.price.quote-size-xlarge { font-size: clamp(36px, 4vw, 56px); }
 .actions { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 36px; }
 .portrait-frame {
   position: relative;
@@ -587,12 +627,52 @@ footer { background: var(--primary); color: rgba(255,255,255,.78); margin-top: 7
     font-size: clamp(34px, 9vw, 46px);
     line-height: 1.18;
   }
+  .display-size-small { font-size: clamp(30px, 8vw, 40px); }
+  .display-size-normal { font-size: clamp(34px, 9vw, 46px); }
+  .display-size-large { font-size: clamp(38px, 10vw, 52px); }
+  .display-size-xlarge { font-size: clamp(42px, 11vw, 58px); }
   h2 { font-size: clamp(28px, 8vw, 36px); }
+  .heading-size-small { font-size: clamp(24px, 7vw, 30px); }
+  .heading-size-normal { font-size: clamp(28px, 8vw, 36px); }
+  .heading-size-large { font-size: clamp(32px, 8.8vw, 42px); }
+  .heading-size-xlarge { font-size: clamp(36px, 9.5vw, 48px); }
   h3 { font-size: 23px; }
   .lede {
     margin-top: 18px;
     font-size: 16px;
   }
+  .font-size-small { font-size: 15px; }
+  .font-size-normal { font-size: 16px; }
+  .font-size-large { font-size: 18px; }
+  .font-size-xlarge { font-size: 20px; }
+  .quote-size-small { font-size: clamp(20px, 6vw, 26px); }
+  .quote-size-normal { font-size: clamp(22px, 6.5vw, 30px); }
+  .quote-size-large { font-size: clamp(25px, 7vw, 34px); }
+  .quote-size-xlarge { font-size: clamp(28px, 7.5vw, 38px); }
+  .service-tile p.font-size-small,
+  .card p.font-size-small,
+  .process-item p.font-size-small,
+  .profile-item p.font-size-small,
+  .credential-card p.font-size-small { font-size: 15px; }
+  .service-tile p.font-size-normal,
+  .card p.font-size-normal,
+  .process-item p.font-size-normal,
+  .profile-item p.font-size-normal,
+  .credential-card p.font-size-normal { font-size: 16px; }
+  .service-tile p.font-size-large,
+  .card p.font-size-large,
+  .process-item p.font-size-large,
+  .profile-item p.font-size-large,
+  .credential-card p.font-size-large { font-size: 18px; }
+  .service-tile p.font-size-xlarge,
+  .card p.font-size-xlarge,
+  .process-item p.font-size-xlarge,
+  .profile-item p.font-size-xlarge,
+  .credential-card p.font-size-xlarge { font-size: 20px; }
+  .price.quote-size-small { font-size: clamp(20px, 6vw, 26px); }
+  .price.quote-size-normal { font-size: clamp(22px, 6.5vw, 30px); }
+  .price.quote-size-large { font-size: clamp(25px, 7vw, 34px); }
+  .price.quote-size-xlarge { font-size: clamp(28px, 7.5vw, 38px); }
   .page-hero { padding: 58px 0 36px; }
   .section { padding: 56px 0; }
   .section-head {
