@@ -238,7 +238,13 @@ function ensureCaseCategories(items: MeidiCase[]): MeidiCase[] {
       body: "案例照片待客戶授權後上傳。",
       status: "待授權"
     }));
-  return [...items, ...placeholders];
+  return [...items, ...placeholders].sort((a, b) => {
+    const aIndex = caseCategories.indexOf(a.category);
+    const bIndex = caseCategories.indexOf(b.category);
+    const normalizedA = aIndex === -1 ? Number.MAX_SAFE_INTEGER : aIndex;
+    const normalizedB = bIndex === -1 ? Number.MAX_SAFE_INTEGER : bIndex;
+    return normalizedA - normalizedB || a.title.localeCompare(b.title, "zh-Hant");
+  });
 }
 
 export function c(copy: MeidiCopy, key: string, fallback: string): string {
