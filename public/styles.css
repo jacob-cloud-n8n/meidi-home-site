@@ -163,10 +163,10 @@ h2 {
 }
 h3 { color: var(--primary); font-family: "Noto Serif TC", "Noto Serif", serif; font-size: 25px; line-height: 1.35; }
 .lede { margin-top: 24px; color: var(--muted); font-size: 18px; max-width: 680px; }
-.display-size-small { font-size: clamp(40px, 4.8vw, 68px); }
-.display-size-normal { font-size: clamp(42px, 6vw, 72px); }
-.display-size-large { font-size: clamp(52px, 7vw, 88px); }
-.display-size-xlarge { font-size: clamp(64px, 8vw, 104px); }
+.display-size-small { font-size: clamp(32px, 3.7vw, 48px); }
+.display-size-normal { font-size: clamp(40px, 5vw, 64px); }
+.display-size-large { font-size: clamp(48px, 6vw, 76px); }
+.display-size-xlarge { font-size: clamp(56px, 7vw, 88px); }
 .heading-size-small { font-size: clamp(28px, 3.2vw, 42px); }
 .heading-size-normal { font-size: clamp(32px, 4vw, 52px); }
 .heading-size-large { font-size: clamp(38px, 4.6vw, 62px); }
@@ -468,10 +468,12 @@ h3 { color: var(--primary); font-family: "Noto Serif TC", "Noto Serif", serif; f
   align-content: start;
   gap: 14px;
 }
+.case-card[hidden] { display: none; }
+.portfolio-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .before-after {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  gap: 14px;
 }
 .before-after figure {
   margin: 0;
@@ -655,10 +657,10 @@ footer { background: var(--primary); color: rgba(255,255,255,.78); margin-top: 7
     font-size: clamp(34px, 9vw, 46px);
     line-height: 1.18;
   }
-  .display-size-small { font-size: clamp(30px, 8vw, 40px); }
-  .display-size-normal { font-size: clamp(34px, 9vw, 46px); }
-  .display-size-large { font-size: clamp(38px, 10vw, 52px); }
-  .display-size-xlarge { font-size: clamp(42px, 11vw, 58px); }
+  .display-size-small { font-size: clamp(28px, 7.2vw, 36px); }
+  .display-size-normal { font-size: clamp(32px, 8.4vw, 42px); }
+  .display-size-large { font-size: clamp(36px, 9.2vw, 48px); }
+  .display-size-xlarge { font-size: clamp(40px, 10vw, 54px); }
   h2 { font-size: clamp(28px, 8vw, 36px); }
   .heading-size-small { font-size: clamp(24px, 7vw, 30px); }
   .heading-size-normal { font-size: clamp(28px, 8vw, 36px); }
