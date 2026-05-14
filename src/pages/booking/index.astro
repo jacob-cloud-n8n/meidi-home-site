@@ -29,7 +29,7 @@ const copy = await getMeidiCopy("booking");
           <select class="field" name="spaceType"><option>衣櫥</option><option>廚房餐廳</option><option>兒童房</option><option>儲藏室</option><option>書房辦公</option><option>搬家打包</option><option>全屋整理</option><option>其他</option></select>
           <textarea class="field large" name="problem" placeholder="目前最困擾的狀況"></textarea>
           <input class="field" name="photoUrl" placeholder="現況照片連結（可先留空）" />
-          <label class="privacy-note"><input name="privacyConsent" type="checkbox" required /> {c(copy, "booking.privacy", "資料僅作預約聯繫與服務評估使用，不會用於其他目的。")}</label>
+          <label class="privacy-note"><input name="privacyConsent" type="checkbox" required /> {c(copy, "booking.privacy", "資料僅作預約聯繫與服務評估使用，不會用於其他目的。")} <a class="inline-privacy-link" href="/privacy/">查看隱私權政策</a></label>
           <button class="button" type="submit">送出預約資料</button>
           <p class="privacy-note form-message" aria-live="polite"></p>
         </form>

@@ -25,6 +25,7 @@ ASTRO_OUTPUT=static pnpm run build
 - `/services/` 服務項目
 - `/portfolio/` 精選案例
 - `/booking/` 預約聯繫
+- `/privacy/` 隱私權政策
 - `/review.html` 審稿註記板
 
 ## Environment
