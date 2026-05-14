@@ -1,31 +1,39 @@
 ---
 import MeidiLayout from "@layouts/MeidiLayout.astro";
-import { c, facebookUrl, fontSizeClass, getMeidiCopy, href, image } from "@lib/meidi";
+import { c, fontSizeClass, getMeidiArticles, getMeidiCopy, image, valueFontSizeClass } from "@lib/meidi";
 
 const copy = await getMeidiCopy("team");
+const articles = await getMeidiArticles();
 ---
 
-<MeidiLayout title="收納團隊｜美地居家收納 Stitch 版" currentPath="/team/">
+<MeidiLayout title="收納大小事｜美地居家收納" currentPath="/team/">
   <main class="container">
-    <section class="section">
-      <div class="section-head"><div><span class="label">{c(copy, "team.hero.label", "收納團隊")}</span><h1 class={fontSizeClass(copy, "team.hero.title", "display-size")}>{c(copy, "team.hero.title", "專業資歷、社群驗證與動態牆嵌入。")}</h1></div><div class="rule"></div></div>
-      <div class="profile-panel">
-        <aside class="photo-card portrait"><img src={image(copy, "team.profile.image", "/assets/huali-portrait.jpg")} alt="華琍老師形象照" /><div class="photo-copy"><h3 class={fontSizeClass(copy, "team.profile.name")}>{c(copy, "team.profile.name", "收納師華琍（小琍）")}</h3><p class={fontSizeClass(copy, "team.profile.body")}>{c(copy, "team.profile.body", "以專業認證、社群日常與真實整理紀錄，串聯個人特質與品牌信任。")}</p></div></aside>
-        <div class="profile-list">
-          <article class="profile-item"><span class="material-symbols-outlined">license</span><div><h3 class={fontSizeClass(copy, "team.qualification.title")}>{c(copy, "team.qualification.title", "專業資歷")}</h3><p class={fontSizeClass(copy, "team.qualification.body")}>{c(copy, "team.qualification.body", "呈現相關認證、收納理念與專業經歷，強化到府服務的可信度。")}</p></div></article>
-          <article class="profile-item"><div class="social-icons"><a class="social-link" href={href(copy, "team.social.facebook", facebookUrl)} target="_blank" rel="noreferrer">f</a><span class="social-link pending">◎</span><span class="social-link pending">@</span></div><div><h3 class={fontSizeClass(copy, "team.social.title")}>{c(copy, "team.social.title", "社群驗證")}</h3><p class={fontSizeClass(copy, "team.social.body")}>{c(copy, "team.social.body", "Facebook 已連結，IG 與 Threads 先保留欄位，待客戶提供正式網址後補上。")}</p></div></article>
-          <article class="profile-item"><span class="material-symbols-outlined">grid_view</span><div><h3 class={fontSizeClass(copy, "team.feed.title")}>{c(copy, "team.feed.title", "動態牆嵌入")}</h3><p class={fontSizeClass(copy, "team.feed.body")}>{c(copy, "team.feed.body", "正式版可於介紹頁底部嵌入 IG 九宮格照片牆，隨時展示最新整理理念的真實感。")}</p></div></article>
-        </div>
-      </div>
+    <section class="stories-cover">
+      <img src={image(copy, "team.stories.hero.image", "/assets/huali-portrait.jpg")} alt="收納大小事主視覺" />
+      <div class="stories-cover-badge">{c(copy, "team.stories.hero.badge", "收納大小事")}</div>
     </section>
-    <section class="section">
-      <div class="credential-grid">
-        <div class="credential-feature">
-          <img src={image(copy, "team.certificate.image", "/assets/naye-certificate.jpg")} alt="納爺收納研究所結業證書" />
-          <div class="caption"><span class="label">{c(copy, "team.certificate.label", "服務證書")}</span><h3 class={fontSizeClass(copy, "team.certificate.title")}>{c(copy, "team.certificate.title", "納爺收納研究所結業證書")}</h3></div>
-        </div>
-        <article class="credential-card">{copy["team.credential.1.image"]?.image ? <img class="credential-visual" src={image(copy, "team.credential.1.image", "")} alt="空間診斷圖示" /> : <span class="material-symbols-outlined">analytics</span>}<h3 class={fontSizeClass(copy, "team.credential.1.title")}>{c(copy, "team.credential.1.title", "空間診斷")}</h3><p class={fontSizeClass(copy, "team.credential.1.body")}>{c(copy, "team.credential.1.body", "先找病灶，再進行分類與定位。")}</p></article>
-        <article class="credential-card">{copy["team.credential.2.image"]?.image ? <img class="credential-visual" src={image(copy, "team.credential.2.image", "")} alt="親子生活圖示" /> : <span class="material-symbols-outlined">family_restroom</span>}<h3 class={fontSizeClass(copy, "team.credential.2.title")}>{c(copy, "team.credential.2.title", "親子生活")}</h3><p class={fontSizeClass(copy, "team.credential.2.body")}>{c(copy, "team.credential.2.body", "替媽媽減壓，讓全家一起維持。")}</p></article>
+
+    <section class="stories-intro">
+      <span class="label">{c(copy, "team.stories.label", "Relife Journal")}</span>
+      <h1 class={fontSizeClass(copy, "team.stories.title", "display-size")}>{c(copy, "team.stories.title", "整理心法、服務消息與家的改變故事。")}</h1>
+      <p class:list={["lede", fontSizeClass(copy, "team.stories.lede")]}>{c(copy, "team.stories.lede", "從收納觀點、線上諮詢到衣櫥與居家空間提案，透過一篇篇圖文讓你看見整理如何回到日常生活。")}</p>
+    </section>
+
+    <section class="section stories-section">
+      <div class="story-grid">
+        {articles.map((article) => (
+          <a class="story-card" href={`/team/${article.slug}/`}>
+            <div class="story-media">
+              {article.image ? <img src={article.image} alt={`${article.title} 圖片`} /> : <div class="story-placeholder">收納大小事</div>}
+            </div>
+            <div class="story-body">
+              <div class="story-meta">{article.category}</div>
+              <h2 class={valueFontSizeClass(article.fontSize, "heading-size")}>{article.title}</h2>
+              <p class={valueFontSizeClass(article.fontSize)}>{article.excerpt}</p>
+              <span class="inline-link">查看更多 <span aria-hidden="true">→</span></span>
+            </div>
+          </a>
+        ))}
       </div>
     </section>
   </main>

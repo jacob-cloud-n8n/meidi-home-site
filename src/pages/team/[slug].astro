@@ -1,0 +1,32 @@
+---
+import MeidiLayout from "@layouts/MeidiLayout.astro";
+import { getMeidiArticles, type MeidiArticle, valueFontSizeClass } from "@lib/meidi";
+
+export async function getStaticPaths() {
+  const articles = await getMeidiArticles();
+  return articles.map((article) => ({ params: { slug: article.slug }, props: { fallbackArticle: article } }));
+}
+
+const articles = await getMeidiArticles();
+const fallbackArticle = Astro.props.fallbackArticle as MeidiArticle | undefined;
+const article = articles.find((item) => item.slug === Astro.params.slug) ?? fallbackArticle;
+if (!article) return Astro.redirect("/team/");
+const paragraphs = (article.body || article.excerpt).split(/\n{2,}/).filter(Boolean);
+---
+
+<MeidiLayout title={`${article.title}｜收納大小事｜美地居家收納`} currentPath="/team/">
+  <main class="container">
+    <article class="article-layout">
+      <a class="back-link" href="/team/">← 回收納大小事</a>
+      <header class="article-header">
+        <span class="label">{article.category}</span>
+        <h1 class={valueFontSizeClass(article.fontSize, "display-size")}>{article.title}</h1>
+        {article.date && <p class="story-date">{article.date}</p>}
+      </header>
+      {article.image && <img class="article-hero-image" src={article.image} alt={`${article.title} 圖片`} />}
+      <div class="article-content">
+        {paragraphs.map((paragraph) => <p class={valueFontSizeClass(article.fontSize)}>{paragraph}</p>)}
+      </div>
+    </article>
+  </main>
+</MeidiLayout>

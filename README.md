@@ -21,7 +21,7 @@ ASTRO_OUTPUT=static pnpm run build
 
 - `/` 首頁
 - `/about/` 關於美地
-- `/team/` 收納團隊
+- `/team/` 收納大小事
 - `/services/` 服務項目
 - `/portfolio/` 精選案例
 - `/booking/` 預約聯繫

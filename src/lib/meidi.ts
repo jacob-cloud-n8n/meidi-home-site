@@ -28,6 +28,17 @@ export type MeidiCase = {
   fontSize?: string;
 };
 
+export type MeidiArticle = {
+  title: string;
+  slug: string;
+  category: string;
+  excerpt: string;
+  body: string;
+  image?: string;
+  date?: string;
+  fontSize?: string;
+};
+
 type NotionPage = {
   properties?: Record<string, any>;
 };
@@ -79,6 +90,10 @@ function checkbox(prop: any, fallback = true): boolean {
 
 function number(prop: any, fallback = 0): number {
   return typeof prop?.number === "number" ? prop.number : fallback;
+}
+
+function date(prop: any): string {
+  return prop?.date?.start ?? "";
 }
 
 function url(prop: any): string {
@@ -228,6 +243,52 @@ export async function getMeidiCases(): Promise<MeidiCase[]> {
   }
 }
 
+export async function getMeidiArticles(): Promise<MeidiArticle[]> {
+  try {
+    const pages = await queryDatabase(import.meta.env.NOTION_MEIDI_TEAM_DB_ID || pageDatabaseIds.team);
+    const items = pages
+      .map((page, index) => {
+        const props = page.properties ?? {};
+        const rowTitle = title(props["名稱"]);
+        const body = text(props["內容"]) || text(props["文章內容"]) || text(props["文字內容"]);
+        const excerpt = text(props["摘要"]) || body.slice(0, 72);
+        return {
+          type: select(props["類型"]),
+          title: rowTitle,
+          slug: text(props["Slug"]) || text(props["網址代碼"]) || slugify(rowTitle, `article-${index + 1}`),
+          category: richOrSelect(props["分類"]) || richOrSelect(props["標籤"]) || "收納大小事",
+          excerpt,
+          body,
+          image: imageValue(props, "圖片", "圖片網址"),
+          date: date(props["日期"]) || text(props["日期"]),
+          fontSize: select(props["字體大小"]),
+          enabled: checkbox(props["啟用"], true),
+          order: number(props["排序"], index)
+        };
+      })
+      .filter((item) => item.enabled && item.type === "文章" && item.title && item.excerpt)
+      .sort((a, b) => a.order - b.order);
+
+    return items.length > 0
+      ? items.map(({ title, slug, category, excerpt, body, image, date, fontSize }) => ({ title, slug, category, excerpt, body, image, date, fontSize }))
+      : fallbackArticles;
+  } catch (error) {
+    warn(error);
+    return fallbackArticles;
+  }
+}
+
+function slugify(input: string, fallback: string): string {
+  const slug = input
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[^\w\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+  return slug || fallback;
+}
+
 function ensureCaseCategories(items: MeidiCase[]): MeidiCase[] {
   const existing = new Set(items.map((item) => item.category));
   const placeholders = caseCategories
@@ -297,4 +358,39 @@ export const fallbackCases: MeidiCase[] = [
   { title: "書房辦公", category: "書房辦公", body: "案例照片待客戶授權後上傳。", status: "待授權" },
   { title: "搬家打包", category: "搬家打包", body: "案例照片待客戶授權後上傳。", status: "待授權" },
   { title: "全屋整理", category: "全屋整理", body: "案例照片待客戶授權後上傳。", status: "待授權" }
+];
+
+export const fallbackArticles: MeidiArticle[] = [
+  {
+    title: "想都不用想！整理師：這 5 大類都可以馬上斷捨離",
+    slug: "declutter-five-types",
+    category: "作品集，整理心法",
+    excerpt: "從每天看得到卻一直沒處理的物品開始，替居家空間清出第一口呼吸感。",
+    body: "整理不是一口氣把家翻完，而是先找出那些已經不再服務生活的物品。\n\n過期的耗材、重複的收納盒、不合身的衣物、壞掉卻捨不得丟的小家電，以及一直以為會用到的贈品，常常是家中混亂感的來源。\n\n美地會陪客戶把物品重新分類，讓每一個留下來的東西都有位置，也讓家人知道該怎麼拿、怎麼收。",
+    image: "/assets/process-pricing.jpg"
+  },
+  {
+    title: "沒時間整理嗎？每天、每週、每月 3 階段整理計畫",
+    slug: "three-stage-routine",
+    category: "整理心法",
+    excerpt: "把整理拆成短時間可以完成的日常節奏，比一次大掃除更容易長期維持。",
+    body: "很多家庭不是不想整理，而是時間被工作、孩子與家務切得太碎。\n\n美地建議先建立三種節奏：每天 10 分鐘歸位、每週 30 分鐘檢查高頻區、每月一次調整換季或囤貨區。\n\n當整理變成固定節奏，家就不需要靠媽媽一直提醒，也能慢慢回到穩定狀態。",
+    image: "/assets/huali-portrait.jpg"
+  },
+  {
+    title: "沒預算請整理師！1 小時線上諮詢讓你問好問滿",
+    slug: "online-consultation",
+    category: "RELIFE 服務",
+    excerpt: "先用線上諮詢釐清問題，再決定是否需要到府服務，降低嘗試整理的門檻。",
+    body: "不是每一個家庭一開始都需要完整到府整理。\n\n如果你正在猶豫預算、服務範圍，或只是想知道目前的空間卡在哪裡，可以先從線上諮詢開始。\n\n美地會根據照片與生活情境，協助你判斷優先處理的區域、適合的收納方式，以及下一步是否需要現場診斷。",
+    image: "/assets/naye-training.jpg"
+  },
+  {
+    title: "衣服永遠少 1 件？打造專屬夢想風格衣櫥",
+    slug: "wardrobe-style-plan",
+    category: "RELIFE 服務",
+    excerpt: "從衣物健康檢查、色彩診斷到衣櫥配置，讓每天穿搭不再被混亂拖住。",
+    body: "衣櫥混亂，常常不是衣服太多，而是分類方式不符合現在的生活。\n\n美地會從季節、穿著頻率、工作情境與家中動線重新規劃衣物位置，讓好穿的衣服被看見，不適合的物品也能被溫柔地篩選出去。\n\n理想的衣櫥不是空無一物，而是每一次打開都知道自己有哪些選擇。",
+    image: "/assets/organizing-grid.png"
+  }
 ];

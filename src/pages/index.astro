@@ -1,9 +1,10 @@
 ---
 import MeidiLayout from "@layouts/MeidiLayout.astro";
-import { c, fontSizeClass, getMeidiCopy, getMeidiServices, image, valueFontSizeClass } from "@lib/meidi";
+import { c, fontSizeClass, getMeidiArticles, getMeidiCopy, getMeidiServices, image, valueFontSizeClass } from "@lib/meidi";
 
 const copy = await getMeidiCopy("home");
 const services = await getMeidiServices();
+const articles = await getMeidiArticles();
 ---
 
 <MeidiLayout title="美地居家收納｜Stitch 視覺版" currentPath="/">
@@ -24,6 +25,24 @@ const services = await getMeidiServices();
       <article class="value"><span class="material-symbols-outlined">architecture</span><h3 class={fontSizeClass(copy, "home.value.1.title")}>{c(copy, "home.value.1.title", "專業邏輯")}</h3><p class={fontSizeClass(copy, "home.value.1.body")}>{c(copy, "home.value.1.body", "不是憑感覺整理，而是透過空間診斷分析動線、物品數量與收納容量，找到復亂的真正原因。")}</p></article>
       <article class="value"><span class="material-symbols-outlined">family_restroom</span><h3 class={fontSizeClass(copy, "home.value.2.title")}>{c(copy, "home.value.2.title", "親子家庭")}</h3><p class={fontSizeClass(copy, "home.value.2.body")}>{c(copy, "home.value.2.body", "結合二寶媽的生活經驗與蒙特梭利精神，建立小孩也能看懂、好拿好收的家庭系統。")}</p></article>
       <article class="value"><span class="material-symbols-outlined">verified</span><h3 class={fontSizeClass(copy, "home.value.3.title")}>{c(copy, "home.value.3.title", "納爺體系")}</h3><p class={fontSizeClass(copy, "home.value.3.body")}>{c(copy, "home.value.3.body", "承襲上門預采、診斷、方案溝通、執行與復盤陳列，把成熟 SOP 轉化為台灣家庭可用的服務。")}</p></article>
+    </section>
+    <section class="section container home-stories-section">
+      <div class="section-head"><div><span class="label">{c(copy, "home.stories.label", "收納大小事")}</span><h2 class={fontSizeClass(copy, "home.stories.title", "heading-size")}>{c(copy, "home.stories.title", "從文章開始，先理解家的整理方向。")}</h2><p class:list={["lede", fontSizeClass(copy, "home.stories.lede")]}>{c(copy, "home.stories.lede", "把整理心法、線上諮詢與衣櫥提案同步放到首頁，讓客戶在進入服務分類前先建立信任。")}</p></div><div class="rule"></div></div>
+      <div class="story-grid">
+        {articles.map((article) => (
+          <a class="story-card compact" href={`/team/${article.slug}/`}>
+            <div class="story-media">
+              {article.image ? <img src={article.image} alt={`${article.title} 圖片`} /> : <div class="story-placeholder">收納大小事</div>}
+            </div>
+            <div class="story-body">
+              <div class="story-meta">{article.category}</div>
+              <h2 class={valueFontSizeClass(article.fontSize, "heading-size")}>{article.title}</h2>
+              <p class={valueFontSizeClass(article.fontSize)}>{article.excerpt}</p>
+              <span class="inline-link">查看更多 <span aria-hidden="true">→</span></span>
+            </div>
+          </a>
+        ))}
+      </div>
     </section>
     <section class="section container">
       <div class="section-head"><div><span class="label">{c(copy, "home.services.label", "空間分類系統")}</span><h2 class={fontSizeClass(copy, "home.services.title", "heading-size")}>{c(copy, "home.services.title", "精準對接客戶痛點。")}</h2><p class:list={["lede", fontSizeClass(copy, "home.services.lede")]}>{c(copy, "home.services.lede", "透過分類標籤，讓客戶快速找到與自家相似的混亂情境，並理解美地可以協助的空間範圍。")}</p></div><div class="rule"></div></div>
