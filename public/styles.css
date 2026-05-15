@@ -273,12 +273,20 @@ h3 { color: var(--primary); font-family: "Noto Serif TC", "Noto Serif", serif; f
   padding: 34px;
   box-shadow: 0 2px 10px rgba(26, 46, 34, 0.06);
 }
-.service-tile .material-symbols-outlined { font-size: 64px; color: var(--sage); }
+.service-tile .material-symbols-outlined { font-size: 128px; color: var(--sage); }
 .service-visual {
-  width: 72px;
-  height: 72px;
+  width: 144px;
+  height: 144px;
   object-fit: contain;
 }
+.service-visual.image-size-small { width: 72px; height: 72px; }
+.service-visual.image-size-normal { width: 108px; height: 108px; }
+.service-visual.image-size-large { width: 144px; height: 144px; }
+.service-visual.image-size-xlarge { width: 180px; height: 180px; }
+.service-tile .material-symbols-outlined.icon-size-small { font-size: 64px; }
+.service-tile .material-symbols-outlined.icon-size-normal { font-size: 96px; }
+.service-tile .material-symbols-outlined.icon-size-large { font-size: 128px; }
+.service-tile .material-symbols-outlined.icon-size-xlarge { font-size: 160px; }
 .service-tile p { color: var(--muted); font-size: 18px; }
 .profile-panel {
   display: grid;
@@ -916,11 +924,19 @@ footer { background: var(--primary); color: rgba(255,255,255,.78); margin-top: 7
     min-height: auto;
     padding: 28px 22px;
   }
-  .service-tile .material-symbols-outlined { font-size: 50px; }
+  .service-tile .material-symbols-outlined { font-size: 100px; }
   .service-visual, .credential-visual {
-    width: 58px;
-    height: 58px;
+    width: 116px;
+    height: 116px;
   }
+  .service-visual.image-size-small { width: 58px; height: 58px; }
+  .service-visual.image-size-normal { width: 86px; height: 86px; }
+  .service-visual.image-size-large { width: 116px; height: 116px; }
+  .service-visual.image-size-xlarge { width: 140px; height: 140px; }
+  .service-tile .material-symbols-outlined.icon-size-small { font-size: 50px; }
+  .service-tile .material-symbols-outlined.icon-size-normal { font-size: 76px; }
+  .service-tile .material-symbols-outlined.icon-size-large { font-size: 100px; }
+  .service-tile .material-symbols-outlined.icon-size-xlarge { font-size: 124px; }
   .service-tile p { font-size: 16px; }
   .credential-card, .credential-feature { min-height: 230px; }
   .booking-layout {

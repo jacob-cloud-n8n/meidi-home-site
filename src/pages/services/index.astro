@@ -1,6 +1,6 @@
 ---
 import MeidiLayout from "@layouts/MeidiLayout.astro";
-import { c, fontSizeClass, getMeidiCopy, getMeidiServices, valueFontSizeClass } from "@lib/meidi";
+import { c, fontSizeClass, getMeidiCopy, getMeidiServices, imageSizeClass, valueFontSizeClass } from "@lib/meidi";
 
 const copy = await getMeidiCopy("services");
 const services = await getMeidiServices();
@@ -11,7 +11,7 @@ const services = await getMeidiServices();
     <header class="page-hero"><span class="label">{c(copy, "services.hero.label", "空間分類系統")}</span><h1 class={fontSizeClass(copy, "services.hero.title", "display-size")}>{c(copy, "services.hero.title", "精準對接客戶痛點。")}</h1><p class:list={["lede", fontSizeClass(copy, "services.hero.lede")]}>{c(copy, "services.hero.lede", "透過分類標籤，讓客戶快速找到與自家相似的混亂情境，並理解美地可以協助的空間範圍。")}</p></header>
     <section class="section">
       <div class="service-grid">
-        {services.map((service) => <article class="service-tile">{service.image ? <img class="service-visual" src={service.image} alt={`${service.title} 圖示`} /> : <span class="material-symbols-outlined">{service.icon}</span>}<h3 class={valueFontSizeClass(service.fontSize)}>{service.title}</h3><p class={valueFontSizeClass(service.fontSize)}>{service.body}</p></article>)}
+        {services.map((service) => <article class="service-tile">{service.image ? <img class:list={["service-visual", imageSizeClass(service.imageSize)]} src={service.image} alt={`${service.title} 圖示`} /> : <span class:list={["material-symbols-outlined", imageSizeClass(service.imageSize, "icon-size")]}>{service.icon}</span>}<h3 class={valueFontSizeClass(service.fontSize)}>{service.title}</h3><p class={valueFontSizeClass(service.fontSize)}>{service.body}</p></article>)}
       </div>
     </section>
   </main>

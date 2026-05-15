@@ -15,6 +15,7 @@ export type MeidiService = {
   icon: string;
   image?: string;
   fontSize?: string;
+  imageSize?: string;
 };
 
 export type MeidiCase = {
@@ -186,6 +187,7 @@ export async function getMeidiServices(): Promise<MeidiService[]> {
           body: text(props["文字內容"]),
           image: fileUrl(props["圖片"]) || url(props["圖片網址"]),
           fontSize: select(props["字體大小"]),
+          imageSize: select(props["圖片大小"]),
           enabled: checkbox(props["啟用"], true),
           order: number(props["排序"], index),
           icon: icons[index % icons.length]
@@ -193,7 +195,9 @@ export async function getMeidiServices(): Promise<MeidiService[]> {
       })
       .filter((item) => item.enabled && item.type === "區塊" && item.key.startsWith("service.") && item.title && item.body)
       .sort((a, b) => a.order - b.order);
-    return items.length > 0 ? items.map(({ title, body, icon, image, fontSize }) => ({ title, body, icon, image, fontSize })) : fallbackServices;
+    return items.length > 0
+      ? items.slice(0, 6).map(({ title, body, icon, image, fontSize, imageSize }) => ({ title, body, icon, image, fontSize, imageSize }))
+      : fallbackServices;
   } catch (error) {
     warn(error);
     return fallbackServices;
@@ -334,18 +338,27 @@ export function valueFontSizeClass(size: string | undefined, prefix = "font-size
   return size ? classes[size] || "" : "";
 }
 
+export function imageSizeClass(size: string | undefined, prefix = "image-size"): string {
+  const classes: Record<string, string> = {
+    "小": `${prefix}-small`,
+    "標準": `${prefix}-normal`,
+    "大": `${prefix}-large`,
+    "特大": `${prefix}-xlarge`
+  };
+  return size ? classes[size] || `${prefix}-large` : `${prefix}-large`;
+}
+
 export const lineUrl = "https://line.me/R/ti/p/@135hliju";
 export const facebookUrl = "https://www.facebook.com/profile.php?id=61587447119551";
 export const lineQrUrl = "https://qr-official.line.me/gs/M_135hliju_GW.png?oat_content=qr";
 
 export const fallbackServices: MeidiService[] = [
-  { title: "衣櫥收納", body: "衣物分類、直立式摺衣技巧、換季規劃。", icon: "checkroom" },
-  { title: "廚房餐廳", body: "調味料、乾貨、鍋碗瓢盆的系統化陳列。", icon: "skillet" },
-  { title: "兒童房 / 遊戲區", body: "玩具分類與孩子自主收納動線設計。", icon: "toys" },
-  { title: "儲藏室", body: "坪效最大化的重型架規劃與大型物品收納。", icon: "inventory_2" },
-  { title: "書房 / 辦公", body: "文件數位化分類與桌面清爽化。", icon: "desk" },
-  { title: "搬家打包", body: "搬遷前打包分類、新居上架與定位規劃。", icon: "move_location" },
-  { title: "全屋整理", body: "年度深度整理與跨空間生活系統重建。", icon: "home_spark" }
+  { title: "居家收納", body: "依家庭動線與物品數量，重新規劃好拿、好收、不復亂的生活系統。", icon: "home_spark", imageSize: "大" },
+  { title: "收納講座", body: "為親子家庭、社群或企業安排整理觀念分享，建立可落地的收納方法。", icon: "school", imageSize: "大" },
+  { title: "收納品代買", body: "依空間尺寸與使用習慣，協助挑選合適收納用品，避免買錯與重複採購。", icon: "shopping_bag", imageSize: "大" },
+  { title: "搬家打包", body: "搬遷前分類打包，新家上架定位，讓搬家後更快回到生活秩序。", icon: "move_location", imageSize: "大" },
+  { title: "空間診斷", body: "到府盤點物量、動線與收納容量，找出復亂來源並提供整理方案。", icon: "analytics", imageSize: "大" },
+  { title: "全屋整理", body: "跨空間深度整理與生活系統重建，適合年度整理或長期混亂家庭。", icon: "inventory_2", imageSize: "大" }
 ];
 
 export const caseCategories = [
