@@ -263,13 +263,17 @@ export async function getMeidiArticles(): Promise<MeidiArticle[]> {
       .map((page, index) => {
         const props = page.properties ?? {};
         const rowTitle = title(props["名稱"]);
+        const location = text(props["前台位置"]);
+        const displayTitle = rowTitle.startsWith("article.") ? lastPathSegment(location) || rowTitle : rowTitle;
         const body = text(props["內容"]) || text(props["文章內容"]) || text(props["文字內容"]);
         const excerpt = text(props["摘要"]) || body.slice(0, 72);
+        const category = richOrSelect(props["分類"]) || richOrSelect(props["標籤"]);
         return {
           type: select(props["類型"]),
-          title: rowTitle,
-          slug: text(props["Slug"]) || text(props["網址代碼"]) || slugify(rowTitle, `article-${index + 1}`),
-          category: richOrSelect(props["分類"]) || richOrSelect(props["標籤"]) || "收納大小事",
+          key: rowTitle,
+          title: displayTitle,
+          slug: text(props["Slug"]) || text(props["網址代碼"]) || slugify(displayTitle, `article-${index + 1}`),
+          category: category || "收納大小事",
           excerpt,
           body,
           image: imageValue(props, "圖片", "圖片網址"),
@@ -279,7 +283,7 @@ export async function getMeidiArticles(): Promise<MeidiArticle[]> {
           order: number(props["排序"], index)
         };
       })
-      .filter((item) => item.enabled && item.type === "文章" && item.title && item.excerpt)
+      .filter((item) => item.enabled && item.title && item.excerpt && (item.type === "文章" || item.key.startsWith("article.") || item.category !== "收納大小事"))
       .sort((a, b) => a.order - b.order);
 
     return items.length > 0
