@@ -110,6 +110,14 @@ function imageValue(props: Record<string, any>, fileKey: string, urlKey: string)
   return fileUrl(props[fileKey]) || url(props[urlKey]);
 }
 
+function lastPathSegment(path: string): string {
+  return path
+    .split("/")
+    .map((segment) => segment.trim())
+    .filter(Boolean)
+    .pop() ?? "";
+}
+
 async function queryDatabase(databaseId: string): Promise<NotionPage[]> {
   const token = import.meta.env.NOTION_TOKEN;
   if (!token || !databaseId) return [];
@@ -212,13 +220,14 @@ export async function getMeidiCases(): Promise<MeidiCase[]> {
         const props = page.properties ?? {};
         const location = text(props["前台位置"]);
         const rowTitle = title(props["名稱"]);
-        const caseTitle = location.split("/").pop()?.trim() || rowTitle;
+        const category = richOrSelect(props["分類"]);
+        const caseTitle = lastPathSegment(location) || category || rowTitle;
         return {
           key: rowTitle,
           type: select(props["類型"]),
           title: caseTitle,
           body: text(props["文字內容"]),
-          category: richOrSelect(props["分類"]) || caseTitle,
+          category: category || caseTitle,
           image: imageValue(props, "圖片", "圖片網址"),
           beforeImage: imageValue(props, "整理前圖片", "整理前圖片網址") || imageValue(props, "Before 圖片", "Before 圖片網址"),
           afterImage: imageValue(props, "整理後圖片", "整理後圖片網址") || imageValue(props, "After 圖片", "After 圖片網址"),
@@ -228,7 +237,7 @@ export async function getMeidiCases(): Promise<MeidiCase[]> {
           order: number(props["排序"], index)
         };
       })
-      .filter((item) => item.enabled && item.type === "案例")
+      .filter((item) => item.enabled && item.category && (item.type === "案例" || item.key.startsWith("case.")))
       .sort((a, b) => a.order - b.order);
     const mapped = items.map(({ title, body, category, image, beforeImage, afterImage, status, fontSize }) => ({
       title,
