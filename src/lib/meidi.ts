@@ -240,10 +240,10 @@ export async function getMeidiCases(): Promise<MeidiCase[]> {
       status,
       fontSize
     }));
-    return ensureCaseCategories(mapped.length > 0 ? mapped : fallbackCases);
+    return mapped.length > 0 ? mapped : fallbackCases;
   } catch (error) {
     warn(error);
-    return ensureCaseCategories(fallbackCases);
+    return fallbackCases;
   }
 }
 
