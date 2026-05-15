@@ -1,6 +1,6 @@
 ---
 import MeidiLayout from "@layouts/MeidiLayout.astro";
-import { c, facebookUrl, fontSizeClass, getMeidiCopy, href, image, lineQrUrl, lineUrl } from "@lib/meidi";
+import { c, fontSizeClass, getMeidiCopy, href, lineUrl } from "@lib/meidi";
 
 const copy = await getMeidiCopy("booking");
 ---
@@ -34,22 +34,6 @@ const copy = await getMeidiCopy("booking");
           <p class="privacy-note form-message" aria-live="polite"></p>
         </form>
       </aside>
-    </section>
-    <section class="section contact-panel">
-      <img src={image(copy, "booking.qr.image", lineQrUrl)} alt="美地居家收納官方 LINE QR Code" />
-      <div>
-        <span class="label">{c(copy, "booking.contact.label", "Official LINE")}</span>
-        <h2 class={fontSizeClass(copy, "booking.contact.title", "heading-size")}>{c(copy, "booking.contact.title", "官方 LINE 已提供，正式預約通知將以 LINE 與 Notion 紀錄串接。")}</h2>
-        <p class:list={["lede", fontSizeClass(copy, "booking.contact.body")]}>{c(copy, "booking.contact.body", "表單資料會寫入 Notion「美地諮詢表單」資料庫；若暫時無法送出，仍可透過 LINE 或 Facebook 聯繫。")}</p>
-        <div class="actions"><a class="button" href={href(copy, "booking.line.url", lineUrl)} target="_blank" rel="noreferrer">加入官方 LINE</a><a class="button secondary" href={href(copy, "booking.facebook.url", facebookUrl)} target="_blank" rel="noreferrer">前往 Facebook</a></div>
-      </div>
-    </section>
-    <section class="section">
-      <div class="grid-3">
-        <article class="card"><span class="label">{c(copy, "booking.step.1.label", "Step 1")}</span><h3 class={fontSizeClass(copy, "booking.step.1.title")}>{c(copy, "booking.step.1.title", "初步自我評估")}</h3><p class={fontSizeClass(copy, "booking.step.1.body")}>{c(copy, "booking.step.1.body", "辨識輕中度凌亂或重度囤積。")}</p></article>
-        <article class="card"><span class="label">{c(copy, "booking.step.2.label", "Step 2")}</span><h3 class={fontSizeClass(copy, "booking.step.2.title")}>{c(copy, "booking.step.2.title", "現場預采與空間診斷")}</h3><div class:list={["price", fontSizeClass(copy, "booking.price.step2", "quote-size")]}>{c(copy, "booking.price.step2", "2000 元 / 約 1hr；後續確定委託，此費用可全額折抵。")}</div></article>
-        <article class="card"><span class="label">{c(copy, "booking.step.3.label", "Step 3")}</span><h3 class={fontSizeClass(copy, "booking.step.3.title")}>{c(copy, "booking.step.3.title", "確認方案")}</h3><p class={fontSizeClass(copy, "booking.price.step3")}>{c(copy, "booking.price.step3", "5500 / 空間；30000 / 全屋。最終報價與時數以 Step 2 診斷結果為主，服務區域與車馬費另行報價。")}</p></article>
-      </div>
     </section>
   </main>
   <script>
