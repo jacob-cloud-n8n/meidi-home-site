@@ -348,16 +348,30 @@ export const fallbackServices: MeidiService[] = [
   { title: "全屋整理", body: "年度深度整理與跨空間生活系統重建。", icon: "home_spark" }
 ];
 
-export const caseCategories = ["衣櫥收納", "廚房餐廳", "兒童房", "儲藏室", "書房辦公", "搬家打包", "全屋整理"];
+export const caseCategories = [
+  "工作室、公司",
+  "玄關",
+  "更衣間",
+  "房間",
+  "客廳",
+  "書房、遊戲房",
+  "搬家-新家還原",
+  "搬家-舊家打包",
+  "廚房",
+  "餐廳"
+];
 
 export const fallbackCases: MeidiCase[] = [
-  { title: "衣櫥收納", category: "衣櫥收納", body: "案例照片待客戶授權後上傳。", status: "待授權" },
-  { title: "廚房餐廳", category: "廚房餐廳", body: "案例照片待客戶授權後上傳。", status: "待授權" },
-  { title: "兒童房", category: "兒童房", body: "案例照片待客戶授權後上傳。", status: "待授權" },
-  { title: "儲藏室", category: "儲藏室", body: "案例照片待客戶授權後上傳。", status: "待授權" },
-  { title: "書房辦公", category: "書房辦公", body: "案例照片待客戶授權後上傳。", status: "待授權" },
-  { title: "搬家打包", category: "搬家打包", body: "案例照片待客戶授權後上傳。", status: "待授權" },
-  { title: "全屋整理", category: "全屋整理", body: "案例照片待客戶授權後上傳。", status: "待授權" }
+  { title: "工作室、公司", category: "工作室、公司", body: "案例照片待客戶授權後上傳。", status: "待授權" },
+  { title: "玄關", category: "玄關", body: "案例照片待客戶授權後上傳。", status: "待授權" },
+  { title: "更衣間", category: "更衣間", body: "案例照片待客戶授權後上傳。", status: "待授權" },
+  { title: "房間", category: "房間", body: "案例照片待客戶授權後上傳。", status: "待授權" },
+  { title: "客廳", category: "客廳", body: "案例照片待客戶授權後上傳。", status: "待授權" },
+  { title: "書房、遊戲房", category: "書房、遊戲房", body: "案例照片待客戶授權後上傳。", status: "待授權" },
+  { title: "搬家-新家還原", category: "搬家-新家還原", body: "案例照片待客戶授權後上傳。", status: "待授權" },
+  { title: "搬家-舊家打包", category: "搬家-舊家打包", body: "案例照片待客戶授權後上傳。", status: "待授權" },
+  { title: "廚房", category: "廚房", body: "案例照片待客戶授權後上傳。", status: "待授權" },
+  { title: "餐廳", category: "餐廳", body: "案例照片待客戶授權後上傳。", status: "待授權" }
 ];
 
 export const fallbackArticles: MeidiArticle[] = [
