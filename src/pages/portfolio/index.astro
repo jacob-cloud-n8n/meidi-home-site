@@ -1,12 +1,11 @@
 ---
 import MeidiLayout from "@layouts/MeidiLayout.astro";
-import { c, caseCategories, fontSizeClass, getMeidiCases, getMeidiCopy, valueFontSizeClass } from "@lib/meidi";
+import { c, fontSizeClass, getMeidiCases, getMeidiCopy, valueFontSizeClass } from "@lib/meidi";
 
 const copy = await getMeidiCopy("portfolio");
 const cases = await getMeidiCases();
-const visibleCategories = new Set(cases.map((item) => item.category).filter(Boolean));
-const extraCategories = Array.from(visibleCategories).filter((category) => !caseCategories.includes(category));
-const categories = ["全部案例", ...caseCategories.filter((category) => visibleCategories.has(category)), ...extraCategories];
+const visibleCategories = [...new Set(cases.map((item) => item.category).filter(Boolean))];
+const categories = ["全部案例", ...visibleCategories];
 ---
 
 <MeidiLayout title="精選案例｜美地居家收納 Stitch 版" currentPath="/portfolio/">
