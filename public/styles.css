@@ -275,14 +275,16 @@ h3 { color: var(--primary); font-family: "Noto Serif TC", "Noto Serif", serif; f
 }
 .service-tile .material-symbols-outlined { font-size: 128px; color: var(--sage); }
 .service-visual {
-  width: 144px;
-  height: 144px;
-  object-fit: contain;
+  width: min(62%, 340px);
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 4px;
 }
-.service-visual.image-size-small { width: 72px; height: 72px; }
-.service-visual.image-size-normal { width: 108px; height: 108px; }
-.service-visual.image-size-large { width: 144px; height: 144px; }
-.service-visual.image-size-xlarge { width: 180px; height: 180px; }
+.service-visual.image-size-small { width: min(36%, 200px); }
+.service-visual.image-size-normal { width: min(50%, 280px); }
+.service-visual.image-size-large { width: min(64%, 360px); }
+.service-visual.image-size-xlarge { width: min(80%, 460px); }
 .service-tile .material-symbols-outlined.icon-size-small { font-size: 64px; }
 .service-tile .material-symbols-outlined.icon-size-normal { font-size: 96px; }
 .service-tile .material-symbols-outlined.icon-size-large { font-size: 128px; }
@@ -926,13 +928,13 @@ footer { background: var(--primary); color: rgba(255,255,255,.78); margin-top: 7
   }
   .service-tile .material-symbols-outlined { font-size: 100px; }
   .service-visual, .credential-visual {
-    width: 116px;
-    height: 116px;
+    width: min(64%, 260px);
+    height: auto;
   }
-  .service-visual.image-size-small { width: 58px; height: 58px; }
-  .service-visual.image-size-normal { width: 86px; height: 86px; }
-  .service-visual.image-size-large { width: 116px; height: 116px; }
-  .service-visual.image-size-xlarge { width: 140px; height: 140px; }
+  .service-visual.image-size-small { width: min(40%, 170px); }
+  .service-visual.image-size-normal { width: min(54%, 220px); }
+  .service-visual.image-size-large { width: min(68%, 280px); }
+  .service-visual.image-size-xlarge { width: min(82%, 340px); }
   .service-tile .material-symbols-outlined.icon-size-small { font-size: 50px; }
   .service-tile .material-symbols-outlined.icon-size-normal { font-size: 76px; }
   .service-tile .material-symbols-outlined.icon-size-large { font-size: 100px; }
