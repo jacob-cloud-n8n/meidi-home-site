@@ -7,6 +7,7 @@ const heroParagraphs = paragraphs(copy, "about.hero.lede", "作為二寶媽，�
 const methodParagraphs = paragraphs(copy, "about.method.body", "美地居家承襲納爺體系，服務開始前先進行空間診斷，像醫生看診一樣分析生活動線、物品數量與儲存空間的關係，找出復亂的真正病灶。");
 const methodCardParagraphs = paragraphs(copy, "about.method.card.body", "細膩傾聽、邏輯分類、維持設計。");
 const mentorParagraphs = paragraphs(copy, "about.mentor.body", "承襲上門預采、空間診斷、方案溝通、上門服務、復盤陳列的 SOP，把成熟市場驗證過的空間科學帶進台灣家庭。");
+const mentorCardParagraphs = paragraphs(copy, "about.mentor.card.body", "承襲專業 SOP，將成熟的空間規劃邏輯帶回台灣家庭。");
 ---
 
 <MeidiLayout title="理念與華琍老師｜美地居家收納 Stitch 版" currentPath="/about/">
@@ -33,7 +34,7 @@ const mentorParagraphs = paragraphs(copy, "about.mentor.body", "承襲上門預�
       <aside class="photo-card portrait"><img src={image(copy, "about.method.image", "/assets/huali-portrait.jpg")} alt="美地居家收納主理人形象照" /><div class="photo-copy"><h3 class={fontSizeClass(copy, "about.method.card.title")}>{c(copy, "about.method.card.title", "美地居家收納主理人")}</h3><div class="paragraph-stack">{methodCardParagraphs.map((paragraph) => <p class={fontSizeClass(copy, "about.method.card.body")}>{paragraph}</p>)}</div></div></aside>
     </section>
     <section class="section split">
-      <aside class="photo-card"><img src={image(copy, "about.mentor.image", "/assets/naye-training.jpg")} alt="華琍老師參與納爺體系培訓照片" /></aside>
+      <aside class="photo-card"><img src={image(copy, "about.mentor.image", "/assets/naye-training.jpg")} alt="華琍老師參與納爺體系培訓照片" /><div class="photo-copy"><h3 class={fontSizeClass(copy, "about.mentor.card.title")}>{c(copy, "about.mentor.card.title", "納爺收納研究室")}</h3><div class="paragraph-stack">{mentorCardParagraphs.map((paragraph) => <p class={fontSizeClass(copy, "about.mentor.card.body")}>{paragraph}</p>)}</div></div></aside>
       <div class="copy"><span class="label">師承研究室</span><h2 class={fontSizeClass(copy, "about.mentor.title", "heading-size")}>{c(copy, "about.mentor.title", "師承納爺收納研究室")}</h2><div class:list={["paragraph-stack", "lede"]}>{mentorParagraphs.map((paragraph) => <p class={fontSizeClass(copy, "about.mentor.body")}>{paragraph}</p>)}</div></div>
     </section>
   </main>

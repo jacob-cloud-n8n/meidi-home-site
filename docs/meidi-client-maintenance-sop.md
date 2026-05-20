@@ -37,7 +37,7 @@
 
 長篇文字若需要分段，可在 Notion 的 `文字內容` 欄位中直接換行。前台會依換行拆成多個段落顯示，適合 `關於美地` 這類較長的介紹文字。
 
-`關於美地` 第一張照片下方的簡短介紹也可維護：`about.method.card.title` 控制照片下方標題，`about.method.card.body` 控制照片下方說明。
+`關於美地` 照片下方的簡短介紹也可維護：`about.method.card.title` / `about.method.card.body` 控制主理人照片下方文字，`about.mentor.card.title` / `about.mentor.card.body` 控制師承研究室照片下方文字。
 
 ## 四、服務項目維護
 

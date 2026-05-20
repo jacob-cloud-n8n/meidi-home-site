@@ -62,6 +62,8 @@
 | 關於美地 | `about.method.card.title` | 關於美地 / 方法論 / 主理人照片下方標題 |
 | 關於美地 | `about.method.card.body` | 關於美地 / 方法論 / 主理人照片下方說明 |
 | 關於美地 | `about.mentor.image` | 關於美地 / 師承研究室 / 培訓照片 |
+| 關於美地 | `about.mentor.card.title` | 關於美地 / 師承研究室 / 照片下方標題 |
+| 關於美地 | `about.mentor.card.body` | 關於美地 / 師承研究室 / 照片下方說明 |
 | 收納大小事 | `team.stories.hero.image` | 收納大小事 / Hero 主視覺 |
 | 精選案例 | 案例列 | 精選案例 / 每張案例卡可設定 `整理前圖片` 與 `整理後圖片` |
 
