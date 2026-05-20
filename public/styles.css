@@ -239,6 +239,17 @@ h3 { color: var(--primary); font-family: "Noto Serif TC", "Noto Serif", serif; f
 }
 .card:hover { border-color: var(--secondary); box-shadow: var(--shadow); }
 .card p, .copy p { color: var(--muted); }
+.paragraph-stack {
+  display: grid;
+  gap: 14px;
+  color: var(--muted);
+}
+.paragraph-stack.lede {
+  margin-top: 24px;
+}
+.paragraph-stack p {
+  color: inherit;
+}
 .value-grid {
   position: relative;
   display: grid;

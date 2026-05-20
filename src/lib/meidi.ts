@@ -329,6 +329,13 @@ export function c(copy: MeidiCopy, key: string, fallback: string): string {
   return copy[key]?.text || copy[key]?.buttonLabel || fallback;
 }
 
+export function paragraphs(copy: MeidiCopy, key: string, fallback: string): string[] {
+  return c(copy, key, fallback)
+    .split(/\n+/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean);
+}
+
 export function href(copy: MeidiCopy, key: string, fallback: string): string {
   return copy[key]?.buttonUrl || fallback;
 }
