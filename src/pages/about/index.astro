@@ -5,6 +5,7 @@ import { c, fontSizeClass, getMeidiCopy, image, paragraphs } from "@lib/meidi";
 const copy = await getMeidiCopy("about");
 const heroParagraphs = paragraphs(copy, "about.hero.lede", "作為二寶媽，華琍老師理解台灣家庭需要的不是空無一物，而是一套真正不復亂的生活系統。");
 const methodParagraphs = paragraphs(copy, "about.method.body", "美地居家承襲納爺體系，服務開始前先進行空間診斷，像醫生看診一樣分析生活動線、物品數量與儲存空間的關係，找出復亂的真正病灶。");
+const methodCardParagraphs = paragraphs(copy, "about.method.card.body", "細膩傾聽、邏輯分類、維持設計。");
 const mentorParagraphs = paragraphs(copy, "about.mentor.body", "承襲上門預采、空間診斷、方案溝通、上門服務、復盤陳列的 SOP，把成熟市場驗證過的空間科學帶進台灣家庭。");
 ---
 
@@ -29,7 +30,7 @@ const mentorParagraphs = paragraphs(copy, "about.mentor.body", "承襲上門預�
           {methodParagraphs.map((paragraph) => <p class={fontSizeClass(copy, "about.method.body")}>{paragraph}</p>)}
         </div>
       </div>
-      <aside class="photo-card portrait"><img src={image(copy, "about.method.image", "/assets/huali-portrait.jpg")} alt="美地居家收納主理人形象照" /><div class="photo-copy"><h3>美地居家收納主理人</h3><p>細膩傾聽、邏輯分類、維持設計。</p></div></aside>
+      <aside class="photo-card portrait"><img src={image(copy, "about.method.image", "/assets/huali-portrait.jpg")} alt="美地居家收納主理人形象照" /><div class="photo-copy"><h3 class={fontSizeClass(copy, "about.method.card.title")}>{c(copy, "about.method.card.title", "美地居家收納主理人")}</h3><div class="paragraph-stack">{methodCardParagraphs.map((paragraph) => <p class={fontSizeClass(copy, "about.method.card.body")}>{paragraph}</p>)}</div></div></aside>
     </section>
     <section class="section split">
       <aside class="photo-card"><img src={image(copy, "about.mentor.image", "/assets/naye-training.jpg")} alt="華琍老師參與納爺體系培訓照片" /></aside>

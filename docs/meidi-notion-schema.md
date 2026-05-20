@@ -59,6 +59,8 @@
 | 首頁、服務項目 | `service.1` 至 `service.6` | 服務項目卡片；每列可用 `圖片` 覆蓋 icon，並用 `圖片大小` 調整圖片尺寸 |
 | 關於美地 | `about.hero.image` | 關於美地 / Hero / 華琍老師形象照 |
 | 關於美地 | `about.method.image` | 關於美地 / 方法論 / 主理人照片 |
+| 關於美地 | `about.method.card.title` | 關於美地 / 方法論 / 主理人照片下方標題 |
+| 關於美地 | `about.method.card.body` | 關於美地 / 方法論 / 主理人照片下方說明 |
 | 關於美地 | `about.mentor.image` | 關於美地 / 師承研究室 / 培訓照片 |
 | 收納大小事 | `team.stories.hero.image` | 收納大小事 / Hero 主視覺 |
 | 精選案例 | 案例列 | 精選案例 / 每張案例卡可設定 `整理前圖片` 與 `整理後圖片` |
