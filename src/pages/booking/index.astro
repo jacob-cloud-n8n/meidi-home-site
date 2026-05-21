@@ -29,9 +29,11 @@ const copy = await getMeidiCopy("booking");
           <select class="field" name="spaceType"><option>衣櫥</option><option>廚房餐廳</option><option>兒童房</option><option>儲藏室</option><option>書房辦公</option><option>搬家打包</option><option>全屋整理</option><option>其他</option></select>
           <textarea class="field large" name="problem" placeholder="目前最困擾的狀況"></textarea>
           <label class="file-field">
-            <span>上傳現況照片（可多選）</span>
-            <input name="photos" type="file" accept="image/*" multiple />
+            <span>上傳現況照片（最多 5 張，可重新選擇）</span>
+            <input name="photos" type="file" accept="image/*" multiple data-photo-input />
+            <small>送出前可先預覽，若要更換請重新點選照片。</small>
           </label>
+          <div class="photo-preview-grid" data-photo-preview aria-live="polite"></div>
           <input class="field" name="photoUrl" placeholder="照片雲端連結（可先留空）" />
           <label class="privacy-note"><input name="privacyConsent" type="checkbox" required /> {c(copy, "booking.privacy", "資料僅作預約聯繫與服務評估使用，不會用於其他目的。")} <a class="inline-privacy-link" href="/privacy/">查看隱私權政策</a></label>
           <button class="button" type="submit">送出預約資料</button>
@@ -43,19 +45,98 @@ const copy = await getMeidiCopy("booking");
   <script>
     const form = document.querySelector(".meidi-inquiry-form");
     const message = document.querySelector(".form-message");
+    const photoInput = document.querySelector("[data-photo-input]");
+    const previewGrid = document.querySelector("[data-photo-preview]");
+    let selectedPhotos = [];
+    const maxPhotos = 5;
+
+    function renderPreviews() {
+      if (!previewGrid) return;
+      previewGrid.innerHTML = "";
+      selectedPhotos.forEach((file, index) => {
+        const item = document.createElement("div");
+        item.className = "photo-preview";
+        const image = document.createElement("img");
+        image.src = URL.createObjectURL(file);
+        image.alt = `現況照片預覽 ${index + 1}`;
+        image.onload = () => URL.revokeObjectURL(image.src);
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = "移除";
+        button.addEventListener("click", () => {
+          selectedPhotos = selectedPhotos.filter((_, photoIndex) => photoIndex !== index);
+          if (photoInput) photoInput.value = "";
+          renderPreviews();
+        });
+        item.append(image, button);
+        previewGrid.append(item);
+      });
+    }
+
+    async function compressPhoto(file) {
+      const image = new Image();
+      const reader = new FileReader();
+      const dataUrl = await new Promise((resolve, reject) => {
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+      await new Promise((resolve, reject) => {
+        image.onload = resolve;
+        image.onerror = reject;
+        image.src = dataUrl;
+      });
+
+      const maxSide = 1600;
+      const ratio = Math.min(1, maxSide / Math.max(image.naturalWidth, image.naturalHeight));
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.max(1, Math.round(image.naturalWidth * ratio));
+      canvas.height = Math.max(1, Math.round(image.naturalHeight * ratio));
+      canvas.getContext("2d")?.drawImage(image, 0, 0, canvas.width, canvas.height);
+      return {
+        name: file.name.replace(/\.[^.]+$/, "") + ".jpg",
+        type: "image/jpeg",
+        data: canvas.toDataURL("image/jpeg", 0.78)
+      };
+    }
+
+    photoInput?.addEventListener("change", () => {
+      selectedPhotos = Array.from(photoInput.files || []).slice(0, maxPhotos);
+      if ((photoInput.files?.length || 0) > maxPhotos && message) {
+        message.textContent = "照片最多可上傳 5 張，已先保留前 5 張。";
+      }
+      renderPreviews();
+    });
+
     form?.addEventListener("submit", async (event) => {
       event.preventDefault();
-      const data = new FormData(form);
+      if (message) message.textContent = "資料送出中，請稍候。";
+      const formData = new FormData(form);
+      const photos = await Promise.all(selectedPhotos.map(compressPhoto));
+      const data = {
+        name: formData.get("name"),
+        phone: formData.get("phone"),
+        lineId: formData.get("lineId"),
+        serviceArea: formData.get("serviceArea"),
+        spaceType: formData.get("spaceType"),
+        problem: formData.get("problem"),
+        photoUrl: formData.get("photoUrl"),
+        privacyConsent: formData.get("privacyConsent") === "on",
+        photos
+      };
       try {
         const response = await fetch("/api/meidi-inquiry", {
           method: "POST",
-          body: data
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
         });
         const payload = await response.json();
         if (payload.ok) {
-          message.textContent = payload.message || (payload.mode === "notion" ? "已送出，後續將由美地居家收納與您聯繫。" : "已建立聯繫訊息，請點選 LINE 完成傳送。");
+          message.textContent = payload.message || "表單已收到！我們會盡快與您聯繫。";
           if (payload.lineUrl) window.open(payload.lineUrl, "_blank", "noopener");
           form.reset();
+          selectedPhotos = [];
+          renderPreviews();
         } else {
           message.textContent = payload.message || "送出失敗，請改用官方 LINE 聯繫。";
         }

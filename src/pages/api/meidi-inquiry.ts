@@ -4,8 +4,14 @@ import { lineUrl } from "@lib/meidi";
 const notionVersion = "2022-06-28";
 const notionUploadVersion = "2026-03-11";
 const defaultInquiryDatabaseId = "ae9b716c250c46e49ffbeeb1e0e8a32a";
-const maxPhotoCount = 6;
+const maxPhotoCount = 5;
 const maxPhotoSize = 20 * 1024 * 1024;
+
+type UploadPhoto = {
+  name: string;
+  type: string;
+  blob: Blob;
+};
 
 type Inquiry = {
   name: string;
@@ -15,7 +21,7 @@ type Inquiry = {
   spaceType: string;
   problem: string;
   photoUrl: string;
-  photoFiles: File[];
+  photoFiles: UploadPhoto[];
   privacyConsent: boolean;
   submittedAt: string;
 };
@@ -44,7 +50,7 @@ function fallbackUrl(inquiry: Inquiry): string {
   return `${lineUrl}?text=${encodeURIComponent(message)}`;
 }
 
-async function uploadPhoto(token: string, pageId: string, file: File): Promise<void> {
+async function uploadPhoto(token: string, pageId: string, file: UploadPhoto): Promise<void> {
   const createResponse = await fetch("https://api.notion.com/v1/file_uploads", {
     method: "POST",
     headers: {
@@ -152,6 +158,24 @@ function isUploadFile(value: FormDataEntryValue): value is File {
   return typeof File !== "undefined" && value instanceof File && value.size > 0;
 }
 
+function dataUrlToUploadPhoto(input: unknown): UploadPhoto | null {
+  if (!input || typeof input !== "object") return null;
+  const photo = input as { name?: unknown; type?: unknown; data?: unknown };
+  const name = clean(photo.name) || "meidi-photo.jpg";
+  const type = clean(photo.type) || "image/jpeg";
+  const data = clean(photo.data);
+  const match = data.match(/^data:([^;]+);base64,(.+)$/);
+  if (!match) return null;
+
+  const bytes = Uint8Array.from(atob(match[2]), (char) => char.charCodeAt(0));
+  if (bytes.byteLength > maxPhotoSize) return null;
+  return {
+    name,
+    type: match[1] || type,
+    blob: new Blob([bytes], { type: match[1] || type })
+  };
+}
+
 async function parseInquiryRequest(request: Request): Promise<Inquiry> {
   const contentType = request.headers.get("content-type") || "";
   if (contentType.includes("multipart/form-data")) {
@@ -160,7 +184,12 @@ async function parseInquiryRequest(request: Request): Promise<Inquiry> {
       .getAll("photos")
       .filter(isUploadFile)
       .filter((file) => file.size <= maxPhotoSize)
-      .slice(0, maxPhotoCount);
+      .slice(0, maxPhotoCount)
+      .map((file) => ({
+        name: file.name,
+        type: file.type || "application/octet-stream",
+        blob: file
+      }));
 
     return {
       name: clean(data.get("name")),
@@ -177,6 +206,10 @@ async function parseInquiryRequest(request: Request): Promise<Inquiry> {
   }
 
   const body = await request.json();
+  const photoFiles = Array.isArray(body.photos)
+    ? body.photos.map(dataUrlToUploadPhoto).filter((photo): photo is UploadPhoto => Boolean(photo)).slice(0, maxPhotoCount)
+    : [];
+
   return {
     name: clean(body.name),
     phone: clean(body.phone),
@@ -185,7 +218,7 @@ async function parseInquiryRequest(request: Request): Promise<Inquiry> {
     spaceType: clean(body.spaceType),
     problem: clean(body.problem),
     photoUrl: clean(body.photoUrl),
-    photoFiles: [],
+    photoFiles,
     privacyConsent: body.privacyConsent === "on" || body.privacyConsent === true,
     submittedAt: new Date().toISOString()
   };
@@ -220,22 +253,22 @@ export const POST: APIRoute = async ({ request }) => {
     const result = await createInquiry(inquiry);
     if (result.ok) {
       const message = result.uploadFailed
-        ? "預約資料已送出，但部分照片未能上傳，後續將由美地居家收納與您聯繫。"
-        : "已送出，後續將由美地居家收納與您聯繫。";
+        ? "表單已收到！我們會盡快與您聯繫。部分照片未能上傳，後續可再由 LINE 補傳。"
+        : "表單已收到！我們會盡快與您聯繫。";
       return new Response(JSON.stringify({ ok: true, mode: "notion", uploadedCount: result.uploadedCount, message }), {
         status: 200,
         headers: { "Content-Type": "application/json" }
       });
     }
 
-    return new Response(JSON.stringify({ ok: true, mode: "line-fallback", lineUrl: fallbackUrl(inquiry) }), {
+    return new Response(JSON.stringify({ ok: true, mode: "line-fallback", lineUrl: fallbackUrl(inquiry), message: "表單已收到！我們會盡快與您聯繫。" }), {
       status: 200,
       headers: { "Content-Type": "application/json" }
     });
   } catch (error) {
     console.error(error);
     if (inquiry) {
-      return new Response(JSON.stringify({ ok: true, mode: "line-fallback", lineUrl: fallbackUrl(inquiry) }), {
+      return new Response(JSON.stringify({ ok: true, mode: "line-fallback", lineUrl: fallbackUrl(inquiry), message: "表單已收到！我們會盡快與您聯繫。" }), {
         status: 200,
         headers: { "Content-Type": "application/json" }
       });
