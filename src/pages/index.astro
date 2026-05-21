@@ -10,7 +10,9 @@ const articles = await getMeidiArticles();
 <MeidiLayout title="美地居家收納｜Stitch 視覺版" currentPath="/">
   <main>
     <section class="hero-cover">
-      <img class="cover-image" src={image(copy, "home.hero.image", "/assets/huali-portrait.jpg")} alt="華琍老師形象照" />
+      <div class="hero-image-panel">
+        <img class="cover-image" src={image(copy, "home.hero.image", "/assets/huali-portrait.jpg")} alt="華琍老師形象照" />
+      </div>
       <div class="hero-copy">
         <div>
           <span class="label">{c(copy, "home.hero.label", "品牌初衷")}</span>

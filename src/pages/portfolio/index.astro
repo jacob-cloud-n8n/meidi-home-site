@@ -24,11 +24,11 @@ const categories = ["全部案例", ...visibleCategories];
           <article class="card case-card" data-category={item.category}>
             <div class="before-after">
               <figure>
-                {item.beforeImage ? <img class="case-image" src={item.beforeImage} alt={`${item.title} 整理前照片`} /> : <div class="case-placeholder">整理前照片待上傳</div>}
+                {item.beforeImage ? <a class="case-image-link" href={item.beforeImage} data-lightbox-image><img class="case-image" src={item.beforeImage} alt={`${item.title} 整理前照片`} loading="lazy" decoding="async" /></a> : <div class="case-placeholder">整理前照片待上傳</div>}
                 <figcaption>整理前</figcaption>
               </figure>
               <figure>
-                {item.afterImage ? <img class="case-image" src={item.afterImage} alt={`${item.title} 整理後照片`} /> : <div class="case-placeholder">整理後照片待上傳</div>}
+                {item.afterImage ? <a class="case-image-link" href={item.afterImage} data-lightbox-image><img class="case-image" src={item.afterImage} alt={`${item.title} 整理後照片`} loading="lazy" decoding="async" /></a> : <div class="case-placeholder">整理後照片待上傳</div>}
                 <figcaption>整理後</figcaption>
               </figure>
             </div>
@@ -51,6 +51,30 @@ const categories = ["全部案例", ...visibleCategories];
       cards.forEach((card) => {
         const matches = category === "全部案例" || card.dataset.category === category;
         card.hidden = !matches;
+      });
+    });
+
+    document.querySelectorAll<HTMLAnchorElement>("[data-lightbox-image]").forEach((link) => {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        const dialog = document.createElement("dialog");
+        dialog.className = "image-lightbox";
+        const close = document.createElement("button");
+        close.type = "button";
+        close.className = "image-lightbox-close";
+        close.setAttribute("aria-label", "關閉大圖");
+        close.textContent = "×";
+        const image = document.createElement("img");
+        image.src = link.href;
+        image.alt = link.querySelector("img")?.getAttribute("alt") || "案例大圖";
+        dialog.append(close, image);
+        document.body.append(dialog);
+        close.addEventListener("click", () => dialog.close());
+        dialog.addEventListener("click", (dialogEvent) => {
+          if (dialogEvent.target === dialog) dialog.close();
+        });
+        dialog.addEventListener("close", () => dialog.remove());
+        dialog.showModal();
       });
     });
   </script>

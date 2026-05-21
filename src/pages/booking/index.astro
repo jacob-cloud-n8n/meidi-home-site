@@ -28,7 +28,11 @@ const copy = await getMeidiCopy("booking");
           <input class="field" name="serviceArea" placeholder="服務行政區" required />
           <select class="field" name="spaceType"><option>衣櫥</option><option>廚房餐廳</option><option>兒童房</option><option>儲藏室</option><option>書房辦公</option><option>搬家打包</option><option>全屋整理</option><option>其他</option></select>
           <textarea class="field large" name="problem" placeholder="目前最困擾的狀況"></textarea>
-          <input class="field" name="photoUrl" placeholder="現況照片連結（可先留空）" />
+          <label class="file-field">
+            <span>上傳現況照片（可多選）</span>
+            <input name="photos" type="file" accept="image/*" multiple />
+          </label>
+          <input class="field" name="photoUrl" placeholder="照片雲端連結（可先留空）" />
           <label class="privacy-note"><input name="privacyConsent" type="checkbox" required /> {c(copy, "booking.privacy", "資料僅作預約聯繫與服務評估使用，不會用於其他目的。")} <a class="inline-privacy-link" href="/privacy/">查看隱私權政策</a></label>
           <button class="button" type="submit">送出預約資料</button>
           <p class="privacy-note form-message" aria-live="polite"></p>
@@ -41,16 +45,15 @@ const copy = await getMeidiCopy("booking");
     const message = document.querySelector(".form-message");
     form?.addEventListener("submit", async (event) => {
       event.preventDefault();
-      const data = Object.fromEntries(new FormData(form));
+      const data = new FormData(form);
       try {
         const response = await fetch("/api/meidi-inquiry", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data)
+          body: data
         });
         const payload = await response.json();
         if (payload.ok) {
-          message.textContent = payload.mode === "notion" ? "已送出，後續將由美地居家收納與您聯繫。" : "已建立聯繫訊息，請點選 LINE 完成傳送。";
+          message.textContent = payload.message || (payload.mode === "notion" ? "已送出，後續將由美地居家收納與您聯繫。" : "已建立聯繫訊息，請點選 LINE 完成傳送。");
           if (payload.lineUrl) window.open(payload.lineUrl, "_blank", "noopener");
           form.reset();
         } else {
