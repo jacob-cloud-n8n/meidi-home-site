@@ -178,7 +178,8 @@
 - `Service Area`
 - `Space Type`
 - `Problem`
-- `Photos`
+- `現況照片`：files 欄位，網站會把客戶上傳的照片寫入此欄；若欄位不存在，後端會嘗試自動新增。
+- `照片連結`：url 欄位，供客戶貼雲端相簿或 Drive 連結。
 - `Source`
 - `Status`
 - `Created At`

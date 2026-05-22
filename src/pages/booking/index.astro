@@ -31,7 +31,7 @@ const copy = await getMeidiCopy("booking");
           <label class="file-field">
             <span>上傳現況照片（最多 5 張，可重新選擇）</span>
             <input name="photos" type="file" accept="image/*" multiple data-photo-input />
-            <small>送出前可先預覽，若要更換請重新點選照片。</small>
+            <small>支援 JPG、PNG、WebP、HEIC 等手機常見照片格式；送出時會自動壓縮。單張建議 10MB 以內，最多 5 張。若要更換請重新點選照片，或用下方雲端連結補充。</small>
           </label>
           <div class="photo-preview-grid" data-photo-preview aria-live="polite"></div>
           <input class="field" name="photoUrl" placeholder="照片雲端連結（可先留空）" />

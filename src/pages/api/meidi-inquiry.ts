@@ -13,6 +13,12 @@ type UploadPhoto = {
   blob: Blob;
 };
 
+type NotionUploadedPhoto = {
+  id: string;
+  name: string;
+  type: string;
+};
+
 type Inquiry = {
   name: string;
   phone: string;
@@ -50,7 +56,7 @@ function fallbackUrl(inquiry: Inquiry): string {
   return `${lineUrl}?text=${encodeURIComponent(message)}`;
 }
 
-async function uploadPhoto(token: string, pageId: string, file: UploadPhoto): Promise<void> {
+async function uploadPhoto(token: string, file: UploadPhoto): Promise<NotionUploadedPhoto> {
   const createResponse = await fetch("https://api.notion.com/v1/file_uploads", {
     method: "POST",
     headers: {
@@ -68,7 +74,7 @@ async function uploadPhoto(token: string, pageId: string, file: UploadPhoto): Pr
   if (!uploadId) throw new Error("Notion file upload id missing");
 
   const formData = new FormData();
-  formData.append("file", file, file.name);
+  formData.append("file", file.blob, file.name);
   const sendResponse = await fetch(uploadUrl, {
     method: "POST",
     headers: {
@@ -80,27 +86,78 @@ async function uploadPhoto(token: string, pageId: string, file: UploadPhoto): Pr
 
   if (!sendResponse.ok) throw new Error(`Notion file upload send failed: ${sendResponse.status}`);
 
-  const blockType = file.type.startsWith("image/") ? "image" : "file";
-  const block = {
-    object: "block",
-    type: blockType,
-    [blockType]: {
-      type: "file_upload",
-      file_upload: { id: uploadId }
-    }
-  };
+  return { id: uploadId, name: file.name, type: file.type };
+}
 
-  const appendResponse = await fetch(`https://api.notion.com/v1/blocks/${pageId}/children`, {
+async function appendPhotoBlocks(token: string, pageId: string, uploads: NotionUploadedPhoto[]): Promise<void> {
+  const children = uploads.map((file) => {
+    const blockType = file.type.startsWith("image/") ? "image" : "file";
+    return {
+      object: "block",
+      type: blockType,
+      [blockType]: {
+        type: "file_upload",
+        file_upload: { id: file.id }
+      }
+    };
+  });
+
+  const response = await fetch(`https://api.notion.com/v1/blocks/${pageId}/children`, {
     method: "PATCH",
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
       "Notion-Version": notionUploadVersion
     },
-    body: JSON.stringify({ children: [block] })
+    body: JSON.stringify({ children })
   });
 
-  if (!appendResponse.ok) throw new Error(`Notion append uploaded file failed: ${appendResponse.status}`);
+  if (!response.ok) throw new Error(`Notion append uploaded file failed: ${response.status}`);
+}
+
+async function ensurePhotoProperty(token: string, databaseId: string): Promise<boolean> {
+  const response = await fetch(`https://api.notion.com/v1/databases/${databaseId}`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+      "Notion-Version": notionVersion
+    },
+    body: JSON.stringify({
+      properties: {
+        "現況照片": { files: {} }
+      }
+    })
+  });
+
+  return response.ok;
+}
+
+async function attachPhotosToProperty(token: string, pageId: string, uploads: NotionUploadedPhoto[]): Promise<boolean> {
+  const files = uploads.map((file) => ({
+    name: file.name,
+    type: "file_upload",
+    file_upload: { id: file.id }
+  }));
+
+  const response = await fetch(`https://api.notion.com/v1/pages/${pageId}`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+      "Notion-Version": notionUploadVersion
+    },
+    body: JSON.stringify({
+      properties: {
+        "現況照片": {
+          type: "files",
+          files
+        }
+      }
+    })
+  });
+
+  return response.ok;
 }
 
 async function createInquiry(inquiry: Inquiry): Promise<{ ok: boolean; uploadedCount: number; uploadFailed: boolean }> {
@@ -140,14 +197,33 @@ async function createInquiry(inquiry: Inquiry): Promise<{ ok: boolean; uploadedC
   let uploadFailed = false;
 
   if (pageId && inquiry.photoFiles.length > 0) {
+    const uploads: NotionUploadedPhoto[] = [];
     for (const file of inquiry.photoFiles) {
       try {
-        await uploadPhoto(token, pageId, file);
-        uploadedCount += 1;
+        uploads.push(await uploadPhoto(token, file));
       } catch (error) {
         uploadFailed = true;
         console.error(error);
       }
+    }
+
+    if (uploads.length > 0) {
+      let attached = await attachPhotosToProperty(token, pageId, uploads);
+      if (!attached && await ensurePhotoProperty(token, databaseId)) {
+        attached = await attachPhotosToProperty(token, pageId, uploads);
+      }
+
+      if (!attached) {
+        try {
+          await appendPhotoBlocks(token, pageId, uploads);
+          attached = true;
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      uploadedCount = attached ? uploads.length : 0;
+      uploadFailed = uploadFailed || !attached;
     }
   }
 
@@ -253,7 +329,7 @@ export const POST: APIRoute = async ({ request }) => {
     const result = await createInquiry(inquiry);
     if (result.ok) {
       const message = result.uploadFailed
-        ? "表單已收到！我們會盡快與您聯繫。部分照片未能上傳，後續可再由 LINE 補傳。"
+        ? "表單已收到！我們會盡快與您聯繫。部分照片未能上傳，請確認格式為 JPG、PNG、WebP 或 HEIC，單張建議 10MB 以內；也可後續用 LINE 補傳。"
         : "表單已收到！我們會盡快與您聯繫。";
       return new Response(JSON.stringify({ ok: true, mode: "notion", uploadedCount: result.uploadedCount, message }), {
         status: 200,
