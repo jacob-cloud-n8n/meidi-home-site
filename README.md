@@ -58,4 +58,5 @@ Zeabur 使用 `zeabur.json`：
 ## Maintenance Docs
 
 - `docs/meidi-notion-schema.md`：Notion 資料庫與欄位規劃
+- `docs/meidi-case-pdf-skill-plan.md`：案例 PDF 匯入與未來 Skill 流程規劃
 - `docs/meidi-astro-build-plan.md`：建置、驗證與部署紀錄

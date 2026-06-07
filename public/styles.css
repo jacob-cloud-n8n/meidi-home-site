@@ -666,39 +666,161 @@ h3 { color: var(--primary); font-family: "Noto Serif TC", "Noto Serif", serif; f
   font: inherit;
 }
 .filter.active { background: var(--primary); color: #fff; border-color: var(--primary); }
-.case-card {
+.case-project-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+.case-project-card {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.86fr) 1fr;
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid rgba(74, 97, 82, 0.2);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.76);
+  box-shadow: 0 14px 30px rgba(26, 46, 34, 0.06);
+}
+.case-project-card[hidden],
+.case-study[hidden] { display: none; }
+.case-project-cover {
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--surface-low);
+}
+.case-project-cover img {
+  width: 100%;
+  height: 100%;
+  min-height: 300px;
+  object-fit: cover;
+  transition: transform .45s ease;
+}
+.case-project-card:hover .case-project-cover img { transform: scale(1.04); }
+.case-project-body {
+  display: grid;
+  align-content: center;
+  gap: 16px;
+  padding: 32px;
+}
+.case-project-body h2 {
+  margin-top: 0;
+  font-size: clamp(30px, 3vw, 46px);
+}
+.case-project-body p,
+.case-space-card p {
+  color: var(--muted);
+}
+.case-project-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: var(--secondary);
+  font-size: 14px;
+  font-weight: 900;
+}
+.case-project-meta span {
+  padding: 6px 10px;
+  border: 1px solid rgba(74, 97, 82, 0.18);
+  border-radius: 999px;
+  background: rgba(208, 232, 214, 0.45);
+}
+.case-study-list {
+  display: grid;
+  gap: 54px;
+}
+.case-study {
+  scroll-margin-top: 96px;
+  display: grid;
+  gap: 34px;
+  padding: 42px;
+  border: 1px solid rgba(74, 97, 82, 0.18);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.62);
+}
+.case-study-head {
+  display: grid;
+  grid-template-columns: minmax(0, 0.86fr) minmax(320px, 0.64fr);
+  gap: 36px;
+  align-items: center;
+}
+.case-study-head h2 { margin-top: 16px; }
+.case-study-cover {
+  overflow: hidden;
+  border: 1px solid rgba(74, 97, 82, 0.16);
+  border-radius: 12px;
+  background: var(--surface-low);
+}
+.case-study-cover img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+.case-method-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+.case-method-panel {
   display: grid;
   align-content: start;
   gap: 14px;
+  min-height: 260px;
+  padding: 28px;
+  border: 1px solid rgba(74, 97, 82, 0.18);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.72);
 }
-.case-card[hidden] { display: none; }
-.portfolio-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.before-after {
+.case-method-panel .material-symbols-outlined {
+  color: var(--secondary);
+  font-size: 42px;
+}
+.case-method-panel ul {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding-left: 20px;
+  color: var(--muted);
+}
+.case-method-images,
+.case-space-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
+  gap: 24px;
 }
-.before-after figure {
+.case-method-images figure {
   margin: 0;
-  display: grid;
-  gap: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(74, 97, 82, 0.18);
+  border-radius: 12px;
+  background: var(--paper);
 }
-.before-after figcaption {
-  color: var(--secondary);
-  font-size: 13px;
-  font-weight: 900;
-  letter-spacing: 0.08em;
-}
-.case-image {
+.case-method-images img,
+.case-space-card img {
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 16 / 9;
   object-fit: cover;
-  border-radius: 8px;
   background: var(--surface-low);
 }
-.case-image-link {
-  display: block;
-  cursor: zoom-in;
+.case-method-images figcaption {
+  padding: 14px 18px;
+  color: var(--secondary);
+  font-weight: 900;
+}
+.case-space-card {
+  overflow: hidden;
+  border: 1px solid rgba(74, 97, 82, 0.18);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.72);
+}
+.case-space-card div {
+  display: grid;
+  gap: 10px;
+  padding: 22px;
+}
+.case-space-card h3 {
+  font-size: 24px;
 }
 .image-lightbox {
   width: min(1000px, calc(100vw - 32px));
@@ -941,6 +1063,18 @@ footer { background: var(--primary); color: rgba(255,255,255,.78); margin-top: 7
   .form-panel { position: static; }
   .step { border-right: 0; border-bottom: 1px solid rgba(74, 97, 82, 0.2); }
   .step:last-child { border-bottom: 0; }
+  .case-project-grid,
+  .case-project-card,
+  .case-study-head,
+  .case-method-grid,
+  .case-method-images,
+  .case-space-grid {
+    grid-template-columns: 1fr;
+  }
+  .case-project-cover img {
+    min-height: 0;
+    aspect-ratio: 16 / 9;
+  }
 }
 @media (max-width: 640px) {
   .container, .nav-inner, .footer-inner { width: min(100% - 28px, 1180px); }
@@ -1034,6 +1168,26 @@ footer { background: var(--primary); color: rgba(255,255,255,.78); margin-top: 7
   .price.quote-size-xlarge { font-size: clamp(28px, 7.5vw, 38px); }
   .page-hero { padding: 58px 0 36px; }
   .section { padding: 56px 0; }
+  .portfolio-projects { padding-bottom: 36px; }
+  .case-project-body,
+  .case-study,
+  .case-method-panel {
+    padding: 24px;
+  }
+  .case-study {
+    gap: 26px;
+    border-radius: 12px;
+  }
+  .case-project-body h2 {
+    font-size: 30px;
+  }
+  .case-method-images,
+  .case-space-grid {
+    gap: 18px;
+  }
+  .case-space-card div {
+    padding: 20px;
+  }
   .section-head {
     display: grid;
     gap: 18px;
