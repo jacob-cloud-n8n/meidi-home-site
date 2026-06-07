@@ -79,6 +79,15 @@
 - Notion `美地諮詢表單` 已新增 `現況照片` files 欄位，並新增 `含現況照片` 檢視，後續表單照片會優先顯示於該欄位。
 - 已建置、提交並推送 `545dfd4 write booking photos to notion field`，Zeabur 由 GitHub 推送自動部署。
 
+### 2026-06-07
+
+- 依客戶提供的 `客廳、玄關、更衣.pdf` 建立案例式作品集呈現流程；原始 PDF 不進公開目錄，只保留壓縮後 WebP 圖片。
+- 已將案例圖片加上「美地居家收納｜案例預覽」浮水印，素材位於 `public/assets/cases/liu-home-storage/`。
+- `/portfolio/` 已調整為純案例列表；點擊案例後進入 `/portfolio/liu-home-storage/` 才顯示亂源分析、解決方案、物品地圖與各空間成果。
+- 補充 `docs/meidi-case-pdf-skill-plan.md`，作為未來建立「PDF 匯入案例 Skill」的流程草稿。
+- 已更新 Notion schema 與客戶維護 SOP，規劃後台以 `案例專案` / `案例空間` 兩層式管理；目前尚未實際修改 Notion，待客戶確認版型後再處理。
+- 已驗證 server build 與 static build，並推送 `7df0013 Add Meidi case study portfolio format`、`08e0225 Separate portfolio case detail pages`。
+
 ## 建置邊界
 
 - 根目錄 `/` 即為美地首頁，不使用 `PUBLIC_SITE_VARIANT`。
@@ -91,7 +100,7 @@
 - `/about/`：關於美地、空間規劃邏輯、納爺體系。
 - `/team/`：收納大小事，整理心法、服務消息與作品集文章列表。
 - `/services/`：服務項目，最多六張服務卡，由 Notion 維護文案、圖片與圖片大小。
-- `/portfolio/`：精選案例與 Before / After 分類佔位。
+- `/portfolio/`：精選案例列表；單一案例內容使用 `/portfolio/[slug]/`。
 - `/booking/`：流程、報價、預約聯繫。
 - `/privacy/`：隱私權政策與個資使用說明。
 - `/review.html`：審稿註記板，不掛主選單。
@@ -123,7 +132,7 @@
 2. 規劃 Notion 資料庫：
    - 頁面文案與圖片：首頁、關於美地、收納團隊、服務項目、案例、預約聯繫。
    - 服務項目：分類名稱、描述、icon、排序、啟用狀態。
-   - 案例資料：分類、Before/After 圖、摘要、授權狀態、是否公開。
+   - 案例資料：案例專案、案例空間、壓縮浮水印圖片、摘要、授權狀態、是否公開。
    - 團隊/資歷：照片、證書、社群連結、排序。
    - 諮詢表單：姓名、電話、LINE ID、服務區域、空間類型、困擾描述、狀態。
 3. 接 Notion adapter：讀 env var、短快取、欄位別名、失敗時 fallback。
@@ -139,7 +148,7 @@
 - 關於美地：品牌方法論、華琍老師介紹、納爺體系說明、圖片。
 - 收納大小事：Hero 主視覺、頁面標題、文章卡片、文章詳情、圖片與分類。
 - 服務項目：服務分類、說明、icon、排序、是否啟用。
-- 精選案例：分類、Before/After 圖片、摘要、授權與隱私狀態。
+- 精選案例：案例列表、單一案例詳情、分類、案例圖片、摘要、授權與隱私狀態。
 - 預約聯繫：流程、報價、LINE QR、FB 連結、表單欄位、隱私文字。
 - 隱私權政策：目前為固定頁面；若客戶要自行維護，後續可接入預約聯繫資料庫或獨立隱私頁資料庫。
 - 審稿註記板：僅供內部審稿，不建議進正式網站主選單。
