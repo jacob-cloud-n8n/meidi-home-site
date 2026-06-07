@@ -23,7 +23,7 @@ const categories = ["全部案例", ...visibleCategories];
       <div class="case-project-grid" data-case-list>
         {projects.map((project) => (
           <article class="case-project-card" data-category={project.category}>
-            <a class="case-project-cover" href={`#case-${project.slug}`}>
+            <a class="case-project-cover" href={`/portfolio/${project.slug}/`}>
               {project.coverImage ? <img src={project.coverImage} alt={`${project.title} 封面`} loading="lazy" decoding="async" /> : <span>案例圖片待上傳</span>}
             </a>
             <div class="case-project-body">
@@ -34,112 +34,24 @@ const categories = ["全部案例", ...visibleCategories];
                 <span>{project.category}</span>
                 <span>{project.spaces.length} 個空間</span>
               </div>
-              <a class="inline-link" href={`#case-${project.slug}`}>查看案例方法 <span aria-hidden="true">→</span></a>
+              <a class="inline-link" href={`/portfolio/${project.slug}/`}>查看案例方法 <span aria-hidden="true">→</span></a>
             </div>
           </article>
         ))}
       </div>
     </section>
-
-    <section class="section case-study-list" aria-label="案例內容">
-      {projects.map((project) => (
-        <article class="case-study" id={`case-${project.slug}`} data-category={project.category}>
-          <div class="case-study-head">
-            <div>
-              <span class="label">{project.category}</span>
-              <h2 class={valueFontSizeClass(project.fontSize, "heading-size")}>{project.title}</h2>
-              <p class:list={["lede", valueFontSizeClass(project.fontSize)]}>{project.summary}</p>
-            </div>
-            {project.coverImage && <a class="case-study-cover" href={project.coverImage} data-lightbox-image><img src={project.coverImage} alt={`${project.title} 案例封面`} loading="lazy" decoding="async" /></a>}
-          </div>
-
-          {(project.problemPoints.length > 0 || project.solutionPoints.length > 0) && (
-            <div class="case-method-grid">
-              {project.problemPoints.length > 0 && (
-                <section class="case-method-panel">
-                  <span class="material-symbols-outlined" aria-hidden="true">search_insights</span>
-                  <h3>關於亂源</h3>
-                  <ul>
-                    {project.problemPoints.map((point) => <li>{point}</li>)}
-                  </ul>
-                </section>
-              )}
-              {project.solutionPoints.length > 0 && (
-                <section class="case-method-panel">
-                  <span class="material-symbols-outlined" aria-hidden="true">task_alt</span>
-                  <h3>解決方案</h3>
-                  <ul>
-                    {project.solutionPoints.map((point) => <li>{point}</li>)}
-                  </ul>
-                </section>
-              )}
-            </div>
-          )}
-
-          {project.methodImages.length > 0 && (
-            <div class="case-method-images">
-              {project.methodImages.map((item) => (
-                <figure>
-                  <a href={item.image} data-lightbox-image><img src={item.image} alt={item.title} loading="lazy" decoding="async" /></a>
-                  <figcaption>{item.title}</figcaption>
-                </figure>
-              ))}
-            </div>
-          )}
-
-          {project.spaces.length > 0 && (
-            <div class="case-space-grid">
-              {project.spaces.map((space) => (
-                <article class="case-space-card">
-                  {space.image ? <a href={space.image} data-lightbox-image><img src={space.image} alt={`${space.title} 整理案例`} loading="lazy" decoding="async" /></a> : <div class="case-placeholder">案例圖片待上傳</div>}
-                  <div>
-                    <h3>{space.title}</h3>
-                    <p>{space.summary}</p>
-                  </div>
-                </article>
-              ))}
-            </div>
-          )}
-        </article>
-      ))}
-    </section>
   </main>
   <script>
     const filters = document.querySelector("[data-case-filters]");
     const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-case-list] [data-category]"));
-    const studies = Array.from(document.querySelectorAll<HTMLElement>(".case-study[data-category]"));
     filters?.addEventListener("click", (event) => {
       const target = event.target instanceof HTMLElement ? event.target.closest<HTMLButtonElement>("[data-category]") : null;
       if (!target) return;
       const category = target.dataset.category || "全部案例";
       filters.querySelectorAll(".filter").forEach((button) => button.classList.toggle("active", button === target));
-      [...cards, ...studies].forEach((item) => {
-        const matches = category === "全部案例" || item.dataset.category === category;
-        item.hidden = !matches;
-      });
-    });
-
-    document.querySelectorAll<HTMLAnchorElement>("[data-lightbox-image]").forEach((link) => {
-      link.addEventListener("click", (event) => {
-        event.preventDefault();
-        const dialog = document.createElement("dialog");
-        dialog.className = "image-lightbox";
-        const close = document.createElement("button");
-        close.type = "button";
-        close.className = "image-lightbox-close";
-        close.setAttribute("aria-label", "關閉大圖");
-        close.textContent = "×";
-        const image = document.createElement("img");
-        image.src = link.href;
-        image.alt = link.querySelector("img")?.getAttribute("alt") || "案例大圖";
-        dialog.append(close, image);
-        document.body.append(dialog);
-        close.addEventListener("click", () => dialog.close());
-        dialog.addEventListener("click", (dialogEvent) => {
-          if (dialogEvent.target === dialog) dialog.close();
-        });
-        dialog.addEventListener("close", () => dialog.remove());
-        dialog.showModal();
+      cards.forEach((card) => {
+        const matches = category === "全部案例" || card.dataset.category === category;
+        card.hidden = !matches;
       });
     });
   </script>
