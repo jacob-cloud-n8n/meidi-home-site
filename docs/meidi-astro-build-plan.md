@@ -88,6 +88,11 @@
 - 已更新 Notion schema 與客戶維護 SOP，規劃後台以 `案例專案` / `案例空間` 兩層式管理；目前尚未實際修改 Notion，待客戶確認版型後再處理。
 - 已驗證 server build 與 static build，並推送 `7df0013 Add Meidi case study portfolio format`、`08e0225 Separate portfolio case detail pages`。
 
+### 2026-06-09
+
+- 依桌面 `劉又豪私人御所收納案_20260609_082823_0000.pdf` 抽出第 6 頁「房間」，轉為壓縮 WebP 並加註「美地居家收納｜案例預覽」浮水印。
+- 新增素材 `public/assets/cases/liu-home-storage/bedroom.webp`，並插入 `/portfolio/liu-home-storage/` 的空間成果清單，位置在「衣帽間 B 區」後方。
+
 ## 建置邊界
 
 - 根目錄 `/` 即為美地首頁，不使用 `PUBLIC_SITE_VARIANT`。

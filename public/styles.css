@@ -706,7 +706,7 @@ h3 { color: var(--primary); font-family: "Noto Serif TC", "Noto Serif", serif; f
 }
 .case-project-body h2 {
   margin-top: 0;
-  font-size: clamp(30px, 3vw, 46px);
+  font-size: clamp(25px, 2.2vw, 34px);
 }
 .case-project-body p,
 .case-space-card p {
@@ -1179,7 +1179,7 @@ footer { background: var(--primary); color: rgba(255,255,255,.78); margin-top: 7
     border-radius: 12px;
   }
   .case-project-body h2 {
-    font-size: 30px;
+    font-size: 26px;
   }
   .case-method-images,
   .case-space-grid {

@@ -551,6 +551,7 @@ export const seedCaseProjects: MeidiCaseProject[] = [
     spaces: [
       { title: "衣帽間 A 區", summary: "依衣物類型與拿取頻率分區，讓日常穿搭更容易查找。", image: `${caseAssetBase}/closet-a.webp` },
       { title: "衣帽間 B 區", summary: "調整收納容量與掛放配置，降低衣物堆疊造成的復亂。", image: `${caseAssetBase}/closet-b.webp` },
+      { title: "房間", summary: "整理床鋪與周邊物品，讓休息區回到清爽、好維持的日常狀態。", image: `${caseAssetBase}/bedroom.webp` },
       { title: "工作室", summary: "重新歸位工作物品與零散雜物，保留清楚的操作檯面。", image: `${caseAssetBase}/studio.webp` },
       { title: "廚房", summary: "以料理動線與品項分類為基準，提升備餐與收拾效率。", image: `${caseAssetBase}/kitchen.webp` },
       { title: "客廳 A 視角", summary: "降低公共區域的視覺雜亂，保留生活用品的固定位置。", image: `${caseAssetBase}/living-a.webp` },
