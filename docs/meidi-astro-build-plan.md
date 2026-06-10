@@ -93,6 +93,15 @@
 - 依桌面 `劉又豪私人御所收納案_20260609_082823_0000.pdf` 抽出第 6 頁「房間」，轉為壓縮 WebP 並加註「美地居家收納｜案例預覽」浮水印。
 - 新增素材 `public/assets/cases/liu-home-storage/bedroom.webp`，並插入 `/portfolio/liu-home-storage/` 的空間成果清單，位置在「衣帽間 B 區」後方。
 
+### 2026-06-10
+
+- 依桌面 `Michel le衣帽間收納案_20260609_224147_0000.pdf` 與 `loui衣帽間收納案_20260609_224027_0000.pdf` 新增兩筆精選案例。
+- 兩份原始 PDF 不放入公開目錄；已轉為壓縮 WebP 並加註「美地居家收納｜案例預覽」浮水印。
+- 新增素材資料夾：`public/assets/cases/michel-closet-storage/`、`public/assets/cases/loui-closet-storage/`。
+- 兩筆案例皆歸入 `更衣間` 分類，網址分別為 `/portfolio/michel-closet-storage/` 與 `/portfolio/loui-closet-storage/`。
+- PDF 內的美地官方聯絡資訊頁屬對外廣告資訊，可公開使用，已保留為案例結尾的「預約與聯絡資訊」圖片。
+- 已嘗試調用 opencode CLI 協助檢查，但本機 opencode SQLite 資料庫卡在 `wal_checkpoint` 且回報唯讀，暫無法正常執行；本次改由 Codex 依現有 PDF 匯入 SOP 完成。
+
 ## 建置邊界
 
 - 根目錄 `/` 即為美地首頁，不使用 `PUBLIC_SITE_VARIANT`。

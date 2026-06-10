@@ -530,7 +530,9 @@ export const fallbackCases: MeidiCase[] = [
   { title: "餐廳", category: "餐廳", body: "案例照片待客戶授權後上傳。", status: "待授權" }
 ];
 
-const caseAssetBase = "/assets/cases/liu-home-storage";
+const liuCaseAssetBase = "/assets/cases/liu-home-storage";
+const michelCaseAssetBase = "/assets/cases/michel-closet-storage";
+const louiCaseAssetBase = "/assets/cases/loui-closet-storage";
 
 export const seedCaseProjects: MeidiCaseProject[] = [
   {
@@ -539,26 +541,84 @@ export const seedCaseProjects: MeidiCaseProject[] = [
     category: "全屋整理",
     summary: "以客廳、玄關、衣帽間與儲藏區為核心，先釐清亂源，再依使用習慣重建分類、分區與維護方式。",
     status: "案例預覽",
-    coverImage: `${caseAssetBase}/cover.webp`,
+    coverImage: `${liuCaseAssetBase}/cover.webp`,
     problemPoints: ["不善長整理", "衣物過多，堆成山，不易查找", "雜物多、亂、雜", "空間規劃不合理"],
     solutionPoints: ["建立維護方案", "增加衣帽掛桿", "斷捨離、分類、分區管理", "按照使用者習慣調整動線與空間規劃"],
     methodImages: [
-      { title: "亂源分析", image: `${caseAssetBase}/problem-analysis.webp` },
-      { title: "解決方案", image: `${caseAssetBase}/solution-plan.webp` },
-      { title: "物品地圖 A", image: `${caseAssetBase}/item-map-a.webp` },
-      { title: "物品地圖 B", image: `${caseAssetBase}/item-map-b.webp` }
+      { title: "亂源分析", image: `${liuCaseAssetBase}/problem-analysis.webp` },
+      { title: "解決方案", image: `${liuCaseAssetBase}/solution-plan.webp` },
+      { title: "物品地圖 A", image: `${liuCaseAssetBase}/item-map-a.webp` },
+      { title: "物品地圖 B", image: `${liuCaseAssetBase}/item-map-b.webp` }
     ],
     spaces: [
-      { title: "衣帽間 A 區", summary: "依衣物類型與拿取頻率分區，讓日常穿搭更容易查找。", image: `${caseAssetBase}/closet-a.webp` },
-      { title: "衣帽間 B 區", summary: "調整收納容量與掛放配置，降低衣物堆疊造成的復亂。", image: `${caseAssetBase}/closet-b.webp` },
-      { title: "房間", summary: "整理床鋪與周邊物品，讓休息區回到清爽、好維持的日常狀態。", image: `${caseAssetBase}/bedroom.webp` },
-      { title: "工作室", summary: "重新歸位工作物品與零散雜物，保留清楚的操作檯面。", image: `${caseAssetBase}/studio.webp` },
-      { title: "廚房", summary: "以料理動線與品項分類為基準，提升備餐與收拾效率。", image: `${caseAssetBase}/kitchen.webp` },
-      { title: "客廳 A 視角", summary: "降低公共區域的視覺雜亂，保留生活用品的固定位置。", image: `${caseAssetBase}/living-a.webp` },
-      { title: "客廳 B 視角", summary: "整合客廳收納與使用動線，讓整理後的空間更容易維持。", image: `${caseAssetBase}/living-b.webp` },
-      { title: "儲藏櫃 A", summary: "依物品用途與使用頻率分層，讓庫存與工具一眼可見。", image: `${caseAssetBase}/storage-a.webp` },
-      { title: "儲藏櫃 B", summary: "減少重複採買與翻找時間，建立可延續的收納位置。", image: `${caseAssetBase}/storage-b.webp` },
-      { title: "鞋櫃", summary: "玄關鞋櫃依家庭成員與外出頻率分類，提升進出門效率。", image: `${caseAssetBase}/entry-shoe-cabinet.webp` }
+      { title: "衣帽間 A 區", summary: "依衣物類型與拿取頻率分區，讓日常穿搭更容易查找。", image: `${liuCaseAssetBase}/closet-a.webp` },
+      { title: "衣帽間 B 區", summary: "調整收納容量與掛放配置，降低衣物堆疊造成的復亂。", image: `${liuCaseAssetBase}/closet-b.webp` },
+      { title: "房間", summary: "整理床鋪與周邊物品，讓休息區回到清爽、好維持的日常狀態。", image: `${liuCaseAssetBase}/bedroom.webp` },
+      { title: "工作室", summary: "重新歸位工作物品與零散雜物，保留清楚的操作檯面。", image: `${liuCaseAssetBase}/studio.webp` },
+      { title: "廚房", summary: "以料理動線與品項分類為基準，提升備餐與收拾效率。", image: `${liuCaseAssetBase}/kitchen.webp` },
+      { title: "客廳 A 視角", summary: "降低公共區域的視覺雜亂，保留生活用品的固定位置。", image: `${liuCaseAssetBase}/living-a.webp` },
+      { title: "客廳 B 視角", summary: "整合客廳收納與使用動線，讓整理後的空間更容易維持。", image: `${liuCaseAssetBase}/living-b.webp` },
+      { title: "儲藏櫃 A", summary: "依物品用途與使用頻率分層，讓庫存與工具一眼可見。", image: `${liuCaseAssetBase}/storage-a.webp` },
+      { title: "儲藏櫃 B", summary: "減少重複採買與翻找時間，建立可延續的收納位置。", image: `${liuCaseAssetBase}/storage-b.webp` },
+      { title: "鞋櫃", summary: "玄關鞋櫃依家庭成員與外出頻率分類，提升進出門效率。", image: `${liuCaseAssetBase}/entry-shoe-cabinet.webp` }
+    ]
+  },
+  {
+    title: "Michel 衣帽間收納案例",
+    slug: "michel-closet-storage",
+    category: "更衣間",
+    summary: "以衣帽間與多個生活收納區為核心，從前期溝通、動線調整到物品分類，重建清爽且易維持的居家收納系統。",
+    status: "案例預覽",
+    coverImage: `${michelCaseAssetBase}/cover.webp`,
+    problemPoints: ["空間使用不合理", "物品數量多且分類不清", "日常動線與維護方式需要重整"],
+    solutionPoints: ["建立具體收納定位系統", "依物品用途與使用頻率分類分區", "把整理後的收納邏輯轉成可持續維護的生活規則"],
+    methodImages: [
+      { title: "前期溝通", image: `${michelCaseAssetBase}/problem-analysis.webp` },
+      { title: "解決方案", image: `${michelCaseAssetBase}/solution-plan.webp` },
+      { title: "物品地圖", image: `${michelCaseAssetBase}/item-map.webp` },
+      { title: "預約與聯絡資訊", image: `${michelCaseAssetBase}/contact.webp` }
+    ],
+    spaces: [
+      { title: "動線調整 1", summary: "先梳理高頻動線，讓需要每天使用的物品回到順手位置。", image: `${michelCaseAssetBase}/movement-1.webp` },
+      { title: "動線調整 2", summary: "依照實際生活節奏調整收納區，降低翻找與堆疊。", image: `${michelCaseAssetBase}/movement-2.webp` },
+      { title: "動線調整 3", summary: "讓空間分工更清楚，減少物品跨區造成的混亂。", image: `${michelCaseAssetBase}/movement-3.webp` },
+      { title: "餐邊櫃", summary: "餐具與餐桌周邊用品重新分類定位，讓日常取用更直覺。", image: `${michelCaseAssetBase}/dining-cabinet.webp` },
+      { title: "會客室", summary: "公共空間保留視覺清爽，也讓臨時物品有固定收納位置。", image: `${michelCaseAssetBase}/guest-room.webp` },
+      { title: "書房", summary: "文件、書籍與辦公用品依使用情境分類，提升工作區效率。", image: `${michelCaseAssetBase}/study.webp` },
+      { title: "備用收納空間", summary: "把備品與低頻用品集中管理，避免分散在各角落。", image: `${michelCaseAssetBase}/spare-storage.webp` },
+      { title: "書桌", summary: "清出桌面操作區，讓工作與暫放物品分開。", image: `${michelCaseAssetBase}/desk.webp` },
+      { title: "衣櫃 1", summary: "依衣物種類建立分區，讓每天穿搭更快找到目標。", image: `${michelCaseAssetBase}/wardrobe-1.webp` },
+      { title: "衣櫃 2", summary: "調整掛放與摺放比例，降低衣物堆疊後復亂。", image: `${michelCaseAssetBase}/wardrobe-2.webp` },
+      { title: "衣櫃 3", summary: "延續分類邏輯到不同櫃位，讓維持方式一致。", image: `${michelCaseAssetBase}/wardrobe-3.webp` },
+      { title: "餐具抽屜", summary: "餐具依類型分格收納，提升拿取與歸位速度。", image: `${michelCaseAssetBase}/dining-drawer-1.webp` },
+      { title: "廚房抽屜 2", summary: "依料理流程重排抽屜內容，減少備餐時來回翻找。", image: `${michelCaseAssetBase}/kitchen-drawer-2.webp` },
+      { title: "廚房抽屜 3", summary: "把同類物品集中，讓庫存與缺漏一眼可見。", image: `${michelCaseAssetBase}/kitchen-drawer-3.webp` },
+      { title: "廚房抽屜 5", summary: "低頻與備用物品移到合適層位，保留高頻區的順手度。", image: `${michelCaseAssetBase}/kitchen-drawer-5.webp` },
+      { title: "廚房抽屜 4", summary: "建立固定分類邊界，降低使用後混放的機率。", image: `${michelCaseAssetBase}/kitchen-drawer-4.webp` },
+      { title: "廚房抽屜 1", summary: "把常用工具集中到近手位置，讓料理收拾更順。", image: `${michelCaseAssetBase}/kitchen-drawer-1.webp` },
+      { title: "鞋櫃", summary: "鞋類依成員與使用頻率分類，讓出門與回家動線更清楚。", image: `${michelCaseAssetBase}/shoe-cabinet.webp` }
+    ]
+  },
+  {
+    title: "Loui 衣帽間收納案例",
+    slug: "loui-closet-storage",
+    category: "更衣間",
+    summary: "以衣帽間為核心，整理衣物分類、收納定位與動線配置，讓衣物拿取與日常維持更清楚。",
+    status: "案例預覽",
+    coverImage: `${louiCaseAssetBase}/cover.webp`,
+    problemPoints: ["空間使用不合理", "衣物與雜物混放", "拿取與歸位動線不夠清楚"],
+    solutionPoints: ["建立衣物分類與定位", "重新分配掛放、摺放與收納區", "用可維持的方式整理衣帽間動線"],
+    methodImages: [
+      { title: "前期溝通", image: `${louiCaseAssetBase}/problem-analysis.webp` },
+      { title: "解決方案", image: `${louiCaseAssetBase}/solution-plan.webp` },
+      { title: "預約與聯絡資訊", image: `${louiCaseAssetBase}/contact.webp` }
+    ],
+    spaces: [
+      { title: "衣帽間 1", summary: "先從整體櫃位重新分區，讓衣物收納有清楚邊界。", image: `${louiCaseAssetBase}/closet-1.webp` },
+      { title: "衣帽間 2", summary: "依拿取頻率配置高低層，提升日常使用效率。", image: `${louiCaseAssetBase}/closet-2.webp` },
+      { title: "衣帽間 3", summary: "調整衣物分類方式，減少重複翻找與堆放。", image: `${louiCaseAssetBase}/closet-3.webp` },
+      { title: "衣帽間 4", summary: "建立固定歸位方式，讓整理後狀態更容易延續。", image: `${louiCaseAssetBase}/closet-4.webp` },
+      { title: "衣帽間 5", summary: "完成衣帽間視覺與使用動線整理，回到清楚好維持的狀態。", image: `${louiCaseAssetBase}/closet-5.webp` }
     ]
   }
 ];
