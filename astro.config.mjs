@@ -10,7 +10,7 @@ export default defineConfig({
     : node({
         mode: "standalone"
       }),
-  site: process.env.PUBLIC_SITE_URL || "https://meidi-home.example.com",
+  site: process.env.SITE_URL || process.env.PUBLIC_SITE_URL || "https://meidi-home-untitled-20260509.zeabur.app",
   image: {
     domains: ["localhost"]
   },

@@ -1,12 +1,100 @@
 ---
-import { lineUrl } from "@lib/meidi";
+import { lineUrl, facebookUrl } from "@lib/meidi";
 
 interface Props {
-  title: string;
+  title?: string;
+  description?: string;
   currentPath: string;
 }
 
-const { title, currentPath } = Astro.props;
+const { 
+  title = "美地居家收納｜到府空間診斷與收納規劃（台中）", 
+  description = "美地居家收納提供專業空間診斷、收納規劃與親子家庭生活系統設計，陪伴您打造不復亂的舒心居家空間。", 
+  currentPath 
+} = Astro.props;
+
+const siteUrl = process.env.SITE_URL || (Astro.site ? Astro.site.origin : "https://meidi-home-untitled-20260509.zeabur.app");
+const canonicalUrl = `${siteUrl.replace(/\/$/, '')}${currentPath}`;
+const imageUrl = `${siteUrl.replace(/\/$/, '')}/assets/meidi-logo.png`;
+
+const localBusinessSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "LocalBusiness",
+      "@id": `${siteUrl.replace(/\/$/, '')}/#localbusiness`,
+      "name": "美地居家收納",
+      "image": imageUrl,
+      "url": siteUrl,
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "台中市",
+        "addressCountry": "TW"
+      },
+      "geo": {
+        "@type": "GeoCircle",
+        "geoMidpoint": {
+          "@type": "GeoCoordinates",
+          "latitude": "24.1477",
+          "longitude": "120.6736"
+        },
+        "geoRadius": "50000"
+      },
+      "areaServed": [
+        {
+          "@type": "AdministrativeArea",
+          "name": "台中市"
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "彰化縣"
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "南投縣"
+        }
+      ],
+      "sameAs": [
+        lineUrl,
+        facebookUrl
+      ]
+    },
+    {
+      "@type": "Service",
+      "@id": `${siteUrl.replace(/\/$/, '')}/#service-diagnosis`,
+      "provider": {
+        "@type": "LocalBusiness",
+        "@id": `${siteUrl.replace(/\/$/, '')}/#localbusiness`
+      },
+      "serviceType": "空間診斷與諮詢",
+      "name": "空間診斷",
+      "description": "到府盤點物量、動線與收納容量，找出復亂來源並提供整理方案建議。"
+    },
+    {
+      "@type": "Service",
+      "@id": `${siteUrl.replace(/\/$/, '')}/#service-organizing`,
+      "provider": {
+        "@type": "LocalBusiness",
+        "@id": `${siteUrl.replace(/\/$/, '')}/#localbusiness`
+      },
+      "serviceType": "居家收納規劃",
+      "name": "收納規劃",
+      "description": "依家庭動線與物品數量，重新規劃好拿、好收、不復亂的生活系統。"
+    },
+    {
+      "@type": "Service",
+      "@id": `${siteUrl.replace(/\/$/, '')}/#service-family-system`,
+      "provider": {
+        "@type": "LocalBusiness",
+        "@id": `${siteUrl.replace(/\/$/, '')}/#localbusiness`
+      },
+      "serviceType": "親子生活系統設計",
+      "name": "親子生活系統",
+      "description": "結合蒙特梭利精神與二寶媽生活經驗，建立小孩也能輕鬆上手的收納與生活秩序系統。"
+    }
+  ]
+};
+
 const nav = [
   ["首頁", "/"],
   ["關於美地", "/about/"],
@@ -23,11 +111,26 @@ const nav = [
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
-    <meta name="description" content="美地居家收納提供專業空間診斷、收納規劃與親子家庭生活系統設計。" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" type="image/png" href="/assets/meidi-logo.png" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={currentPath.startsWith('/team/') && currentPath !== '/team/' ? 'article' : 'website'} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:site_name" content="美地居家收納" />
+    <meta property="og:locale" content="zh_TW" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Noto+Serif+TC:wght@600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/styles.css" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify(localBusinessSchema)} />
   </head>
   <body class="grid-bg">
     <nav class="nav">

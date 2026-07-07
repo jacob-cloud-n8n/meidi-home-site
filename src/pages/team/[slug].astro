@@ -14,7 +14,7 @@ if (!article) return Astro.redirect("/team/");
 const paragraphs = (article.body || article.excerpt).split(/\n{2,}/).filter(Boolean);
 ---
 
-<MeidiLayout title={`${article.title}｜收納大小事｜美地居家收納`} currentPath="/team/">
+<MeidiLayout title={`${article.title}｜美地居家收納`} description={article.excerpt} currentPath={`/team/${article.slug}/`}>
   <main class="container">
     <article class="article-layout">
       <a class="back-link" href="/team/">← 回收納大小事</a>

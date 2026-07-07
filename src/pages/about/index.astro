@@ -10,7 +10,7 @@ const mentorParagraphs = paragraphs(copy, "about.mentor.body", "承襲上門預�
 const mentorCardParagraphs = paragraphs(copy, "about.mentor.card.body", "承襲專業 SOP，將成熟的空間規劃邏輯帶回台灣家庭。");
 ---
 
-<MeidiLayout title="理念與華琍老師｜美地居家收納 Stitch 版" currentPath="/about/">
+<MeidiLayout title="理念與華琍老師｜美地居家收納" description="了解美地居家收納創辦人華琍老師的理念，以二寶媽的同理心，承襲專業收納SOP，將成熟的空間規劃與親子收納系統帶回台灣家庭。" currentPath="/about/">
   <main class="container">
     <header class="hero">
       <div>
@@ -31,10 +31,10 @@ const mentorCardParagraphs = paragraphs(copy, "about.mentor.card.body", "承襲�
           {methodParagraphs.map((paragraph) => <p class={fontSizeClass(copy, "about.method.body")}>{paragraph}</p>)}
         </div>
       </div>
-      <aside class="photo-card portrait"><img src={image(copy, "about.method.image", "/assets/huali-portrait.jpg")} alt="美地居家收納主理人形象照" /><div class="photo-copy"><h3 class={fontSizeClass(copy, "about.method.card.title")}>{c(copy, "about.method.card.title", "美地居家收納主理人")}</h3><div class="paragraph-stack">{methodCardParagraphs.map((paragraph) => <p class={fontSizeClass(copy, "about.method.card.body")}>{paragraph}</p>)}</div></div></aside>
+      <aside class="photo-card portrait"><img src={image(copy, "about.method.image", "/assets/huali-portrait.jpg")} alt="美地居家收納主理人形象照" loading="lazy" /><div class="photo-copy"><h3 class={fontSizeClass(copy, "about.method.card.title")}>{c(copy, "about.method.card.title", "美地居家收納主理人")}</h3><div class="paragraph-stack">{methodCardParagraphs.map((paragraph) => <p class={fontSizeClass(copy, "about.method.card.body")}>{paragraph}</p>)}</div></div></aside>
     </section>
     <section class="section split">
-      <aside class="photo-card"><img src={image(copy, "about.mentor.image", "/assets/naye-training.jpg")} alt="華琍老師參與納爺體系培訓照片" /><div class="photo-copy"><h3 class={fontSizeClass(copy, "about.mentor.card.title")}>{c(copy, "about.mentor.card.title", "納爺收納研究室")}</h3><div class="paragraph-stack">{mentorCardParagraphs.map((paragraph) => <p class={fontSizeClass(copy, "about.mentor.card.body")}>{paragraph}</p>)}</div></div></aside>
+      <aside class="photo-card"><img src={image(copy, "about.mentor.image", "/assets/naye-training.jpg")} alt="華琍老師參與納爺體系培訓照片" loading="lazy" /><div class="photo-copy"><h3 class={fontSizeClass(copy, "about.mentor.card.title")}>{c(copy, "about.mentor.card.title", "納爺收納研究室")}</h3><div class="paragraph-stack">{mentorCardParagraphs.map((paragraph) => <p class={fontSizeClass(copy, "about.mentor.card.body")}>{paragraph}</p>)}</div></div></aside>
       <div class="copy"><span class="label">師承研究室</span><h2 class={fontSizeClass(copy, "about.mentor.title", "heading-size")}>{c(copy, "about.mentor.title", "師承納爺收納研究室")}</h2><div class:list={["paragraph-stack", "lede"]}>{mentorParagraphs.map((paragraph) => <p class={fontSizeClass(copy, "about.mentor.body")}>{paragraph}</p>)}</div></div>
     </section>
   </main>
