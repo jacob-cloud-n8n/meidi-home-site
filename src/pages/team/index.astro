@@ -6,7 +6,7 @@ const copy = await getMeidiCopy("team");
 const articles = await getMeidiArticles();
 ---
 
-<MeidiLayout title="收納大小事｜美地居家收納" currentPath="/team/">
+<MeidiLayout title="收納大小事與整理心法專欄｜美地居家收納" description="瀏覽美地居家收納專欄，分享專業整理心法、收納技巧、線上諮詢與真實居家改善故事，幫助您建立有秩序的日常生活。" currentPath="/team/">
   <main class="container">
     <section class="stories-cover">
       <img src={image(copy, "team.stories.hero.image", "/assets/huali-portrait.jpg")} alt="收納大小事主視覺" />
@@ -24,7 +24,7 @@ const articles = await getMeidiArticles();
         {articles.map((article) => (
           <a class="story-card" href={`/team/${article.slug}/`}>
             <div class="story-media">
-              {article.image ? <img src={article.image} alt={`${article.title} 圖片`} /> : <div class="story-placeholder">收納大小事</div>}
+              {article.image ? <img src={article.image} alt={`${article.title} 圖片`} loading="lazy" /> : <div class="story-placeholder">收納大小事</div>}
             </div>
             <div class="story-body">
               <div class="story-meta">{article.category}</div>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>審稿註記板｜美地居家收納 Stitch 版</title>
+    <title>審稿註記板｜美地居家收納</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Noto+Serif+TC:wght@600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
@@ -58,7 +58,7 @@
     </main>
     <footer><div class="footer-inner"><div>美地居家收納 · 審稿註記板</div><div><a href="index.html">回網站首頁</a></div></div></footer>
     <script>
-      const storageKey = "meidi-stitch-review-notes-v1";
+      const storageKey = "meidi-review-notes-v1";
       const saveState = document.querySelector("#save-state");
       const textareas = Array.from(document.querySelectorAll("[data-note]"));
       const checks = Array.from(document.querySelectorAll("[data-check]"));
@@ -103,12 +103,12 @@
             .join("\n");
           return `## ${page}\n\n${field.value || "尚未填寫註記"}\n\n${checklist}`;
         }).join("\n\n---\n\n");
-        const content = `# 美地居家收納 Stitch 版審稿註記\n\n匯出時間：${new Date().toLocaleString("zh-TW")}\n\n${pages}\n`;
+        const content = `# 美地居家收納 審稿註記\n\n匯出時間：${new Date().toLocaleString("zh-TW")}\n\n${pages}\n`;
         const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.href = url;
-        link.download = "meidi-stitch-review-notes.txt";
+        link.download = "meidi-review-notes.txt";
         link.click();
         URL.revokeObjectURL(url);
         writeStore(store);

@@ -2,7 +2,7 @@
 
 ## 目前方向
 
-- 客戶已確認 Stitch 版本作為正式設計方向。
+- 客戶已確認 視覺版 版本作為正式設計方向。
 - 美地已拆成獨立 Astro repo：`jacob-cloud-n8n/meidi-home-site`。
 - Zeabur 使用獨立服務 `meidi-home-site-v2`，不再與小牧人 repo 或服務共用部署流程。
 - 正式網址：`https://meidi-home-untitled-20260509.zeabur.app/`。
@@ -150,5 +150,5 @@
 
 - 靜態預覽建置：`ASTRO_OUTPUT=static pnpm run build`
 - 確認 `/`、`/booking/`、`/privacy/` 與 `/review.html` 可正常開啟。
-- 搜尋不得殘留舊版 `/meidi-home/` 或 `/meidi-home-stitch/` 對外導流。
+- 搜尋不得殘留舊版 `/meidi-home/` 或 `/meidi-home-visual/` 對外導流。
 - 發布 GitHub Pages 前確認沒有新增秘密、私人聯絡資料或未授權案例照片。
