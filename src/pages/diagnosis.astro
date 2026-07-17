@@ -51,13 +51,15 @@ import { lineUrl } from "@lib/meidi";
                     <span class="radio-text">爸爸</span>
                   </span>
                 </label>
-                <label class="radio-card" id="roleOtherLabel">
-                  <input type="radio" name="parentRole" value="其他" id="roleOtherRadio" />
-                  <span class="radio-content">
-                    <span class="radio-text">其他</span>
-                    <input type="text" id="parentRoleOther" class="inline-text-input" placeholder="請填寫..." disabled />
-                  </span>
-                </label>
+                <div class="radio-card-wrapper">
+                  <label class="radio-card" id="roleOtherLabel">
+                    <input type="radio" name="parentRole" value="其他" id="roleOtherRadio" />
+                    <span class="radio-content">
+                      <span class="radio-text">其他</span>
+                    </span>
+                  </label>
+                  <input type="text" id="parentRoleOther" class="inline-text-input-separate" placeholder="請輸入您的稱呼..." disabled style="display:none;" />
+                </div>
               </div>
             </div>
 
@@ -148,14 +150,16 @@ import { lineUrl } from "@lib/meidi";
                     <span class="checkbox-text">玄關鞋櫃</span>
                   </span>
                 </label>
-                <label class="checkbox-card" id="spaceOtherLabel">
-                  <input type="checkbox" name="troubleSpace" value="其他" id="spaceOtherCheckbox" />
-                  <span class="checkbox-content">
-                    <span class="material-symbols-outlined">more_horiz</span>
-                    <span class="checkbox-text">其他</span>
-                    <input type="text" id="troubleSpaceOther" class="inline-text-input" placeholder="請填寫空間..." disabled />
-                  </span>
-                </label>
+                <div class="checkbox-card-wrapper">
+                  <label class="checkbox-card" id="spaceOtherLabel">
+                    <input type="checkbox" name="troubleSpace" value="其他" id="spaceOtherCheckbox" />
+                    <span class="checkbox-content">
+                      <span class="material-symbols-outlined">more_horiz</span>
+                      <span class="checkbox-text">其他</span>
+                    </span>
+                  </label>
+                  <input type="text" id="troubleSpaceOther" class="inline-text-input-separate" placeholder="請填寫其他空間..." disabled style="display:none;" />
+                </div>
               </div>
               <p class="error-msg" id="spaceError" style="display:none;">請至少選擇一個頭痛空間</p>
             </div>
@@ -617,25 +621,29 @@ import { lineUrl } from "@lib/meidi";
       background: #fdfdfd;
     }
 
-    .inline-text-input {
-      border: none;
-      border-bottom: 2px solid var(--outline);
-      background: transparent;
-      padding: 2px 6px;
+    .inline-text-input-separate {
+      width: 100%;
+      height: 44px;
+      padding: 0 16px;
+      background: var(--paper);
+      border: 1px solid var(--outline-soft);
+      border-radius: 8px;
       font-size: 14px;
       font-weight: 700;
       color: var(--primary);
-      width: 100%;
-      margin-top: 6px;
+      margin-top: 8px;
       outline: none;
-      transition: border-color 0.2s;
+      transition: all 0.2s ease;
     }
-    .inline-text-input:focus {
-      border-bottom-color: var(--secondary);
+    .inline-text-input-separate:focus {
+      border-color: var(--secondary);
+      box-shadow: 0 0 0 2px rgba(74, 97, 82, 0.1);
     }
-    .inline-text-input:disabled {
-      border-bottom-color: var(--outline-soft);
+    .inline-text-input-separate:disabled {
+      background: var(--surface-low);
+      border-color: var(--outline-soft);
       opacity: 0.5;
+      cursor: not-allowed;
     }
 
     /* 寶貝資訊區 */
@@ -1277,28 +1285,21 @@ import { lineUrl } from "@lib/meidi";
       const parentRoleRadios = document.querySelectorAll('input[name="parentRole"]');
       const parentRoleOtherInput = document.getElementById("parentRoleOther");
       const roleOtherRadio = document.getElementById("roleOtherRadio");
-      const roleOtherLabel = document.getElementById("roleOtherLabel");
 
       parentRoleRadios.forEach((radio) => {
         radio.addEventListener("change", () => {
           if (radio.value === "其他") {
+            parentRoleOtherInput.style.display = "block";
             parentRoleOtherInput.disabled = false;
             parentRoleOtherInput.focus();
             parentRoleOtherInput.required = true;
           } else {
+            parentRoleOtherInput.style.display = "none";
             parentRoleOtherInput.disabled = true;
             parentRoleOtherInput.value = "";
             parentRoleOtherInput.required = false;
           }
         });
-      });
-
-      // 點擊「其他」卡片時自動 focus
-      roleOtherLabel?.addEventListener("click", () => {
-        if (roleOtherRadio?.checked) {
-          parentRoleOtherInput.disabled = false;
-          parentRoleOtherInput.focus();
-        }
       });
 
       // 寶貝 1 年齡自動帶入
@@ -1366,34 +1367,20 @@ import { lineUrl } from "@lib/meidi";
 
       // 頭痛空間「其他」輸入框控制
       const spaceOtherCheckbox = document.getElementById("spaceOtherCheckbox");
-      const spaceOtherLabel = document.getElementById("spaceOtherLabel");
       const troubleSpaceOtherInput = document.getElementById("troubleSpaceOther");
 
       spaceOtherCheckbox?.addEventListener("change", () => {
         if (spaceOtherCheckbox.checked) {
+          troubleSpaceOtherInput.style.display = "block";
           troubleSpaceOtherInput.disabled = false;
           troubleSpaceOtherInput.focus();
           troubleSpaceOtherInput.required = true;
         } else {
+          troubleSpaceOtherInput.style.display = "none";
           troubleSpaceOtherInput.disabled = true;
           troubleSpaceOtherInput.value = "";
           troubleSpaceOtherInput.required = false;
         }
-      });
-
-      spaceOtherLabel?.addEventListener("click", () => {
-        if (spaceOtherCheckbox?.checked) {
-          troubleSpaceOtherInput.disabled = false;
-          troubleSpaceOtherInput.focus();
-        }
-      });
-
-      // 防止點擊「其他」文字輸入框時，因為事件冒泡觸發了 Label 的 click 事件，導致 checkbox 被取消或 Radio 被重置
-      parentRoleOtherInput?.addEventListener("click", (e) => {
-        e.stopPropagation();
-      });
-      troubleSpaceOtherInput?.addEventListener("click", (e) => {
-        e.stopPropagation();
       });
 
       // 表單按鈕點擊「下一步」
@@ -1409,28 +1396,27 @@ import { lineUrl } from "@lib/meidi";
             const ageVal = baby1AgeInput.value;
             
             if (!genderVal || !ageGroupVal || !ageVal) {
-              form.reportValidity();
+              showToast("⚠️ 請完整填寫寶貝 1 的性別與年齡層！");
               return;
             }
             
             // 驗證頭痛空間多選，至少選一項
             const troubleSpaces = document.querySelectorAll('input[name="troubleSpace"]:checked');
-            const spaceError = document.getElementById("spaceError");
             if (troubleSpaces.length === 0) {
-              if (spaceError) spaceError.style.display = "block";
+              showToast("⚠️ 請至少選擇一個最頭痛的空間！");
               return;
-            } else {
-              if (spaceError) spaceError.style.display = "none";
             }
             
             // 若選擇「其他」空間，必須填寫內容
             if (spaceOtherCheckbox?.checked && !troubleSpaceOtherInput.value.trim()) {
-              troubleSpaceOtherInput.reportValidity();
+              showToast("⚠️ 請填寫其他空間的名稱！");
+              troubleSpaceOtherInput.focus();
               return;
             }
             // 若選擇「其他」稱呼，必須填寫內容
             if (roleOtherRadio?.checked && !parentRoleOtherInput.value.trim()) {
-              parentRoleOtherInput.reportValidity();
+              showToast("⚠️ 請填寫您的稱呼！");
+              parentRoleOtherInput.focus();
               return;
             }
           }
