@@ -101,7 +101,17 @@ import { lineUrl } from "@lib/meidi";
                         <option value="男生">男生</option>
                       </select>
                     </div>
-                    <input type="number" name="baby2Age" id="baby2Age" class="field" placeholder="年齡(歲)" min="0" max="18" />
+                    <div class="select-wrapper">
+                      <select name="baby2AgeGroup" id="baby2AgeGroup" class="field">
+                        <option value="" selected>選擇年齡層</option>
+                        <option value="幼幼班以下">幼幼班以下</option>
+                        <option value="小班/中班">小班/中班</option>
+                        <option value="大班">大班</option>
+                        <option value="國小低年級">國小低年級</option>
+                        <option value="其他">其他 (自行填寫年齡)</option>
+                      </select>
+                    </div>
+                    <input type="number" name="baby2Age" id="baby2Age" class="field compact-input" placeholder="年齡(歲)" min="0" max="18" />
                   </div>
                 </div>
               </div>
@@ -1313,11 +1323,12 @@ import { lineUrl } from "@lib/meidi";
 
       // 寶貝 2 顯示/清除控制
       const baby2Gender = document.getElementById("baby2Gender");
+      const baby2AgeGroup = document.getElementById("baby2AgeGroup");
       const baby2Age = document.getElementById("baby2Age");
       const btnClearBaby2 = document.getElementById("btnClearBaby2");
 
       function updateBaby2ClearButton() {
-        if (baby2Gender?.value || baby2Age?.value) {
+        if (baby2Gender?.value || baby2AgeGroup?.value || baby2Age?.value) {
           btnClearBaby2.style.display = "inline-block";
         } else {
           btnClearBaby2.style.display = "none";
@@ -1325,12 +1336,32 @@ import { lineUrl } from "@lib/meidi";
       }
 
       baby2Gender?.addEventListener("change", updateBaby2ClearButton);
+      baby2AgeGroup?.addEventListener("change", updateBaby2ClearButton);
       baby2Age?.addEventListener("input", updateBaby2ClearButton);
 
       btnClearBaby2?.addEventListener("click", () => {
         if (baby2Gender) baby2Gender.value = "";
+        if (baby2AgeGroup) baby2AgeGroup.value = "";
         if (baby2Age) baby2Age.value = "";
         btnClearBaby2.style.display = "none";
+      });
+
+      // 寶貝 2 年齡自動帶入
+      baby2AgeGroup?.addEventListener("change", (e) => {
+        const val = e.target.value;
+        if (val === "幼幼班以下") {
+          baby2Age.value = "2";
+        } else if (val === "小班/中班") {
+          baby2Age.value = "4";
+        } else if (val === "大班") {
+          baby2Age.value = "6";
+        } else if (val === "國小低年級") {
+          baby2Age.value = "8";
+        } else {
+          baby2Age.value = "";
+          baby2Age.focus();
+        }
+        updateBaby2ClearButton();
       });
 
       // 頭痛空間「其他」輸入框控制
@@ -1355,6 +1386,14 @@ import { lineUrl } from "@lib/meidi";
           troubleSpaceOtherInput.disabled = false;
           troubleSpaceOtherInput.focus();
         }
+      });
+
+      // 防止點擊「其他」文字輸入框時，因為事件冒泡觸發了 Label 的 click 事件，導致 checkbox 被取消或 Radio 被重置
+      parentRoleOtherInput?.addEventListener("click", (e) => {
+        e.stopPropagation();
+      });
+      troubleSpaceOtherInput?.addEventListener("click", (e) => {
+        e.stopPropagation();
       });
 
       // 表單按鈕點擊「下一步」
@@ -1510,6 +1549,43 @@ import { lineUrl } from "@lib/meidi";
         }
       }
 
+      // 支援非 HTTPS/iOS/Android Fallback 的複製函數
+      function copyToClipboard(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+          return navigator.clipboard.writeText(text);
+        } else {
+          return new Promise((resolve, reject) => {
+            const textarea = document.createElement("textarea");
+            textarea.value = text;
+            textarea.style.position = "fixed";
+            textarea.style.top = "0";
+            textarea.style.left = "0";
+            textarea.style.width = "2em";
+            textarea.style.height = "2em";
+            textarea.style.padding = "0";
+            textarea.style.border = "none";
+            textarea.style.outline = "none";
+            textarea.style.boxShadow = "none";
+            textarea.style.background = "transparent";
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            try {
+              const successful = document.execCommand("copy");
+              document.body.removeChild(textarea);
+              if (successful) {
+                resolve();
+              } else {
+                reject(new Error("複製失敗"));
+              }
+            } catch (err) {
+              document.body.removeChild(textarea);
+              reject(err);
+            }
+          });
+        }
+      }
+
       // 一鍵複製報告與加 LINE 預約
       const btnLineGift = document.getElementById("btnLineGift");
       btnLineGift?.addEventListener("click", () => {
@@ -1527,10 +1603,11 @@ import { lineUrl } from "@lib/meidi";
         
         let babyInfo = `${baby1Gender} (${baby1AgeGroup} ${baby1Age}歲)`;
         
-        const baby2Gender = document.getElementById("baby2Gender")?.value;
-        const baby2Age = document.getElementById("baby2Age")?.value;
-        if (baby2Gender && baby2Age) {
-          babyInfo += `、寶貝 2：${baby2Gender} (${baby2Age}歲)`;
+        const baby2GenderVal = formData.get("baby2Gender");
+        const baby2AgeGroupVal = formData.get("baby2AgeGroup");
+        const baby2AgeVal = formData.get("baby2Age");
+        if (baby2GenderVal && baby2AgeGroupVal && baby2AgeVal) {
+          babyInfo += `、寶貝 2：${baby2GenderVal} (${baby2AgeGroupVal} ${baby2AgeVal}歲)`;
         }
         
         // 收集頭痛空間
@@ -1573,8 +1650,8 @@ import { lineUrl } from "@lib/meidi";
 
 希望能預約小琍老師的【1對1 線上空間拍照診斷】！`;
 
-        // 複製到剪貼簿
-        navigator.clipboard.writeText(reportText).then(() => {
+        // 複製到剪貼簿 (具備相容性 Fallback)
+        copyToClipboard(reportText).then(() => {
           showToast("📋 診斷報告已複製！正在跳轉官方 LINE...");
           
           // 1.5 秒後跳轉 LINE
