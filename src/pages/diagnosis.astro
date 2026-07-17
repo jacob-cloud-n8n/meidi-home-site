@@ -1,0 +1,1596 @@
+---
+import MeidiLayout from "@layouts/MeidiLayout.astro";
+import { lineUrl } from "@lib/meidi";
+---
+
+<MeidiLayout title="親子居家空間健康診斷表｜美地居家收納" description="家是溫暖的避風港，讓我們一起找出讓媽媽心累、寶貝不知所措的「空間盲點」吧！" currentPath="/diagnosis/">
+  <main class="container py-diagnosis">
+    <div class="diagnosis-wrapper">
+      
+      <!-- 頂部標題區 -->
+      <header class="diagnosis-header text-center">
+        <span class="label">親子空間診斷</span>
+        <h1 class="diagnosis-title">親子居家空間健康診斷表</h1>
+        <p class="diagnosis-subtitle">家是溫暖的避風港，讓我們一起找出讓媽媽心累、寶貝不知所措的「空間盲點」吧！</p>
+      </header>
+
+      <!-- 進度條 -->
+      <div class="progress-bar-container">
+        <div class="progress-steps">
+          <span class="step-indicator active" data-step="1">1. 基本資料</span>
+          <span class="step-indicator" data-step="2">2. 混亂指數</span>
+          <span class="step-indicator" data-step="3">3. 心靈溫度</span>
+          <span class="step-indicator" data-step="4">4. 診斷結果</span>
+        </div>
+        <div class="progress-line">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <!-- 表單本體 -->
+      <div class="diagnosis-card shadow">
+        <form id="diagnosisForm">
+          
+          <!-- STEP 1: 家庭基本資料 -->
+          <div class="form-step active" id="step1">
+            <h2 class="step-title"><span class="material-symbols-outlined icon-align">family_restroom</span> 第一部分：家庭基本資料</h2>
+            <p class="step-desc">填寫基本資料，以便小琍老師提供精準的居家診斷建議。</p>
+            
+            <div class="form-group">
+              <label class="form-label">填寫人稱呼 <span class="required">*</span></label>
+              <div class="radio-card-grid">
+                <label class="radio-card">
+                  <input type="radio" name="parentRole" value="媽咪" required checked />
+                  <span class="radio-content">
+                    <span class="radio-text">媽咪</span>
+                  </span>
+                </label>
+                <label class="radio-card">
+                  <input type="radio" name="parentRole" value="爸爸" />
+                  <span class="radio-content">
+                    <span class="radio-text">爸爸</span>
+                  </span>
+                </label>
+                <label class="radio-card" id="roleOtherLabel">
+                  <input type="radio" name="parentRole" value="其他" id="roleOtherRadio" />
+                  <span class="radio-content">
+                    <span class="radio-text">其他</span>
+                    <input type="text" id="parentRoleOther" class="inline-text-input" placeholder="請填寫..." disabled />
+                  </span>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">寶貝的年齡與性別（最多兩位） <span class="required">*</span></label>
+              <div class="baby-info-container">
+                <div class="baby-row">
+                  <span class="baby-badge">寶貝 1</span>
+                  <div class="baby-inputs">
+                    <div class="select-wrapper">
+                      <select name="baby1Gender" class="field" required>
+                        <option value="" disabled selected>選擇性別</option>
+                        <option value="女生">女生</option>
+                        <option value="男生">男生</option>
+                      </select>
+                    </div>
+                    <div class="select-wrapper">
+                      <select name="baby1AgeGroup" id="baby1AgeGroup" class="field" required>
+                        <option value="" disabled selected>選擇年齡層</option>
+                        <option value="幼幼班以下">幼幼班以下</option>
+                        <option value="小班/中班">小班/中班</option>
+                        <option value="大班">大班</option>
+                        <option value="國小低年級">國小低年級</option>
+                        <option value="其他">其他 (自行填寫年齡)</option>
+                      </select>
+                    </div>
+                    <input type="number" name="baby1Age" class="field compact-input" placeholder="年齡(歲)" min="0" max="18" required />
+                  </div>
+                </div>
+
+                <div class="baby-row optional-row">
+                  <div class="baby-row-header">
+                    <span class="baby-badge secondary">寶貝 2（選填）</span>
+                    <button type="button" class="btn-clear-baby" id="btnClearBaby2" style="display:none;">清除寶貝 2</button>
+                  </div>
+                  <div class="baby-inputs">
+                    <div class="select-wrapper">
+                      <select name="baby2Gender" id="baby2Gender" class="field">
+                        <option value="" selected>選擇性別</option>
+                        <option value="女生">女生</option>
+                        <option value="男生">男生</option>
+                      </select>
+                    </div>
+                    <input type="number" name="baby2Age" id="baby2Age" class="field" placeholder="年齡(歲)" min="0" max="18" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">目前家中最讓您頭痛的空間 <span class="required">*</span></label>
+              <div class="checkbox-card-grid">
+                <label class="checkbox-card">
+                  <input type="checkbox" name="troubleSpace" value="客廳公共區" />
+                  <span class="checkbox-content">
+                    <span class="material-symbols-outlined">deck</span>
+                    <span class="checkbox-text">客廳公共區</span>
+                  </span>
+                </label>
+                <label class="checkbox-card">
+                  <input type="checkbox" name="troubleSpace" value="兒童房/玩具區" />
+                  <span class="checkbox-content">
+                    <span class="material-symbols-outlined">smart_toy</span>
+                    <span class="checkbox-text">兒童房/玩具區</span>
+                  </span>
+                </label>
+                <label class="checkbox-card">
+                  <input type="checkbox" name="troubleSpace" value="衣櫃衣物區" />
+                  <span class="checkbox-content">
+                    <span class="material-symbols-outlined">checkroom</span>
+                    <span class="checkbox-text">衣櫃衣物區</span>
+                  </span>
+                </label>
+                <label class="checkbox-card">
+                  <input type="checkbox" name="troubleSpace" value="玄關鞋櫃" />
+                  <span class="checkbox-content">
+                    <span class="material-symbols-outlined">door_front</span>
+                    <span class="checkbox-text">玄關鞋櫃</span>
+                  </span>
+                </label>
+                <label class="checkbox-card" id="spaceOtherLabel">
+                  <input type="checkbox" name="troubleSpace" value="其他" id="spaceOtherCheckbox" />
+                  <span class="checkbox-content">
+                    <span class="material-symbols-outlined">more_horiz</span>
+                    <span class="checkbox-text">其他</span>
+                    <input type="text" id="troubleSpaceOther" class="inline-text-input" placeholder="請填寫空間..." disabled />
+                  </span>
+                </label>
+              </div>
+              <p class="error-msg" id="spaceError" style="display:none;">請至少選擇一個頭痛空間</p>
+            </div>
+
+            <div class="step-actions text-right">
+              <button type="button" class="button btn-next" data-next="2">進入第二部分：混亂指數 <span class="material-symbols-outlined">arrow_forward</span></button>
+            </div>
+          </div>
+
+          <!-- STEP 2: 居家空間混亂指數 -->
+          <div class="form-step" id="step2">
+            <h2 class="step-title"><span class="material-symbols-outlined icon-align">analytics</span> 第二部分：居家空間混亂指數</h2>
+            <p class="step-desc">請根據您家中的真實日常情境，勾選符合您家現狀的選項（多選）。</p>
+
+            <div class="confusion-grid">
+              <!-- A. 兒童玩具與遊戲區 -->
+              <div class="confusion-section">
+                <h3 class="confusion-section-title"><span class="material-symbols-outlined icon-align">toys</span> A. 兒童玩具與遊戲區</h3>
+                <div class="confusion-items">
+                  <label class="confusion-item-card">
+                    <input type="checkbox" name="confusionItem" value="1" />
+                    <div class="item-inner">
+                      <span class="item-num">1</span>
+                      <p class="item-desc">玩具沒有固定的家，每次收完不到半天又散落一地。</p>
+                      <div class="custom-check"></div>
+                    </div>
+                  </label>
+                  <label class="confusion-item-card">
+                    <input type="checkbox" name="confusionItem" value="2" />
+                    <div class="item-inner">
+                      <span class="item-num">2</span>
+                      <p class="item-desc">玩具箱太深、太重或太高，孩子想拿底部的玩具時必須把整箱倒出來。</p>
+                      <div class="custom-check"></div>
+                    </div>
+                  </label>
+                  <label class="confusion-item-card">
+                    <input type="checkbox" name="confusionItem" value="3" />
+                    <div class="item-inner">
+                      <span class="item-num">3</span>
+                      <p class="item-desc">家裡常出現「缺件的拼圖」、「壞掉的玩具」或「麥當勞贈品」，不知該不該丟。</p>
+                      <div class="custom-check"></div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <!-- B. 書包與學校物品區 -->
+              <div class="confusion-section">
+                <h3 class="confusion-section-title"><span class="material-symbols-outlined icon-align">school</span> B. 書包與學校物品區</h3>
+                <div class="confusion-items">
+                  <label class="confusion-item-card">
+                    <input type="checkbox" name="confusionItem" value="4" />
+                    <div class="item-inner">
+                      <span class="item-num">4</span>
+                      <p class="item-desc">孩子的書包、餐袋、水壺回家後總是隨手放在地板、沙發或餐椅上。</p>
+                      <div class="custom-check"></div>
+                    </div>
+                  </label>
+                  <label class="confusion-item-card">
+                    <input type="checkbox" name="confusionItem" value="5" />
+                    <div class="item-inner">
+                      <span class="item-num">5</span>
+                      <p class="item-desc">聯絡簿常常摺角，或是孩子出門前一秒才在慌亂尋找要簽名的通知單。</p>
+                      <div class="custom-check"></div>
+                    </div>
+                  </label>
+                  <label class="confusion-item-card">
+                    <input type="checkbox" name="confusionItem" value="6" />
+                    <div class="item-inner">
+                      <span class="item-num">6</span>
+                      <p class="item-desc">課本、彩色筆、美勞作品混成一團，書桌幾乎沒有空間可以寫功課。</p>
+                      <div class="custom-check"></div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <!-- C. 衣物與出門準備區 -->
+              <div class="confusion-section">
+                <h3 class="confusion-section-title"><span class="material-symbols-outlined icon-align">checkroom</span> C. 衣物與出門準備區</h3>
+                <div class="confusion-items">
+                  <label class="confusion-item-card">
+                    <input type="checkbox" name="confusionItem" value="7" />
+                    <div class="item-inner">
+                      <span class="item-num">7</span>
+                      <p class="item-desc">摺好的童裝一抽出來就整疊倒塌，或是衣服多到抽屜根本塞不進去。</p>
+                      <div class="custom-check"></div>
+                    </div>
+                  </label>
+                  <label class="confusion-item-card">
+                    <input type="checkbox" name="confusionItem" value="8" />
+                    <div class="item-inner">
+                      <span class="item-num">8</span>
+                      <p class="item-desc">每天出門前像戰場，要花很多時間幫孩子找襪子、學校圍兜兜或外套。</p>
+                      <div class="custom-check"></div>
+                    </div>
+                  </label>
+                  <label class="confusion-item-card">
+                    <input type="checkbox" name="confusionItem" value="9" />
+                    <div class="item-inner">
+                      <span class="item-num">9</span>
+                      <p class="item-desc">衣櫃裡混雜著「已經穿不下」和「準備等以後穿」的恩典牌衣服。</p>
+                      <div class="custom-check"></div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="step-actions flex-between">
+              <button type="button" class="button secondary btn-prev" data-prev="1"><span class="material-symbols-outlined">arrow_back</span> 回上一步</button>
+              <button type="button" class="button btn-next" data-next="3">進入第三部分：心靈溫度計 <span class="material-symbols-outlined">arrow_forward</span></button>
+            </div>
+          </div>
+
+          <!-- STEP 3: 親子收納習慣與心靈溫度計 -->
+          <div class="form-step" id="step3">
+            <h2 class="step-title"><span class="material-symbols-outlined icon-align">thermostat</span> 第三部分：親子收納習慣與心靈溫度計</h2>
+            <p class="step-desc">此部分為加深診斷，請選擇最符合您家庭目前真實狀況的頻率或標準。</p>
+
+            <div class="metric-list">
+              <!-- 孩子自動自發度 -->
+              <div class="metric-item">
+                <div class="metric-header">
+                  <span class="metric-title">孩子自動自發度</span>
+                  <p class="metric-question">孩子在被提醒後，能夠自己把玩具或書包收到「對的位置」嗎？</p>
+                </div>
+                <div class="radio-card-grid three-options">
+                  <label class="radio-card">
+                    <input type="radio" name="childIndependence" value="經常可以" required checked />
+                    <span class="radio-content text-center">
+                      <span class="radio-text">經常可以</span>
+                    </span>
+                  </label>
+                  <label class="radio-card">
+                    <input type="radio" name="childIndependence" value="偶爾可以" />
+                    <span class="radio-content text-center">
+                      <span class="radio-text">偶爾可以</span>
+                    </span>
+                  </label>
+                  <label class="radio-card">
+                    <input type="radio" name="childIndependence" value="幾乎沒辦法" />
+                    <span class="radio-content text-center">
+                      <span class="radio-text">幾乎沒辦法</span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- 收納標準一致度 -->
+              <div class="metric-item">
+                <div class="metric-header">
+                  <span class="metric-title">收納標準一致度</span>
+                  <p class="metric-question">全家人（爸爸、媽媽、阿公阿嬤等）對物品的「收納位置」標準一致嗎？</p>
+                </div>
+                <div class="radio-card-grid three-options">
+                  <label class="radio-card">
+                    <input type="radio" name="familyStandard" value="標準相同" required checked />
+                    <span class="radio-content text-center">
+                      <span class="radio-text">標準相同</span>
+                    </span>
+                  </label>
+                  <label class="radio-card">
+                    <input type="radio" name="familyStandard" value="各收各的" />
+                    <span class="radio-content text-center">
+                      <span class="radio-text">各收各的</span>
+                    </span>
+                  </label>
+                  <label class="radio-card">
+                    <input type="radio" name="familyStandard" value="常為此吵架" />
+                    <span class="radio-content text-center">
+                      <span class="radio-text">常為此吵架</span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- 媽媽的心情負擔 -->
+              <div class="metric-item">
+                <div class="metric-header">
+                  <span class="metric-title">媽媽的心情負擔</span>
+                  <p class="metric-question">看著滿地的雜物，會忍不住對孩子碎念、血壓飆高，感覺家務壓力都在自己身上嗎？</p>
+                </div>
+                <div class="radio-card-grid three-options">
+                  <label class="radio-card">
+                    <input type="radio" name="motherStress" value="每天都會" required checked />
+                    <span class="radio-content text-center">
+                      <span class="radio-text">每天都會</span>
+                    </span>
+                  </label>
+                  <label class="radio-card">
+                    <input type="radio" name="motherStress" value="偶爾煩躁" />
+                    <span class="radio-content text-center">
+                      <span class="radio-text">偶爾煩躁</span>
+                    </span>
+                  </label>
+                  <label class="radio-card">
+                    <input type="radio" name="motherStress" value="心平氣和" />
+                    <span class="radio-content text-center">
+                      <span class="radio-text">心平氣和</span>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="step-actions flex-between" style="margin-top: 40px;">
+              <button type="button" class="button secondary btn-prev" data-prev="2"><span class="material-symbols-outlined">arrow_back</span> 回上一步</button>
+              <button type="submit" class="button btn-submit"><span class="material-symbols-outlined">insights</span> 計算診斷結果</button>
+            </div>
+          </div>
+
+          <!-- STEP 4: 診斷結果頁面 -->
+          <div class="form-step" id="step4">
+            
+            <!-- 載入中動畫 -->
+            <div class="loading-state text-center" id="diagnosisLoading">
+              <div class="spinner"></div>
+              <h3 class="loading-text">美地空間大腦分析中...</h3>
+              <p class="loading-sub">小琍老師正在幫您盤點家中的收納黑洞，請稍候</p>
+            </div>
+
+            <!-- 真正結果顯示區 -->
+            <div id="diagnosisResult" class="result-container" style="display:none;">
+              
+              <!-- 頂部診斷卡 -->
+              <div class="result-card" id="resultCard">
+                <div class="result-badge" id="resultZoneBadge">紅色緊繃區</div>
+                <div class="result-score-block">
+                  <span class="result-score-label">居家空間混亂指數</span>
+                  <h2 class="result-score-val"><span id="resultScore">0</span> <span class="score-total">/ 9 項符合</span></h2>
+                </div>
+                
+                <hr class="result-divider" />
+                
+                <div class="result-desc-block">
+                  <h3 class="result-subtitle">🔍 空間現況診斷</h3>
+                  <p class="result-desc-text" id="resultDescText"></p>
+                </div>
+              </div>
+
+              <!-- 親子習慣回饋 -->
+              <div class="habit-feedback-card">
+                <h3 class="habit-title"><span class="material-symbols-outlined icon-align">favorite</span> 親子收納習慣反思</h3>
+                <div class="habit-indicators">
+                  <div class="habit-indicator">
+                    <span class="habit-indicator-label">孩子自動自發</span>
+                    <span class="habit-indicator-val" id="valIndependence">偶爾可以</span>
+                  </div>
+                  <div class="habit-indicator">
+                    <span class="habit-indicator-label">家庭標準對齊</span>
+                    <span class="habit-indicator-val" id="valStandard">各收各的</span>
+                  </div>
+                  <div class="habit-indicator">
+                    <span class="habit-indicator-label">媽媽心情指數</span>
+                    <span class="habit-indicator-val" id="valStress">每天都會</span>
+                  </div>
+                </div>
+                <p class="habit-quote">「收納不是勞動，是我們給孩子最溫柔的自主權教育。」—— 小琍老師</p>
+              </div>
+
+              <!-- 幸福好禮引流卡 -->
+              <div class="gift-card">
+                <div class="gift-gift-badge">✨ 專屬完成好禮 ✨</div>
+                <h2 class="gift-title">預約 1對1 免費線上空間診斷</h2>
+                <p class="gift-text">凡完成此線上診斷的社區媽咪，即可憑此診斷結果免費預約由小琍老師親自進行的<strong>【1對1 線上空間拍照診斷（限時 20 分鐘）】</strong>，幫您精準找出家中的收納黑洞！</p>
+                
+                <div class="gift-steps">
+                  <div class="gift-step-item">
+                    <span class="gift-step-num">1</span>
+                    <span>點擊下方按鈕，系統將自動複製您的診斷報告並開啟官方 LINE。</span>
+                  </div>
+                  <div class="gift-step-item">
+                    <span class="gift-step-num">2</span>
+                    <span>加入 LINE 後在對話框直接「貼上」並送出，即可完成免費預約登記！</span>
+                  </div>
+                </div>
+
+                <div class="gift-actions text-center">
+                  <button type="button" class="button btn-line-gift" id="btnLineGift">
+                    <span class="material-symbols-outlined">content_copy</span>
+                    <span>一鍵複製報告並加 LINE 預約</span>
+                  </button>
+                  <p class="line-id-fallback">官方 LINE 帳號：<strong>@meidi_organize</strong></p>
+                </div>
+              </div>
+
+              <!-- 重新測驗 -->
+              <div class="text-center" style="margin-top: 30px;">
+                <button type="button" class="button secondary" id="btnRestart">
+                  <span class="material-symbols-outlined">restart_alt</span> 重新填寫診斷表
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Toast 提示組件 -->
+  <div class="toast" id="toast" aria-live="polite">已複製診斷報告！</div>
+
+  <style>
+    /* 診斷表專屬樣式 */
+    .py-diagnosis {
+      padding: 60px 0 100px;
+    }
+    .diagnosis-wrapper {
+      width: min(800px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+    .diagnosis-header {
+      margin-bottom: 40px;
+    }
+    .diagnosis-title {
+      font-size: clamp(28px, 4.5vw, 42px);
+      margin-top: 15px;
+      margin-bottom: 12px;
+      font-weight: 800;
+    }
+    .diagnosis-subtitle {
+      color: var(--muted);
+      font-size: clamp(15px, 2vw, 17px);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    
+    /* 進度條樣式 */
+    .progress-bar-container {
+      margin-bottom: 35px;
+      position: relative;
+    }
+    .progress-steps {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      z-index: 2;
+    }
+    .step-indicator {
+      background: var(--surface-low);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: clamp(12px, 1.8vw, 14px);
+      font-weight: 700;
+      color: var(--sage);
+      border: 1px solid var(--outline-soft);
+      transition: all 0.3s ease;
+    }
+    .step-indicator.active {
+      background: var(--primary-container);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 2px 4px rgba(26, 46, 34, 0.15);
+    }
+    .progress-line {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--outline-soft);
+      z-index: 1;
+      transform: translateY(-50%);
+    }
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: var(--secondary);
+      transition: width 0.3s ease;
+    }
+
+    /* 卡片與表單 */
+    .diagnosis-card {
+      background: var(--paper);
+      border-radius: 16px;
+      padding: clamp(24px, 5vw, 40px);
+      border: 1px solid rgba(74, 97, 82, 0.12);
+      min-height: 400px;
+    }
+    .shadow {
+      box-shadow: var(--shadow);
+    }
+    .step-title {
+      font-size: clamp(20px, 3vw, 24px);
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+    .step-desc {
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 30px;
+      border-bottom: 1px dashed var(--outline-soft);
+      padding-bottom: 15px;
+    }
+    .form-group {
+      margin-bottom: 32px;
+    }
+    .form-label {
+      display: block;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 12px;
+      font-size: 16px;
+    }
+    .required {
+      color: #b3261e;
+      margin-left: 2px;
+    }
+    .icon-align {
+      vertical-align: middle;
+      margin-right: 4px;
+    }
+
+    /* 卡片式單選/複選設計 */
+    .radio-card-grid, .checkbox-card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+    .radio-card, .checkbox-card {
+      cursor: pointer;
+      position: relative;
+    }
+    .radio-card input, .checkbox-card input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .radio-content, .checkbox-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      background: var(--surface-low);
+      border: 1px solid var(--outline-soft);
+      border-radius: 12px;
+      transition: all 0.25s ease;
+      font-weight: 700;
+      color: var(--text);
+      min-height: 58px;
+    }
+    .radio-card input:checked + .radio-content,
+    .checkbox-card input:checked + .checkbox-content {
+      background: var(--fixed);
+      border-color: var(--secondary);
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(74, 97, 82, 0.12);
+    }
+    .radio-card:hover .radio-content,
+    .checkbox-card:hover .checkbox-content {
+      border-color: var(--secondary);
+      background: #fdfdfd;
+    }
+
+    .inline-text-input {
+      border: none;
+      border-bottom: 2px solid var(--outline);
+      background: transparent;
+      padding: 2px 6px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--primary);
+      width: 100%;
+      margin-top: 6px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .inline-text-input:focus {
+      border-bottom-color: var(--secondary);
+    }
+    .inline-text-input:disabled {
+      border-bottom-color: var(--outline-soft);
+      opacity: 0.5;
+    }
+
+    /* 寶貝資訊區 */
+    .baby-info-container {
+      background: var(--surface-low);
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid var(--outline-soft);
+    }
+    .baby-row {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-bottom: 16px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid rgba(74, 97, 82, 0.1);
+    }
+    .baby-row.optional-row {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .baby-row-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .baby-badge {
+      display: inline-block;
+      align-self: flex-start;
+      padding: 4px 10px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      border-radius: 4px;
+    }
+    .baby-badge.secondary {
+      background: var(--sage);
+    }
+    .btn-clear-baby {
+      background: transparent;
+      border: none;
+      color: #b3261e;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+      padding: 2px 6px;
+    }
+    .baby-inputs {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr 0.8fr;
+      gap: 12px;
+    }
+    .baby-inputs.optional-inputs {
+      grid-template-columns: 1fr 1fr;
+    }
+    .select-wrapper {
+      position: relative;
+    }
+    .field {
+      width: 100%;
+      height: 48px;
+      padding: 0 16px;
+      background: var(--paper);
+      border: 1px solid var(--outline-soft);
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .field:focus {
+      border-color: var(--secondary);
+    }
+    select.field {
+      appearance: none;
+      cursor: pointer;
+    }
+    .select-wrapper::after {
+      content: "expand_more";
+      font-family: "Material Symbols Outlined";
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: var(--outline);
+      font-size: 20px;
+    }
+
+    /* 混亂指數日常情境 */
+    .confusion-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+    .confusion-section {
+      background: var(--surface-low);
+      border-radius: 14px;
+      padding: 24px;
+      border: 1px solid var(--outline-soft);
+    }
+    .confusion-section-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 18px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--outline-soft);
+    }
+    .confusion-items {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .confusion-item-card {
+      cursor: pointer;
+      position: relative;
+      display: block;
+    }
+    .confusion-item-card input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .item-inner {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+      background: var(--paper);
+      border: 1px solid var(--outline-soft);
+      border-radius: 10px;
+      transition: all 0.2s;
+    }
+    .confusion-item-card:hover .item-inner {
+      border-color: var(--secondary);
+    }
+    .item-num {
+      width: 28px;
+      height: 28px;
+      background: var(--surface-low);
+      color: var(--secondary);
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 13px;
+    }
+    .item-desc {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .custom-check {
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--outline-soft);
+      border-radius: 6px;
+      position: relative;
+      transition: all 0.2s;
+    }
+    .confusion-item-card input:checked + .item-inner {
+      background: var(--fixed);
+      border-color: var(--secondary);
+    }
+    .confusion-item-card input:checked + .item-inner .custom-check {
+      background: var(--secondary);
+      border-color: var(--secondary);
+    }
+    .confusion-item-card input:checked + .item-inner .custom-check::after {
+      content: "";
+      position: absolute;
+      left: 7px;
+      top: 3px;
+      width: 6px;
+      height: 11px;
+      border: solid white;
+      border-width: 0 2.5px 2.5px 0;
+      transform: rotate(45deg);
+    }
+
+    /* 心靈溫度計 */
+    .metric-list {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+    .metric-item {
+      background: var(--surface-low);
+      border-radius: 14px;
+      padding: 24px;
+      border: 1px solid var(--outline-soft);
+    }
+    .metric-header {
+      margin-bottom: 18px;
+    }
+    .metric-title {
+      font-size: 12px;
+      font-weight: 900;
+      background: var(--secondary);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+    }
+    .metric-question {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-top: 10px;
+    }
+    .radio-card-grid.three-options {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    /* 步驟顯示控制 */
+    .form-step {
+      display: none;
+    }
+    .form-step.active {
+      display: block;
+      animation: fadeIn 0.4s ease;
+    }
+
+    /* 按鈕與佈局 */
+    .flex-between {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+    .text-center {
+      text-align: center;
+    }
+    .text-right {
+      text-align: right;
+    }
+    .btn-next, .btn-submit, .btn-line-gift {
+      cursor: pointer;
+      border: none;
+      transition: transform 0.2s, background-color 0.2s;
+    }
+    .btn-next:hover, .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(26, 46, 34, 0.2);
+    }
+    .btn-prev {
+      cursor: pointer;
+    }
+
+    /* 載入狀態 */
+    .loading-state {
+      padding: 60px 20px;
+    }
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid var(--outline-soft);
+      border-top-color: var(--secondary);
+      border-radius: 50%;
+      margin: 0 auto 24px;
+      animation: spin 1s linear infinite;
+    }
+    .loading-text {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+    .loading-sub {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* 診斷結果區 */
+    .result-container {
+      animation: fadeIn 0.6s ease;
+    }
+    .result-card {
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 24px;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .result-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 8px;
+      height: 100%;
+    }
+    
+    /* 綠色安全區 */
+    .result-card.zone-green {
+      background: #f0f7f4;
+      border: 1px solid #cce5da;
+    }
+    .result-card.zone-green::before {
+      background: #198754;
+    }
+    .result-card.zone-green .result-badge {
+      background: #198754;
+    }
+    
+    /* 黃色預警區 */
+    .result-card.zone-yellow {
+      background: #fffcf4;
+      border: 1px solid #ffeeba;
+    }
+    .result-card.zone-yellow::before {
+      background: #ffc107;
+    }
+    .result-card.zone-yellow .result-badge {
+      background: #ffc107;
+      color: #000;
+    }
+
+    /* 紅色緊繃區 */
+    .result-card.zone-red {
+      background: #fff5f5;
+      border: 1px solid #f8d7da;
+    }
+    .result-card.zone-red::before {
+      background: #dc3545;
+    }
+    .result-card.zone-red .result-badge {
+      background: #dc3545;
+    }
+
+    .result-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 20px;
+      color: #fff;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 0.05em;
+      margin-bottom: 20px;
+    }
+    .result-score-block {
+      margin-bottom: 20px;
+    }
+    .result-score-label {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 6px;
+    }
+    .result-score-val {
+      font-size: 40px;
+      font-weight: 800;
+      color: var(--primary);
+      font-family: "Noto Serif TC", serif;
+    }
+    .score-total {
+      font-size: 16px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .result-divider {
+      border: none;
+      border-top: 1px solid rgba(74, 97, 82, 0.15);
+      margin: 20px 0;
+    }
+    .result-subtitle {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+    .result-desc-text {
+      font-size: 15px;
+      line-height: 1.65;
+      font-weight: 700;
+      color: var(--text);
+      white-space: pre-line;
+    }
+
+    /* 親子習慣回饋卡 */
+    .habit-feedback-card {
+      background: var(--surface-low);
+      border: 1px solid var(--outline-soft);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .habit-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 18px;
+      border-bottom: 1px dashed var(--outline-soft);
+      padding-bottom: 8px;
+    }
+    .habit-indicators {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .habit-indicator {
+      background: var(--paper);
+      padding: 14px;
+      border-radius: 10px;
+      border: 1px solid var(--outline-soft);
+      text-align: center;
+    }
+    .habit-indicator-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--sage);
+      margin-bottom: 4px;
+    }
+    .habit-indicator-val {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .habit-quote {
+      font-style: italic;
+      color: var(--secondary);
+      font-weight: 700;
+      text-align: center;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    /* 禮物引流卡 */
+    .gift-card {
+      background: var(--primary-container);
+      color: #fff;
+      border-radius: 16px;
+      padding: clamp(24px, 5vw, 36px);
+      position: relative;
+      box-shadow: 0 8px 24px rgba(26, 46, 34, 0.15);
+    }
+    .gift-gift-badge {
+      display: inline-block;
+      background: #d0e8d6;
+      color: var(--primary);
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+    .gift-title {
+      color: #fff;
+      font-family: "Noto Serif TC", serif;
+      font-size: clamp(22px, 3.5vw, 28px);
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .gift-text {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .gift-steps {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .gift-step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .gift-step-num {
+      background: #fff;
+      color: var(--primary);
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 11px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .btn-line-gift {
+      background: #25d366; /* LINE 綠色調 */
+      border-color: #25d366;
+      color: #fff;
+      width: 100%;
+      max-width: 380px;
+      min-height: 52px;
+      font-size: 16px;
+      font-weight: 800;
+      gap: 10px;
+      box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+    }
+    .btn-line-gift:hover {
+      background: #20bd5a;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4);
+    }
+    .line-id-fallback {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 10px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: rgba(0, 0, 0, 0.85);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 700;
+      z-index: 100;
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      white-space: nowrap;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    
+    /* 錯誤訊息 */
+    .error-msg {
+      color: #b3261e;
+      font-size: 13px;
+      font-weight: 800;
+      margin-top: 8px;
+    }
+
+    /* 動畫 */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* RWD */
+    @media (max-width: 768px) {
+      .py-diagnosis {
+        padding: 30px 0 60px;
+      }
+      .progress-steps {
+        display: none; /* 手機端隱藏步驟字樣，僅看進度條 */
+      }
+      .progress-bar-container {
+        margin-bottom: 20px;
+      }
+      .diagnosis-card {
+        padding: 20px;
+        border-radius: 12px;
+      }
+      .radio-card-grid, .checkbox-card-grid {
+        grid-template-columns: 1fr;
+      }
+      .radio-card-grid.three-options {
+        grid-template-columns: 1fr;
+      }
+      .baby-inputs {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      .baby-inputs select.field, .baby-inputs input.field {
+        height: 46px;
+      }
+      .item-inner {
+        padding: 12px 14px;
+        gap: 10px;
+      }
+      .habit-indicators {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+  <!-- 前端 JavaScript 邏輯 -->
+  <script is:inline define:vars={{ lineUrl }}>
+    document.addEventListener("DOMContentLoaded", () => {
+      let currentStep = 1;
+      const totalSteps = 3;
+      
+      const form = document.getElementById("diagnosisForm");
+      const progressFill = document.getElementById("progressFill");
+      const stepIndicators = document.querySelectorAll(".step-indicator");
+      
+      // 更新進度條
+      function updateProgressBar(step) {
+        // 更新進度條寬度
+        const percentage = ((step - 1) / (totalSteps)) * 100;
+        progressFill.style.width = `${percentage}%`;
+        
+        // 更新步驟標籤樣式
+        stepIndicators.forEach((indicator) => {
+          const stepNum = parseInt(indicator.getAttribute("data-step") || "1");
+          if (stepNum <= step) {
+            indicator.classList.add("active");
+          } else {
+            indicator.classList.remove("active");
+          }
+        });
+      }
+
+      // 步驟切換函數
+      function goToStep(step) {
+        document.querySelector(`.form-step.active`)?.classList.remove("active");
+        document.getElementById(`step${step}`)?.classList.add("active");
+        currentStep = step;
+        updateProgressBar(step);
+        window.scrollTo({ top: document.querySelector(".progress-bar-container")?.getBoundingClientRect().top + window.scrollY - 100, behavior: "smooth" });
+      }
+
+      // Step 1: 填寫人「其他」輸入框控制
+      const parentRoleRadios = document.querySelectorAll('input[name="parentRole"]');
+      const parentRoleOtherInput = document.getElementById("parentRoleOther");
+      const roleOtherRadio = document.getElementById("roleOtherRadio");
+      const roleOtherLabel = document.getElementById("roleOtherLabel");
+
+      parentRoleRadios.forEach((radio) => {
+        radio.addEventListener("change", () => {
+          if (radio.value === "其他") {
+            parentRoleOtherInput.disabled = false;
+            parentRoleOtherInput.focus();
+            parentRoleOtherInput.required = true;
+          } else {
+            parentRoleOtherInput.disabled = true;
+            parentRoleOtherInput.value = "";
+            parentRoleOtherInput.required = false;
+          }
+        });
+      });
+
+      // 點擊「其他」卡片時自動 focus
+      roleOtherLabel?.addEventListener("click", () => {
+        if (roleOtherRadio?.checked) {
+          parentRoleOtherInput.disabled = false;
+          parentRoleOtherInput.focus();
+        }
+      });
+
+      // 寶貝 1 年齡自動帶入
+      const baby1AgeGroup = document.getElementById("baby1AgeGroup");
+      const baby1AgeInput = document.querySelector('input[name="baby1Age"]');
+
+      baby1AgeGroup?.addEventListener("change", (e) => {
+        const val = e.target.value;
+        if (val === "幼幼班以下") {
+          baby1AgeInput.value = "2";
+        } else if (val === "小班/中班") {
+          baby1AgeInput.value = "4";
+        } else if (val === "大班") {
+          baby1AgeInput.value = "6";
+        } else if (val === "國小低年級") {
+          baby1AgeInput.value = "8";
+        } else {
+          baby1AgeInput.value = "";
+          baby1AgeInput.focus();
+        }
+      });
+
+      // 寶貝 2 顯示/清除控制
+      const baby2Gender = document.getElementById("baby2Gender");
+      const baby2Age = document.getElementById("baby2Age");
+      const btnClearBaby2 = document.getElementById("btnClearBaby2");
+
+      function updateBaby2ClearButton() {
+        if (baby2Gender?.value || baby2Age?.value) {
+          btnClearBaby2.style.display = "inline-block";
+        } else {
+          btnClearBaby2.style.display = "none";
+        }
+      }
+
+      baby2Gender?.addEventListener("change", updateBaby2ClearButton);
+      baby2Age?.addEventListener("input", updateBaby2ClearButton);
+
+      btnClearBaby2?.addEventListener("click", () => {
+        if (baby2Gender) baby2Gender.value = "";
+        if (baby2Age) baby2Age.value = "";
+        btnClearBaby2.style.display = "none";
+      });
+
+      // 頭痛空間「其他」輸入框控制
+      const spaceOtherCheckbox = document.getElementById("spaceOtherCheckbox");
+      const spaceOtherLabel = document.getElementById("spaceOtherLabel");
+      const troubleSpaceOtherInput = document.getElementById("troubleSpaceOther");
+
+      spaceOtherCheckbox?.addEventListener("change", () => {
+        if (spaceOtherCheckbox.checked) {
+          troubleSpaceOtherInput.disabled = false;
+          troubleSpaceOtherInput.focus();
+          troubleSpaceOtherInput.required = true;
+        } else {
+          troubleSpaceOtherInput.disabled = true;
+          troubleSpaceOtherInput.value = "";
+          troubleSpaceOtherInput.required = false;
+        }
+      });
+
+      spaceOtherLabel?.addEventListener("click", () => {
+        if (spaceOtherCheckbox?.checked) {
+          troubleSpaceOtherInput.disabled = false;
+          troubleSpaceOtherInput.focus();
+        }
+      });
+
+      // 表單按鈕點擊「下一步」
+      document.querySelectorAll(".btn-next").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const nextStep = parseInt(btn.getAttribute("data-next") || "2");
+          
+          // 驗證當前步驟
+          if (currentStep === 1) {
+            // 驗證寶貝 1 資料是否齊全
+            const genderVal = document.querySelector('select[name="baby1Gender"]').value;
+            const ageGroupVal = document.querySelector('select[name="baby1AgeGroup"]').value;
+            const ageVal = baby1AgeInput.value;
+            
+            if (!genderVal || !ageGroupVal || !ageVal) {
+              form.reportValidity();
+              return;
+            }
+            
+            // 驗證頭痛空間多選，至少選一項
+            const troubleSpaces = document.querySelectorAll('input[name="troubleSpace"]:checked');
+            const spaceError = document.getElementById("spaceError");
+            if (troubleSpaces.length === 0) {
+              if (spaceError) spaceError.style.display = "block";
+              return;
+            } else {
+              if (spaceError) spaceError.style.display = "none";
+            }
+            
+            // 若選擇「其他」空間，必須填寫內容
+            if (spaceOtherCheckbox?.checked && !troubleSpaceOtherInput.value.trim()) {
+              troubleSpaceOtherInput.reportValidity();
+              return;
+            }
+            // 若選擇「其他」稱呼，必須填寫內容
+            if (roleOtherRadio?.checked && !parentRoleOtherInput.value.trim()) {
+              parentRoleOtherInput.reportValidity();
+              return;
+            }
+          }
+          
+          goToStep(nextStep);
+        });
+      });
+
+      // 表單按鈕點擊「上一步」
+      document.querySelectorAll(".btn-prev").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const prevStep = parseInt(btn.getAttribute("data-prev") || "1");
+          goToStep(prevStep);
+        });
+      });
+
+      // 診斷說明文案庫
+      const zoneTexts = {
+        green: `恭喜您！您和寶貝的空間非常有秩序！\n您的居家生活系統運作良好，孩子目前能順利適應現有秩序。只需微調局部的動線與收納技巧（例如調整換季衣物收納法、或是定期維持玩具淘汰機制），就能持續維持完美的親子空間。`,
+        yellow: `注意！您家裡的收納工具可能「太複雜」或「高度不對」。\n孩子不是不收，而是遇到了物理上的困難。例如收納箱太深不方便拿、或者掛鉤太高夠不著。建議重新規劃「兒童直覺動線」，將常用物品降至孩子胸口以下的高度，並採用開放式、單一動作即可完成的收納工具，孩子就能大大提升自主整理的意願！`,
+        red: `警告！空間混亂已經開始影響家人的情緒與孩子的自主學習！\n孩子在過多雜物與不明確的物品定位下，容易感到不知所措，進而放棄收拾；而家長也因反覆碎念累積了高額的心累指數。此階段非常需要整理專家的協助，透過「徹底篩選淘汰」與「重新建立生活動線規劃」，為您的家庭量身打造小孩好收、媽媽好教的舒心秩序。`
+      };
+
+      // 表單送出：計算診斷結果
+      form?.addEventListener("submit", (e) => {
+        e.preventDefault();
+        
+        // 進入第 4 步 (顯示 Loading)
+        goToStep(4);
+        const loadingDiv = document.getElementById("diagnosisLoading");
+        const resultDiv = document.getElementById("diagnosisResult");
+        
+        if (loadingDiv) loadingDiv.style.display = "block";
+        if (resultDiv) resultDiv.style.display = "none";
+        
+        // 模擬 AI 運算大腦延遲（增加專業感與真實度）
+        setTimeout(() => {
+          if (loadingDiv) loadingDiv.style.display = "none";
+          if (resultDiv) resultDiv.style.display = "block";
+          
+          // 1. 計算混亂分數
+          const checkedConfusion = document.querySelectorAll('input[name="confusionItem"]:checked');
+          const score = checkedConfusion.length;
+          
+          // 2. 決定分區與更新卡片樣式
+          const resultScoreSpan = document.getElementById("resultScore");
+          const resultCard = document.getElementById("resultCard");
+          const resultZoneBadge = document.getElementById("resultZoneBadge");
+          const resultDescText = document.getElementById("resultDescText");
+          
+          if (resultScoreSpan) resultScoreSpan.textContent = score.toString();
+          
+          // 清除舊 class
+          resultCard?.classList.remove("zone-green", "zone-yellow", "zone-red");
+          
+          let zoneKey = "green";
+          let zoneLabel = "【綠色安全區】";
+          
+          if (score <= 2) {
+            zoneKey = "green";
+            zoneLabel = "綠色安全區";
+            resultCard?.classList.add("zone-green");
+          } else if (score <= 5) {
+            zoneKey = "yellow";
+            zoneLabel = "黃色預警區";
+            resultCard?.classList.add("zone-yellow");
+          } else {
+            zoneKey = "red";
+            zoneLabel = "紅色緊繃區";
+            resultCard?.classList.add("zone-red");
+          }
+          
+          if (resultZoneBadge) resultZoneBadge.textContent = zoneLabel;
+          if (resultDescText) resultDescText.textContent = zoneTexts[zoneKey];
+          
+          // 3. 填寫心靈溫度計與基本資訊
+          const childIndependenceVal = document.querySelector('input[name="childIndependence"]:checked')?.value || "";
+          const familyStandardVal = document.querySelector('input[name="familyStandard"]:checked')?.value || "";
+          const motherStressVal = document.querySelector('input[name="motherStress"]:checked')?.value || "";
+          
+          const valIndependence = document.getElementById("valIndependence");
+          const valStandard = document.getElementById("valStandard");
+          const valStress = document.getElementById("valStress");
+          
+          if (valIndependence) valIndependence.textContent = childIndependenceVal;
+          if (valStandard) valStandard.textContent = familyStandardVal;
+          if (valStress) valStress.textContent = motherStressVal;
+          
+          // 4. 更新進度條為 100%
+          updateProgressBar(4);
+          
+        }, 1800); // 1.8 秒延遲
+      });
+
+      // 重新填寫
+      const btnRestart = document.getElementById("btnRestart");
+      btnRestart?.addEventListener("click", () => {
+        form.reset();
+        parentRoleOtherInput.disabled = true;
+        parentRoleOtherInput.value = "";
+        troubleSpaceOtherInput.disabled = true;
+        troubleSpaceOtherInput.value = "";
+        if (btnClearBaby2) btnClearBaby2.style.display = "none";
+        goToStep(1);
+      });
+
+      // Toast 提示函數
+      function showToast(msg) {
+        const toast = document.getElementById("toast");
+        if (toast) {
+          toast.textContent = msg;
+          toast.classList.add("show");
+          setTimeout(() => {
+            toast.classList.remove("show");
+          }, 2500);
+        }
+      }
+
+      // 一鍵複製報告與加 LINE 預約
+      const btnLineGift = document.getElementById("btnLineGift");
+      btnLineGift?.addEventListener("click", () => {
+        // 蒐集填寫的詳細資料
+        const formData = new FormData(form);
+        
+        let parentRole = formData.get("parentRole");
+        if (parentRole === "其他") {
+          parentRole = `其他 (${document.getElementById("parentRoleOther")?.value || ""})`;
+        }
+        
+        const baby1Gender = formData.get("baby1Gender");
+        const baby1AgeGroup = formData.get("baby1AgeGroup");
+        const baby1Age = formData.get("baby1Age");
+        
+        let babyInfo = `${baby1Gender} (${baby1AgeGroup} ${baby1Age}歲)`;
+        
+        const baby2Gender = document.getElementById("baby2Gender")?.value;
+        const baby2Age = document.getElementById("baby2Age")?.value;
+        if (baby2Gender && baby2Age) {
+          babyInfo += `、寶貝 2：${baby2Gender} (${baby2Age}歲)`;
+        }
+        
+        // 收集頭痛空間
+        const selectedSpaces = [];
+        document.querySelectorAll('input[name="troubleSpace"]:checked').forEach((cb) => {
+          if (cb.value === "其他") {
+            selectedSpaces.push(`其他 (${document.getElementById("troubleSpaceOther")?.value || ""})`);
+          } else {
+            selectedSpaces.push(cb.value);
+          }
+        });
+        const spacesText = selectedSpaces.join("、");
+        
+        // 得分與分區
+        const score = document.getElementById("resultScore")?.textContent || "0";
+        let zoneLabel = "綠色安全區";
+        if (parseInt(score) <= 2) {
+          zoneLabel = "綠色安全區 (0-2項符合)";
+        } else if (parseInt(score) <= 5) {
+          zoneLabel = "黃色預警區 (3-5項符合)";
+        } else {
+          zoneLabel = "紅色緊繃區 (6項以上符合)";
+        }
+        
+        // 心靈溫度計
+        const childIndependence = document.querySelector('input[name="childIndependence"]:checked')?.value || "";
+        const familyStandard = document.querySelector('input[name="familyStandard"]:checked')?.value || "";
+        const motherStress = document.querySelector('input[name="motherStress"]:checked')?.value || "";
+        
+        // 組合報告文字
+        const reportText = `您好！我已完成美地居家收納的「親子居家空間健康診斷表」。
+【填寫人】${parentRole}
+【寶貝資訊】${babyInfo}
+【頭痛空間】${spacesText}
+【居家混亂得分】${score} 分 / 屬於【${zoneLabel}】
+【親子收納心靈指標】
+- 孩子自動自發：${childIndependence}
+- 收納標準一致：${familyStandard}
+- 媽媽心情負擔：${motherStress}
+
+希望能預約小琍老師的【1對1 線上空間拍照診斷】！`;
+
+        // 複製到剪貼簿
+        navigator.clipboard.writeText(reportText).then(() => {
+          showToast("📋 診斷報告已複製！正在跳轉官方 LINE...");
+          
+          // 1.5 秒後跳轉 LINE
+          setTimeout(() => {
+            window.location.href = lineUrl;
+          }, 1500);
+        }).catch((err) => {
+          console.error("複製失敗:", err);
+          showToast("❌ 複製失敗，即將為您開啟官方 LINE！");
+          setTimeout(() => {
+            window.location.href = lineUrl;
+          }, 1000);
+        });
+
+      });
+
+    });
+  </script>
+</MeidiLayout>
