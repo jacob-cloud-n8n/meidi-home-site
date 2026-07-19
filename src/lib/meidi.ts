@@ -82,6 +82,7 @@ const pageDatabaseIds = {
 };
 
 const cache = new Map<string, CacheEntry<NotionPage[]>>();
+const lastFetchedTimes = new Map<string, number>();
 
 function warn(error: unknown): void {
   console.warn(error instanceof Error ? error.message : error);
@@ -181,6 +182,7 @@ async function queryDatabase(databaseId: string): Promise<NotionPage[]> {
 
   const ttl = cacheSeconds();
   if (ttl > 0) cache.set(databaseId, { expiresAt: Date.now() + ttl * 1000, value: pages });
+  lastFetchedTimes.set(databaseId, Date.now());
   return pages;
 }
 
@@ -259,15 +261,15 @@ export async function getMeidiCases(): Promise<MeidiCase[]> {
           body: text(props["文字內容"]),
           category: category || caseTitle,
           image: imageValue(props, "圖片", "圖片網址"),
-          beforeImage: imageValue(props, "整理前圖片", "整理前圖片網址") || imageValue(props, "Before 圖片", "Before 圖片網址"),
-          afterImage: imageValue(props, "整理後圖片", "整理後圖片網址") || imageValue(props, "After 圖片", "After 圖片網址"),
+          beforeImage: imageValue(props, "整理前圖片", "整理前圖片網址"),
+          afterImage: imageValue(props, "整理後圖片", "整理後圖片網址"),
           status: select(props["授權狀態"]),
           fontSize: select(props["字體大小"]),
           enabled: checkbox(props["啟用"], true),
           order: number(props["排序"], index)
         };
       })
-      .filter((item) => item.enabled && item.category && (item.type === "案例" || item.key.startsWith("case.")))
+      .filter((item) => item.enabled && item.status === "可公開" && item.category && (item.type === "案例" || item.key.startsWith("case.")))
       .sort((a, b) => a.order - b.order);
     const mapped = items.map(({ title, body, category, image, beforeImage, afterImage, status, fontSize }) => ({
       title,
@@ -308,8 +310,8 @@ export async function getMeidiCaseProjects(): Promise<MeidiCaseProject[]> {
           status: select(props["授權狀態"]),
           coverImage: imageValue(props, "封面圖", "封面圖網址") || imageValue(props, "圖片", "圖片網址"),
           image: imageValue(props, "案例圖片", "案例圖片網址") || imageValue(props, "圖片", "圖片網址"),
-          beforeImage: imageValue(props, "整理前圖片", "整理前圖片網址") || imageValue(props, "Before 圖片", "Before 圖片網址"),
-          afterImage: imageValue(props, "整理後圖片", "整理後圖片網址") || imageValue(props, "After 圖片", "After 圖片網址"),
+          beforeImage: imageValue(props, "整理前圖片", "整理前圖片網址"),
+          afterImage: imageValue(props, "整理後圖片", "整理後圖片網址"),
           problemPoints: listText(text(props["亂源分析"]) || text(props["問題分析"])),
           solutionPoints: listText(text(props["解決方案"]) || text(props["美地做法"])),
           fontSize: select(props["字體大小"]),
@@ -317,7 +319,7 @@ export async function getMeidiCaseProjects(): Promise<MeidiCaseProject[]> {
           order: number(props["排序"], index)
         };
       })
-      .filter((item) => item.enabled)
+      .filter((item) => item.enabled && item.status === "可公開")
       .sort((a, b) => a.order - b.order);
 
     const projectRows = rows.filter((row) => row.type === "案例專案" || row.rowTitle.startsWith("case-project."));
@@ -381,7 +383,13 @@ export async function getMeidiCaseProjects(): Promise<MeidiCaseProject[]> {
 
 export async function getMeidiArticles(): Promise<MeidiArticle[]> {
   try {
-    const pages = await queryDatabase(import.meta.env.NOTION_MEIDI_TEAM_DB_ID || pageDatabaseIds.team);
+    // NOTION_MEIDI_TEAM_DB_ID 為歷史遺留變數名稱，實際對應的是「收納大小事」(Articles) 資料庫。
+    // 新增別名 NOTION_MEIDI_ARTICLES_DB_ID 以符合語意。
+    const databaseId = 
+      import.meta.env.NOTION_MEIDI_ARTICLES_DB_ID || 
+      import.meta.env.NOTION_MEIDI_TEAM_DB_ID || 
+      pageDatabaseIds.team;
+    const pages = await queryDatabase(databaseId);
     const items = pages
       .map((page, index) => {
         const props = page.properties ?? {};
@@ -662,3 +670,152 @@ export const fallbackArticles: MeidiArticle[] = [
     image: "/assets/organizing-grid.png"
   }
 ];
+
+export function clearMeidiCache(): void {
+  cache.clear();
+  lastFetchedTimes.clear();
+}
+
+export async function getNotionStatus(): Promise<Record<string, { fetched: number; filtered: number; reasons: string[]; lastFetchedAt: string }>> {
+  const status: Record<string, { fetched: number; filtered: number; reasons: string[]; lastFetchedAt: string }> = {};
+
+  const dbs = [
+    { key: "home", id: import.meta.env.NOTION_MEIDI_HOME_DB_ID || pageDatabaseIds.home, type: "copy" },
+    { key: "about", id: import.meta.env.NOTION_MEIDI_ABOUT_DB_ID || pageDatabaseIds.about, type: "copy" },
+    { key: "booking", id: import.meta.env.NOTION_MEIDI_BOOKING_DB_ID || pageDatabaseIds.booking, type: "copy" },
+    { key: "services", id: import.meta.env.NOTION_MEIDI_SERVICES_DB_ID || pageDatabaseIds.services, type: "services" },
+    { key: "portfolio", id: import.meta.env.NOTION_MEIDI_PORTFOLIO_DB_ID || pageDatabaseIds.portfolio, type: "portfolio" },
+    { key: "team", id: import.meta.env.NOTION_MEIDI_ARTICLES_DB_ID || import.meta.env.NOTION_MEIDI_TEAM_DB_ID || pageDatabaseIds.team, type: "team" },
+    { key: "inquiry", id: import.meta.env.NOTION_MEIDI_INQUIRY_DB_ID || "ae9b716c250c46e49ffbeeb1e0e8a32a", type: "inquiry" }
+  ];
+
+  for (const db of dbs) {
+    if (db.type === "inquiry") {
+      status[db.key] = { fetched: 0, filtered: 0, reasons: [], lastFetchedAt: "" };
+      continue;
+    }
+
+    try {
+      const pages = await queryDatabase(db.id);
+      const lastFetched = lastFetchedTimes.get(db.id);
+      const lastFetchedAt = lastFetched ? new Date(lastFetched).toISOString() : "";
+
+      let filtered = 0;
+      const reasonsSet = new Set<string>();
+
+      if (db.type === "copy") {
+        pages.forEach((page) => {
+          const props = page.properties ?? {};
+          const key = title(props["名稱"]);
+          let isFiltered = false;
+          
+          if (!checkbox(props["啟用"], true)) {
+            reasonsSet.add("未啟用");
+            isFiltered = true;
+          }
+          if (!key || !key.includes(".")) {
+            reasonsSet.add("key 無點");
+            isFiltered = true;
+          }
+          
+          if (isFiltered) {
+            filtered++;
+          }
+        });
+      } else if (db.type === "services") {
+        pages.forEach((page, index) => {
+          const props = page.properties ?? {};
+          const rowTitle = title(props["名稱"]);
+          const location = text(props["前台位置"]);
+          const cardTitle = location.split("/").pop()?.trim() || rowTitle;
+          const serviceType = select(props["類型"]);
+          const body = text(props["文字內容"]);
+          
+          let isFiltered = false;
+          if (!checkbox(props["啟用"], true)) {
+            reasonsSet.add("未啟用");
+            isFiltered = true;
+          }
+          if (serviceType !== "區塊") {
+            reasonsSet.add("類型不符");
+            isFiltered = true;
+          }
+          if (!rowTitle.startsWith("service.")) {
+            reasonsSet.add("key 無點");
+            isFiltered = true;
+          }
+          if (!cardTitle || !body) {
+            reasonsSet.add("類型不符");
+            isFiltered = true;
+          }
+
+          if (isFiltered) {
+            filtered++;
+          }
+        });
+      } else if (db.type === "portfolio") {
+        pages.forEach((page) => {
+          const props = page.properties ?? {};
+          const rowTitle = title(props["名稱"]);
+          const type = select(props["類型"]);
+          const status = select(props["授權狀態"]);
+          
+          let isFiltered = false;
+          if (!checkbox(props["啟用"], true)) {
+            reasonsSet.add("未啟用");
+            isFiltered = true;
+          }
+          if (status !== "可公開") {
+            reasonsSet.add("授權未過");
+            isFiltered = true;
+          }
+          if (type !== "案例" && type !== "案例專案" && type !== "案例空間" && !rowTitle.startsWith("case.") && !rowTitle.startsWith("case-project.") && !rowTitle.startsWith("case-space.")) {
+            reasonsSet.add("類型不符");
+            isFiltered = true;
+          }
+
+          if (isFiltered) {
+            filtered++;
+          }
+        });
+      } else if (db.type === "team") {
+        pages.forEach((page) => {
+          const props = page.properties ?? {};
+          const rowTitle = title(props["名稱"]);
+          const type = select(props["類型"]);
+          const category = richOrSelect(props["分類"]) || richOrSelect(props["標籤"]);
+          
+          let isFiltered = false;
+          if (!checkbox(props["啟用"], true)) {
+            reasonsSet.add("未啟用");
+            isFiltered = true;
+          }
+          if (type !== "文章" && !rowTitle.startsWith("article.") && category === "收納大小事") {
+            reasonsSet.add("類型不符");
+            isFiltered = true;
+          }
+
+          if (isFiltered) {
+            filtered++;
+          }
+        });
+      }
+
+      status[db.key] = {
+        fetched: pages.length,
+        filtered,
+        reasons: Array.from(reasonsSet),
+        lastFetchedAt
+      };
+    } catch (error) {
+      status[db.key] = {
+        fetched: 0,
+        filtered: 0,
+        reasons: ["查詢失敗"],
+        lastFetchedAt: ""
+      };
+    }
+  }
+
+  return status;
+}
