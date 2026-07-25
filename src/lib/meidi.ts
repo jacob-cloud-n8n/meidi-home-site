@@ -385,9 +385,9 @@ export async function getMeidiArticles(): Promise<MeidiArticle[]> {
   try {
     // NOTION_MEIDI_TEAM_DB_ID 為歷史遺留變數名稱，實際對應的是「收納大小事」(Articles) 資料庫。
     // 新增別名 NOTION_MEIDI_ARTICLES_DB_ID 以符合語意。
-    const databaseId = 
-      import.meta.env.NOTION_MEIDI_ARTICLES_DB_ID || 
-      import.meta.env.NOTION_MEIDI_TEAM_DB_ID || 
+    const databaseId =
+      import.meta.env.NOTION_MEIDI_ARTICLES_DB_ID ||
+      import.meta.env.NOTION_MEIDI_TEAM_DB_ID ||
       pageDatabaseIds.team;
     const pages = await queryDatabase(databaseId);
     const items = pages
@@ -708,7 +708,7 @@ export async function getNotionStatus(): Promise<Record<string, { fetched: numbe
           const props = page.properties ?? {};
           const key = title(props["名稱"]);
           let isFiltered = false;
-          
+
           if (!checkbox(props["啟用"], true)) {
             reasonsSet.add("未啟用");
             isFiltered = true;
@@ -717,7 +717,7 @@ export async function getNotionStatus(): Promise<Record<string, { fetched: numbe
             reasonsSet.add("key 無點");
             isFiltered = true;
           }
-          
+
           if (isFiltered) {
             filtered++;
           }
@@ -730,7 +730,7 @@ export async function getNotionStatus(): Promise<Record<string, { fetched: numbe
           const cardTitle = location.split("/").pop()?.trim() || rowTitle;
           const serviceType = select(props["類型"]);
           const body = text(props["文字內容"]);
-          
+
           let isFiltered = false;
           if (!checkbox(props["啟用"], true)) {
             reasonsSet.add("未啟用");
@@ -759,7 +759,7 @@ export async function getNotionStatus(): Promise<Record<string, { fetched: numbe
           const rowTitle = title(props["名稱"]);
           const type = select(props["類型"]);
           const status = select(props["授權狀態"]);
-          
+
           let isFiltered = false;
           if (!checkbox(props["啟用"], true)) {
             reasonsSet.add("未啟用");
@@ -784,7 +784,7 @@ export async function getNotionStatus(): Promise<Record<string, { fetched: numbe
           const rowTitle = title(props["名稱"]);
           const type = select(props["類型"]);
           const category = richOrSelect(props["分類"]) || richOrSelect(props["標籤"]);
-          
+
           let isFiltered = false;
           if (!checkbox(props["啟用"], true)) {
             reasonsSet.add("未啟用");
