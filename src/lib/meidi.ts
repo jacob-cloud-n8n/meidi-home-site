@@ -433,7 +433,11 @@ function slugify(input: string, fallback: string): string {
     .replace(/[^\w\s-]/g, "")
     .trim()
     .replace(/\s+/g, "-")
-    .replace(/-+/g, "-");
+    .replace(/-+/g, "-")
+    // 純非 ASCII 標題（例如中文）在上面會被刪光，只剩下原本標題裡的連字號。
+    // 少了這一行，「甲-乙」會產出 "-"，而 "-" 是 truthy，下面的 fallback 不會生效，
+    // 於是所有含連字號的中文標題都撞在同一個網址上。（2026-09-11 live 實害：兩張案例卡共用 /portfolio/-/）
+    .replace(/^-+|-+$/g, "");
   return slug || fallback;
 }
 
