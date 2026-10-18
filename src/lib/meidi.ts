@@ -1,3 +1,8 @@
+import {
+  localizeNotionFileUrls,
+  rethrowNotionAssetDownload
+} from "./notion-assets";
+
 const notionVersion = "2022-06-28";
 const defaultCacheSeconds = 60;
 
@@ -64,6 +69,7 @@ export type MeidiArticle = {
 };
 
 type NotionPage = {
+  id?: string;
   properties?: Record<string, any>;
 };
 
@@ -160,7 +166,8 @@ async function queryDatabase(databaseId: string): Promise<NotionPage[]> {
   let startCursor: string | undefined;
 
   do {
-    const response = await fetch(`https://api.notion.com/v1/databases/${databaseId}/query`, {
+    const notionApiBaseUrl = import.meta.env.NOTION_API_BASE_URL || "https://api.notion.com/v1";
+    const response = await fetch(`${notionApiBaseUrl.replace(/\/$/, "")}/databases/${databaseId}/query`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -176,7 +183,9 @@ async function queryDatabase(databaseId: string): Promise<NotionPage[]> {
 
     if (!response.ok) throw new Error(`Meidi Notion query failed: ${response.status}`);
     const payload = await response.json();
-    pages.push(...(payload.results ?? []));
+    const results = payload.results ?? [];
+    await localizeNotionFileUrls(results, databaseId);
+    pages.push(...results);
     startCursor = payload.has_more ? payload.next_cursor : undefined;
   } while (startCursor);
 
@@ -205,6 +214,7 @@ export async function getMeidiCopy(page: keyof typeof pageDatabaseIds): Promise<
       return copy;
     }, {});
   } catch (error) {
+    rethrowNotionAssetDownload(error);
     warn(error);
     return {};
   }
@@ -239,6 +249,7 @@ export async function getMeidiServices(): Promise<MeidiService[]> {
       ? items.slice(0, 6).map(({ title, body, icon, image, fontSize, imageSize }) => ({ title, body, icon, image, fontSize, imageSize }))
       : fallbackServices;
   } catch (error) {
+    rethrowNotionAssetDownload(error);
     warn(error);
     return fallbackServices;
   }
@@ -283,6 +294,7 @@ export async function getMeidiCases(): Promise<MeidiCase[]> {
     }));
     return mapped.length > 0 ? mapped : fallbackCases;
   } catch (error) {
+    rethrowNotionAssetDownload(error);
     warn(error);
     return fallbackCases;
   }
@@ -376,6 +388,7 @@ export async function getMeidiCaseProjects(): Promise<MeidiCaseProject[]> {
 
     return mergeSeedCaseProjects(projects);
   } catch (error) {
+    rethrowNotionAssetDownload(error);
     warn(error);
     return seedCaseProjects;
   }
@@ -421,6 +434,7 @@ export async function getMeidiArticles(): Promise<MeidiArticle[]> {
       ? items.map(({ title, slug, category, excerpt, body, image, date, fontSize }) => ({ title, slug, category, excerpt, body, image, date, fontSize }))
       : fallbackArticles;
   } catch (error) {
+    rethrowNotionAssetDownload(error);
     warn(error);
     return fallbackArticles;
   }
@@ -812,6 +826,7 @@ export async function getNotionStatus(): Promise<Record<string, { fetched: numbe
         lastFetchedAt
       };
     } catch (error) {
+      rethrowNotionAssetDownload(error);
       status[db.key] = {
         fetched: 0,
         filtered: 0,

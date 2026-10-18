@@ -9,6 +9,7 @@
     "build": "astro build",
     "build:cloudflare": "ASTRO_OUTPUT=static astro build",
     "postbuild:cloudflare": "node scripts/generate-cloudflare-redirects.mjs",
+    "test:notion-images": "node scripts/test-notion-images.mjs",
     "preview": "astro preview",
     "preview:cloudflare": "wrangler pages dev dist --compatibility-date 2026-10-18",
     "start": "node ./dist/server/entry.mjs"
