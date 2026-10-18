@@ -1,9 +1,18 @@
-import type { APIRoute } from "astro";
-import { lineUrl } from "@lib/meidi";
+interface Env {
+  NOTION_TOKEN?: string;
+  NOTION_MEIDI_INQUIRY_DB_ID?: string;
+  PUBLIC_LINE_URL?: string;
+}
+
+type PagesContext = {
+  request: Request;
+  env: Env;
+};
 
 const notionVersion = "2022-06-28";
 const notionUploadVersion = "2026-03-11";
 const defaultInquiryDatabaseId = "ae9b716c250c46e49ffbeeb1e0e8a32a";
+const defaultLineUrl = "https://line.me/R/ti/p/@135hliju";
 const maxPhotoCount = 5;
 const maxPhotoSize = 20 * 1024 * 1024;
 
@@ -40,7 +49,7 @@ function validPhone(value: string): boolean {
   return /^[0-9+\-\s()]{8,20}$/.test(value);
 }
 
-function fallbackUrl(inquiry: Inquiry): string {
+function fallbackUrl(env: Env, inquiry: Inquiry): string {
   const message = [
     "美地居家收納預約諮詢",
     `姓名：${inquiry.name}`,
@@ -53,6 +62,7 @@ function fallbackUrl(inquiry: Inquiry): string {
     inquiry.photoFiles.length ? `上傳照片：${inquiry.photoFiles.map((file) => file.name).join("、")}` : ""
   ].filter(Boolean).join("\n");
 
+  const lineUrl = clean(env.PUBLIC_LINE_URL) || defaultLineUrl;
   return `${lineUrl}?text=${encodeURIComponent(message)}`;
 }
 
@@ -160,9 +170,9 @@ async function attachPhotosToProperty(token: string, pageId: string, uploads: No
   return response.ok;
 }
 
-async function createInquiry(inquiry: Inquiry): Promise<{ ok: boolean; uploadedCount: number; uploadFailed: boolean }> {
-  const token = import.meta.env.NOTION_TOKEN;
-  const databaseId = import.meta.env.NOTION_MEIDI_INQUIRY_DB_ID || defaultInquiryDatabaseId;
+async function createInquiry(env: Env, inquiry: Inquiry): Promise<{ ok: boolean; uploadedCount: number; uploadFailed: boolean }> {
+  const token = clean(env.NOTION_TOKEN);
+  const databaseId = clean(env.NOTION_MEIDI_INQUIRY_DB_ID) || defaultInquiryDatabaseId;
   if (!token || !databaseId) return { ok: false, uploadedCount: 0, uploadFailed: false };
 
   const response = await fetch("https://api.notion.com/v1/pages", {
@@ -283,7 +293,7 @@ async function parseInquiryRequest(request: Request): Promise<Inquiry> {
 
   const body = await request.json();
   const photoFiles = Array.isArray(body.photos)
-    ? body.photos.map(dataUrlToUploadPhoto).filter((photo): photo is UploadPhoto => Boolean(photo)).slice(0, maxPhotoCount)
+    ? body.photos.map(dataUrlToUploadPhoto).filter((photo: UploadPhoto | null): photo is UploadPhoto => Boolean(photo)).slice(0, maxPhotoCount)
     : [];
 
   return {
@@ -300,7 +310,7 @@ async function parseInquiryRequest(request: Request): Promise<Inquiry> {
   };
 }
 
-export const POST: APIRoute = async ({ request }) => {
+export const onRequestPost = async ({ request, env }: PagesContext): Promise<Response> => {
   let inquiry: Inquiry | null = null;
   try {
     inquiry = await parseInquiryRequest(request);
@@ -326,7 +336,7 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    const result = await createInquiry(inquiry);
+    const result = await createInquiry(env, inquiry);
     if (result.ok) {
       const message = result.uploadFailed
         ? "表單已收到！我們會盡快與您聯繫。部分照片未能上傳，請確認格式為 JPG、PNG、WebP 或 HEIC，單張建議 10MB 以內；也可後續用 LINE 補傳。"
@@ -337,14 +347,14 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    return new Response(JSON.stringify({ ok: true, mode: "line-fallback", lineUrl: fallbackUrl(inquiry), message: "表單已收到！我們會盡快與您聯繫。" }), {
+    return new Response(JSON.stringify({ ok: true, mode: "line-fallback", lineUrl: fallbackUrl(env, inquiry), message: "表單已收到！我們會盡快與您聯繫。" }), {
       status: 200,
       headers: { "Content-Type": "application/json" }
     });
   } catch (error) {
     console.error(error);
     if (inquiry) {
-      return new Response(JSON.stringify({ ok: true, mode: "line-fallback", lineUrl: fallbackUrl(inquiry), message: "表單已收到！我們會盡快與您聯繫。" }), {
+      return new Response(JSON.stringify({ ok: true, mode: "line-fallback", lineUrl: fallbackUrl(env, inquiry), message: "表單已收到！我們會盡快與您聯繫。" }), {
         status: 200,
         headers: { "Content-Type": "application/json" }
       });

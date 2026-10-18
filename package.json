@@ -7,7 +7,10 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "build:cloudflare": "ASTRO_OUTPUT=static astro build",
+    "postbuild:cloudflare": "node scripts/generate-cloudflare-redirects.mjs",
     "preview": "astro preview",
+    "preview:cloudflare": "wrangler pages dev dist --compatibility-date 2026-10-18",
     "start": "node ./dist/server/entry.mjs"
   },
   "dependencies": {
@@ -15,7 +18,9 @@
     "astro": "^5.0.0"
   },
   "devDependencies": {
+    "@types/node": "^22.0.0",
     "@rollup/wasm-node": "^4.60.2",
-    "typescript": "^5.6.0"
+    "typescript": "^5.6.0",
+    "wrangler": "^4.45.0"
   }
 }

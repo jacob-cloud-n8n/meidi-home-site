@@ -1,0 +1,2 @@
+# `pnpm run postbuild:cloudflare` replaces this file in dist with rules generated
+# from the built team and portfolio detail pages, followed by missing-slug 302s.

@@ -2,7 +2,7 @@ import type { APIRoute } from "astro";
 import { getMeidiArticles } from "../lib/meidi";
 
 export const GET: APIRoute = async ({ site }) => {
-  const siteUrl = process.env.SITE_URL || (site ? site.origin : "https://meidi-home-untitled-20260509.zeabur.app");
+  const siteUrl = import.meta.env.PUBLIC_SITE_URL || process.env.SITE_URL || (site ? site.origin : "https://meidi-home-untitled-20260509.zeabur.app");
   const baseUrl = siteUrl.replace(/\/$/, "");
 
   const staticPages = [
